@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Device Sorter | Cyber Breaker Labs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --primary: #3b82f6;
+            --input: #a855f7;
+            --output: #10b981;
+            --storage: #f59e0b;
+            --text: #f8fafc;
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        nav {
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky; top: 0; z-index: 100;
+        }
+
+        .back-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .workspace {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 2rem;
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Bin */
+        .bin-section {
+            background: var(--card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            overflow-y: auto;
+            max-height: calc(100vh - 120px);
+        }
+
+        .device-card {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 14px;
+            padding: 1rem;
+            cursor: grab;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            transition: 0.3s;
+            user-select: none;
+        }
+
+        .device-card:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.02);
+        }
+
+        .device-card.dragging { opacity: 0.5; }
+
+        .device-icon {
+            width: 45px;
+            height: 45px;
+            background: #0f172a;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: var(--primary);
+        }
+
+        /* Drop Zones */
+        .sorting-area {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+        }
+
+        .drop-zone {
+            background: rgba(0,0,0,0.3);
+            border: 2px dashed rgba(255,255,255,0.1);
+            border-radius: 30px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            min-height: 500px;
+            transition: 0.3s;
+        }
+
+        .drop-zone.active-hover {
+            border-color: var(--primary);
+            background: rgba(59, 130, 246, 0.05);
+            transform: scale(1.02);
+        }
+
+        .zone-header { text-align: center; }
+        .zone-header i { font-size: 3rem; margin-bottom: 0.5rem; }
+        .zone-header h2 { font-size: 1.2rem; text-transform: uppercase; letter-spacing: 1px; }
+
+        .sorted-item {
+            width: 100%;
+            background: var(--card);
+            padding: 10px 15px;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            animation: slideIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+
+        .score-box {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--card);
+            padding: 1.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            min-width: 180px;
+        }
+
+    </style>
+</head>
+<body data-theme="dark">
+
+    <nav>
+        <div style="font-family: 'Orbitron'; font-weight: 800; font-size: 1.2rem; color: var(--primary)">
+            DEVICE CLASSIFIER
+        </div>
+        <a href="../Labs.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Hub
+        </a>
+    </nav>
+
+    <div class="workspace">
+        <div class="bin-section" id="device-bin">
+            <h3 style="color: var(--primary); font-size: 0.9rem; letter-spacing: 1px;">COMPONENTS TO SORT</h3>
+            <!-- Cards go here -->
+        </div>
+
+        <div class="sorting-area">
+            <!-- INPUT BIN -->
+            <div class="drop-zone" id="zone-input" data-accept="input" style="border-top: 5px solid var(--input)">
+                <div class="zone-header" style="color: var(--input)">
+                    <i class="fas fa-keyboard"></i>
+                    <h2>Input</h2>
+                </div>
+                <div class="sorted-list" id="list-input" style="width: 100%; display: flex; flex-direction: column; gap: 8px;"></div>
+            </div>
+
+            <!-- OUTPUT BIN -->
+            <div class="drop-zone" id="zone-output" data-accept="output" style="border-top: 5px solid var(--output)">
+                <div class="zone-header" style="color: var(--output)">
+                    <i class="fas fa-desktop"></i>
+                    <h2>Output</h2>
+                </div>
+                <div class="sorted-list" id="list-output" style="width: 100%; display: flex; flex-direction: column; gap: 8px;"></div>
+            </div>
+
+            <!-- STORAGE BIN -->
+            <div class="drop-zone" id="zone-storage" data-accept="storage" style="border-top: 5px solid var(--storage)">
+                <div class="zone-header" style="color: var(--storage)">
+                    <i class="fas fa-database"></i>
+                    <h2>Storage</h2>
+                </div>
+                <div class="sorted-list" id="list-storage" style="width: 100%; display: flex; flex-direction: column; gap: 8px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="score-box">
+        <div style="font-size: 0.75rem; color: #94a3b8; text-transform: uppercase;">LAB PROGRESS</div>
+        <div id="score-text" style="font-size: 2rem; font-weight: 800; color: var(--primary);">0%</div>
+        <div style="width: 100%; height: 6px; background: rgba(0,0,0,0.5); border-radius: 10px; overflow: hidden;">
+            <div id="progress-bar" style="width: 0%; height: 100%; background: var(--primary); transition: 0.5s;"></div>
+        </div>
+        <p id="feedback" style="font-size: 0.8rem; margin-top: 5px; opacity: 0.5;">Drag a device to start!</p>
+    </div>
+
+    <script>
+        const devices = [
+            { id: "kb", name: "Keyboard", icon: "fa-keyboard", cat: "input" },
+            { id: "ms", name: "Mouse", icon: "fa-mouse", cat: "input" },
+            { id: "mn", name: "Monitor", icon: "fa-desktop", cat: "output" },
+            { id: "pr", name: "Printer", icon: "fa-print", cat: "output" },
+            { id: "sc", name: "Scanner", icon: "fa-barcode", cat: "input" },
+            { id: "sp", name: "Speakers", icon: "fa-volume-high", cat: "output" },
+            { id: "hd", name: "Hard Drive", icon: "fa-hdd", cat: "storage" },
+            { id: "vd", name: "Flash Drive", icon: "fa-usb", cat: "storage" },
+            { id: "mc", name: "Microphone", icon: "fa-microphone", cat: "input" },
+            { id: "pj", name: "Projector", icon: "fa-display", cat: "output" },
+            { id: "sd", name: "SD Card", icon: "fa-microchip", cat: "storage" },
+            { id: "gp", name: "Gamepad", icon: "fa-gamepad", cat: "input" }
+        ];
+
+        let finished = 0;
+        const total = devices.length;
+
+        function init() {
+            const bin = document.getElementById('device-bin');
+            // Shuffle
+            devices.sort(() => Math.random() - 0.5);
+            
+            devices.forEach(d => {
+                const card = document.createElement('div');
+                card.className = 'device-card';
+                card.draggable = true;
+                card.id = d.id;
+                card.innerHTML = `
+                    <div class="device-icon"><i class="fas ${d.icon}"></i></div>
+                    <span style="font-weight: 600">${d.name}</span>
+                `;
+                
+                card.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', d.id);
+                    card.classList.add('dragging');
+                });
+                
+                card.addEventListener('dragend', () => card.classList.remove('dragging'));
+                bin.appendChild(card);
+            });
+        }
+
+        const zones = document.querySelectorAll('.drop-zone');
+        zones.forEach(zone => {
+            zone.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                zone.classList.add('active-hover');
+            });
+            
+            zone.addEventListener('dragleave', () => zone.classList.remove('active-hover'));
+            
+            zone.addEventListener('drop', (e) => {
+                e.preventDefault();
+                zone.classList.remove('active-hover');
+                const id = e.dataTransfer.getData('text/plain');
+                const dev = devices.find(d => d.id === id);
+                const accept = zone.getAttribute('data-accept');
+                
+                if (dev.cat === accept) {
+                    onCorrect(dev, zone);
+                } else {
+                    onWrong();
+                }
+            });
+        });
+
+        function onCorrect(dev, zone) {
+            const list = zone.querySelector('.sorted-list');
+            const item = document.createElement('div');
+            item.className = 'sorted-item';
+            item.innerHTML = `<i class="fas ${dev.icon}"></i> ${dev.name} ✅`;
+            list.appendChild(item);
+            
+            document.getElementById(dev.id).style.display = 'none';
+            finished++;
+            
+            updateScore();
+        }
+
+        function onWrong() {
+            document.body.animate([
+                { backgroundColor: 'var(--bg)' },
+                { backgroundColor: 'rgba(239, 68, 68, 0.1)' },
+                { backgroundColor: 'var(--bg)' }
+            ], { duration: 200 });
+            document.getElementById('feedback').innerText = "Incorrect Category!";
+            document.getElementById('feedback').style.color = '#ef4444';
+            document.getElementById('feedback').style.opacity = '1';
+        }
+
+        function updateScore() {
+            const perc = Math.round((finished / total) * 100);
+            document.getElementById('score-text').innerText = `${perc}%`;
+            document.getElementById('progress-bar').style.width = `${perc}%`;
+            document.getElementById('feedback').innerText = "Correct Placement!";
+            document.getElementById('feedback').style.color = 'var(--primary)';
+            document.getElementById('feedback').style.opacity = '1';
+            
+            if(perc === 100) {
+                document.getElementById('feedback').innerText = "Excellent! You've sorted them all.";
+                document.getElementById('feedback').style.color = 'var(--output)';
+                alert("Master Device Classifier: You successfully categorized all I/O and Storage devices.");
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>

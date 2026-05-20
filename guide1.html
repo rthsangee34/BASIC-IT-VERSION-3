@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER BREAKER - ICT Guide</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #3b82f6;
+            --accent: #60a5fa;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-light: #64748b;
+            --white: #ffffff;
+            --border: #e2e8f0;
+            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        [data-theme="dark"] {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f1f5f9;
+            --text-light: #94a3b8;
+            --border: #334155;
+            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(135deg, var(--bg) 0%, #dbeafe 100%);
+            padding: 2rem;
+            position: relative;
+        }
+
+        [data-theme="dark"] .hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+        }
+
+        .hero-content {
+            max-width: 800px;
+            z-index: 1;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 3vw, 1.4rem);
+            color: var(--text-light);
+            margin-bottom: 2.5rem;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .btn-learn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background-color: var(--primary);
+            color: var(--white);
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+            transition: var(--transition);
+            animation: fadeInUp 0.8s ease-out 0.4s backwards;
+        }
+
+        .btn-learn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.4);
+            background-color: var(--secondary);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 100;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0.5rem;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            box-shadow: var(--card-shadow);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        /* Section Styling */
+        section {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .section-title p {
+            color: var(--text-light);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Intro Section */
+        .intro-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .intro-card {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            border: 1px solid var(--border);
+        }
+
+        .intro-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .intro-card i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .intro-card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        /* Fundamentals Cards */
+        .fundamentals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .fund-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            border: 1px solid var(--border);
+        }
+
+        .fund-card:hover {
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .fund-header {
+            padding: 2rem;
+            background: linear-gradient(135deg, var(--bg) 0%, var(--border) 100%);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .fund-header i {
+            font-size: 2rem;
+            color: var(--primary);
+        }
+
+        .fund-body {
+            padding: 2rem;
+            flex-grow: 1;
+        }
+
+        .fund-body h3 {
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        .example-list {
+            list-style: none;
+            margin-top: 1.5rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.8rem;
+        }
+
+        .example-list li {
+            background: var(--bg);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 1px solid var(--border);
+        }
+
+        .example-list li::before {
+            content: "•";
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        /* Comparison Box */
+        .comparison-container {
+            display: flex;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+        }
+
+        .compare-box {
+            flex: 1;
+            min-width: 300px;
+            background: var(--bg);
+            padding: 2rem;
+            border-radius: 16px;
+            border-left: 5px solid var(--primary);
+            border-top: 1px solid var(--border);
+            border-right: 1px solid var(--border);
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Daily Life Section */
+        .scenario-box {
+            background: var(--card-bg);
+            padding: 3rem;
+            border-radius: 30px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            border: 1px solid var(--border);
+        }
+
+        .scenario-text {
+            font-style: italic;
+            font-size: 1.2rem;
+            color: var(--primary);
+            margin-bottom: 2rem;
+            padding-left: 1.5rem;
+            border-left: 4px solid var(--accent);
+        }
+
+        .breakdown-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .breakdown-item {
+            text-align: center;
+            padding: 1.5rem;
+            background: var(--bg);
+            border-radius: 15px;
+            border: 1px solid var(--border);
+        }
+
+        .breakdown-item span {
+            display: block;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: var(--white);
+            padding: 3rem 2rem;
+            text-align: center;
+        }
+
+        .quiz-promo {
+            margin-top: 1rem;
+        }
+
+        .quiz-promo a {
+            color: var(--white);
+            text-decoration: underline;
+            font-weight: 600;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 768px) {
+            section {
+                padding: 4rem 1.5rem;
+            }
+
+            .fundamentals-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .example-list {
+                grid-template-columns: 1fr;
+            }
+
+            .theme-toggle {
+                top: 1rem;
+                right: 1rem;
+            }
+
+            .waves {
+                height: 40px;
+                min-height: 40px;
+            }
+
+            .ambient-glow {
+                width: 150vw;
+                height: 150vw;
+            }
+        }
+
+        /* Wave Background Animation */
+        .waves-container {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: clamp(50px, 10vh, 100px);
+            overflow: hidden;
+            line-height: 0;
+            z-index: 2;
+        }
+
+        .waves {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            margin-bottom: -7px;
+            /* Fix for safari gap */
+        }
+
+        .parallax>use {
+            animation: move-forever 25s cubic-bezier(.55, .5, .45, .5) infinite;
+        }
+
+        .parallax>use:nth-child(1) {
+            animation-delay: -2s;
+            animation-duration: 7s;
+        }
+
+        .parallax>use:nth-child(2) {
+            animation-delay: -3s;
+            animation-duration: 10s;
+        }
+
+        .parallax>use:nth-child(3) {
+            animation-delay: -4s;
+            animation-duration: 13s;
+        }
+
+        .parallax>use:nth-child(4) {
+            animation-delay: -5s;
+            animation-duration: 20s;
+        }
+
+        @keyframes move-forever {
+            0% {
+                transform: translate3d(-90px, 0, 0);
+            }
+
+            100% {
+                transform: translate3d(85px, 0, 0);
+            }
+        }
+
+        /* Ambient glowing background */
+        .ambient-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80vw;
+            height: 80vw;
+            max-width: 600px;
+            max-height: 600px;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 60%);
+            opacity: 0.15;
+            z-index: 0;
+            animation: bgGlowPulse 6s infinite alternate;
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        [data-theme="dark"] .ambient-glow {
+            background: radial-gradient(circle, var(--primary) 0%, transparent 60%);
+            opacity: 0.25;
+        }
+
+        @keyframes bgGlowPulse {
+            0% {
+                transform: translate(-50%, -50%) scale(0.8);
+                opacity: 0.1;
+            }
+
+            100% {
+                transform: translate(-50%, -50%) scale(1.2);
+                opacity: 0.3;
+            }
+        }
+
+        /* Div Glow Animation */
+        @keyframes glowingDiv {
+            0% {
+                box-shadow: 0 0 10px var(--accent), 0 0 20px rgba(96, 165, 250, 0.5);
+            }
+
+            50% {
+                box-shadow: 0 0 20px var(--accent), 0 0 30px var(--primary);
+            }
+
+            100% {
+                box-shadow: 0 0 10px var(--accent), 0 0 20px rgba(96, 165, 250, 0.5);
+            }
+        }
+
+        .glow-div {
+            animation: glowingDiv 2s infinite ease-in-out;
+            position: relative;
+            z-index: 2;
+        }
+
+        .intro-card:hover,
+        .fund-card:hover,
+        .scenario-box:hover {
+            animation: glowingDiv 2s infinite ease-in-out;
+            border-color: var(--accent);
+            z-index: 10;
+        }
+    </style>
+</head>
+
+<body data-theme="light">
+
+    <!-- Navigation -->
+    <nav style="position: absolute; top: 0; left: 0; width: 100%; padding: 1.5rem 5%; display: flex; justify-content: space-between; align-items: center; z-index: 101;">
+        <div class="logo" style="display: flex; align-items: center; gap: 12px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.5rem; color: var(--primary);">
+            <img src="logo.jpeg" alt="CYBER BREAKER" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); box-shadow: 0 0 15px rgba(37,99,235,0.2);">
+            <span>CYBER BREAKER</span>
+        </div>
+        <div>
+            <a href="lessons.html" style="text-decoration: none; color: var(--text); font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 1px; transition: var(--transition);" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text)'">Lessons</a>
+        </div>
+    </nav>
+
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" id="themeBtn" title="Toggle Theme">
+        <i class="fas fa-moon"></i>
+    </button>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="ambient-glow"></div>
+        <div class="hero-content">
+            <h1>What is ICT?</h1>
+            <p>ICT stands for Information and Communication Technology. It is the use of computers, networks, and
+                digital tools to create, store, process, and share information.</p>
+            <a href="#intro" class="btn-learn glow-div">Learn More <i class="fas fa-arrow-down"></i></a>
+        </div>
+        <!-- Animated Waves -->
+        <div class="waves-container">
+            <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+                <defs>
+                    <path id="gentle-wave"
+                        d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+                </defs>
+                <g class="parallax">
+                    <use xlink:href="#gentle-wave" x="48" y="0" fill="var(--accent)" opacity="0.3" />
+                    <use xlink:href="#gentle-wave" x="48" y="3" fill="var(--primary)" opacity="0.5" />
+                    <use xlink:href="#gentle-wave" x="48" y="5" fill="var(--secondary)" opacity="0.7" />
+                    <use xlink:href="#gentle-wave" x="48" y="7" fill="var(--bg)" />
+                </g>
+            </svg>
+        </div>
+    </header>
+
+    <!-- Section 1: What is ICT -->
+    <section id="intro">
+        <div class="section-title">
+            <h2>Understanding ICT</h2>
+            <p>ICT is all around us! Here are some simple examples of how we use it every day.</p>
+        </div>
+
+        <div class="intro-grid">
+            <div class="intro-card">
+                <i class="fas fa-pen-nib"></i>
+                <h3>Creating</h3>
+                <p>Using a computer to type documents for school or work.</p>
+            </div>
+            <div class="intro-card">
+                <i class="fab fa-whatsapp"></i>
+                <h3>Sharing</h3>
+                <p>Sending quick messages to friends and family on WhatsApp.</p>
+            </div>
+            <div class="intro-card">
+                <i class="fab fa-google"></i>
+                <h3>Searching</h3>
+                <p>Finding information about any topic using Google Search.</p>
+            </div>
+            <div class="intro-card">
+                <i class="fas fa-envelope"></i>
+                <h3>Communicating</h3>
+                <p>Sending official letters or homework to teachers via Gmail.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2: ICT Fundamentals -->
+    <section id="fundamentals" style="background-color: var(--bg); max-width: 100%;">
+        <div style="max-width: 1200px; margin: 0 auto; padding: 0 2rem;">
+            <div class="section-title">
+                <h2>ICT Fundamentals</h2>
+                <p>The core building blocks that make technology work.</p>
+            </div>
+
+            <div class="fundamentals-grid">
+                <!-- Networks -->
+                <article class="fund-card">
+                    <div class="fund-header">
+                        <i class="fas fa-network-wired"></i>
+                        <h3>Networks</h3>
+                    </div>
+                    <div class="fund-body">
+                        <p>Two or more computers connected together to share resources and information.</p>
+                        <ul class="example-list">
+                            <li>The Internet</li>
+                            <li>School Lab</li>
+                            <li>Office Wi-Fi</li>
+                            <li>Home Network</li>
+                        </ul>
+                    </div>
+                </article>
+
+
+                <!-- Software -->
+                <article class="fund-card">
+                    <div class="fund-header">
+                        <i class="fas fa-code"></i>
+                        <h3>Software</h3>
+                    </div>
+                    <div class="fund-body">
+                        <p>Special programs and instructions that tell the computer hardware what to do.</p>
+                        <ul class="example-list">
+                            <li>MS Word</li>
+                            <li>Google Chrome</li>
+                            <li>Windows OS</li>
+                            <li>Apps / Games</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- Data & Information -->
+                <article class="fund-card" style="grid-column: span 1;">
+                    <div class="fund-header">
+                        <i class="fas fa-database"></i>
+                        <h3>Data vs Information</h3>
+                    </div>
+                    <div class="fund-body">
+                        <div class="comparison-container">
+                            <div class="compare-box">
+                                <strong>Data (Raw)</strong>
+                                <p>Simple numbers or facts without meaning yet.</p>
+                                <small>Example: 85, 90, 78</small>
+                            </div>
+                            <div class="compare-box">
+                                <strong>Information (Processed)</strong>
+                                <p>Data that has been processed to have meaning.</p>
+                                <small>Example: "The student's average mark is 84."</small>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Communication -->
+                <article class="fund-card">
+                    <div class="fund-header">
+                        <i class="fas fa-wifi"></i>
+                        <h3>Communication</h3>
+                    </div>
+                    <div class="fund-body">
+                        <p>Technology used to share information and stay connected with others.</p>
+                        <ul class="example-list">
+                            <li>Internet</li>
+                            <li>Email</li>
+                            <li>Video Calls</li>
+                            <li>Telegram</li>
+                            <li>Zoom</li>
+                        </ul>
+                    </div>
+                </article>
+
+                <!-- Storage -->
+                <article class="fund-card">
+                    <div class="fund-header">
+                        <i class="fas fa-hdd"></i>
+                        <h3>Storage Devices</h3>
+                    </div>
+                    <div class="fund-body">
+                        <p>Physical devices used to save your data and files for later use.</p>
+                        <ul class="example-list">
+                            <li>Hard Disk</li>
+                            <li>USB Flash</li>
+                            <li>Memory Card</li>
+                            <li>CD / DVD</li>
+                        </ul>
+                    </div>
+                </article>
+                <!-- Hardware -->
+                <article class="fund-card">
+                    <div class="fund-header">
+                        <i class="fas fa-keyboard"></i>
+                        <h3>Hardware</h3>
+                    </div>
+                    <div class="fund-body">
+                        <p>Physical parts of a computer system that you can touch and feel.</p>
+                        <ul class="example-list">
+                            <li>Keyboard</li>
+                            <li>Mouse</li>
+                            <li>Monitor</li>
+                            <li>Printer</li>
+                            <li>Hard Disk</li>
+                        </ul>
+                    </div>
+                </article>
+                <!-- Generation -->
+                <article class="fund-card">
+                    <div class="fund-header">
+                        <i class="fas fa-keyboard"></i>
+                        <h3>Generation</h3>
+                    </div>
+                    <div class="fund-body">
+                        <p>Computer Generations means the different stages of development of computers over time. Each
+                            generation shows improvements in technology, size, speed, and memory.</p>
+                        <ul class="example-list">
+                            <li>Generation 1 :- Vacuum Tubes</li>
+                            <li>Generation 2 :- Transistors</li>
+                            <li>Generation 3 :- Integrated Circuits</li>
+                            <li>Generation 4 :- Large Scale Intergration</li>
+                            <li>Generation 5 :- Very Large Scale Intergration</li>
+                        </ul>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: ICT in Daily Life -->
+    <section id="daily-life">
+        <div class="section-title">
+            <h2>ICT in Daily Life</h2>
+            <p>Let's see how all these parts work together in a real-world example.</p>
+        </div>
+
+        <div class="scenario-box">
+            <div class="scenario-text">
+                "A student writes homework in Microsoft Word, saves it on a USB drive, and sends it to the teacher using
+                Gmail."
+            </div>
+
+            <div class="breakdown-grid">
+                <div class="breakdown-item">
+                    <span>Computer</span>
+                    <p>Hardware</p>
+                </div>
+                <div class="breakdown-item">
+                    <span>Microsoft Word</span>
+                    <p>Software</p>
+                </div>
+                <div class="breakdown-item">
+                    <span>USB Drive</span>
+                    <p>Storage</p>
+                </div>
+                <div class="breakdown-item">
+                    <span>Internet / Gmail</span>
+                    <p>Communication</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 ICT Fundamentals Guide. All rights reserved.</p>
+        <div class="quiz-promo">
+            Ready to test your knowledge? <a href="basicictquiz.html">Take the ICT Quiz!</a>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Toggle Logic
+        const themeBtn = document.getElementById('themeBtn');
+        let soundContext;
+
+        function playClickSound() {
+            if (!soundContext) soundContext = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = soundContext.createOscillator();
+            const gain = soundContext.createGain();
+            osc.frequency.setValueAtTime(440, soundContext.currentTime);
+            gain.gain.setValueAtTime(0.1, soundContext.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, soundContext.currentTime + 0.1);
+            osc.connect(gain);
+            gain.connect(soundContext.destination);
+            osc.start();
+            osc.stop(soundContext.currentTime + 0.1);
+        }
+
+        themeBtn.onclick = () => {
+            playClickSound();
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            body.setAttribute('data-theme', newTheme);
+            themeBtn.innerHTML = newTheme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+        };
+
+        // Smooth reveal animation on scroll
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = "1";
+                    entry.target.style.transform = "translateY(0)";
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.intro-card, .fund-card, .scenario-box').forEach(el => {
+            el.style.opacity = "0";
+            el.style.transform = "translateY(20px)";
+            el.style.transition = "all 0.6s ease-out";
+            observer.observe(el);
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Printer Lab | Cyber Breaker Labs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #f3f4f6;
+            --card: #ffffff;
+            --inkjet: #ec4899;
+            --laser: #3b82f6;
+            --3d: #10b981;
+            --text: #1f2937;
+            --glass-border: rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --text: #f8fafc;
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            transition: 0.3s;
+        }
+
+        nav {
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--card);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 100;
+        }
+
+        .back-btn {
+            background: var(--laser);
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .container {
+            flex: 1;
+            padding: 3rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .printer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .printer-card {
+            background: var(--card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            transition: 0.4s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .printer-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .printer-visual {
+            width: 150px;
+            height: 150px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        .printer-visual i {
+            font-size: 5rem;
+            z-index: 2;
+        }
+
+        .paper {
+            position: absolute;
+            width: 80px;
+            height: 100px;
+            background: white;
+            border: 1px solid #ddd;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 1;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: none;
+        }
+
+        /* Stats */
+        .printer-stats {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-size: 0.85rem;
+            padding-top: 1rem;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .stat-row {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .stat-row label { opacity: 0.7; }
+        .stat-row span { font-weight: 700; color: var(--laser); }
+
+        .btn-print {
+            background: var(--laser);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 12px;
+            width: 100%;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-print:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        /* Animations */
+        @keyframes printOut {
+            0% { transform: translate(-50%, -50%) scale(0.5); opacity: 0; }
+            100% { transform: translate(-50%, 80px) scale(1.2); opacity: 1; }
+        }
+
+        /* Comparison Tool */
+        .comparison-area {
+            margin-top: 4rem;
+            background: var(--card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+        }
+
+        .comparison-area h2 { margin-bottom: 2rem; text-align: center; }
+
+        .type-pill {
+            font-size: 0.7rem;
+            font-weight: 800;
+            padding: 4px 10px;
+            border-radius: 50px;
+            text-transform: uppercase;
+            color: white;
+            margin-bottom: 0.5rem;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body data-theme="dark">
+
+<nav>
+    <div style="font-weight: 800; font-size: 1.2rem; font-family: 'Orbitron'; color: var(--laser)">
+        PRINTER LAB v1.0
+    </div>
+    <a href="../Labs.html" class="back-btn">
+        <i class="fas fa-arrow-left"></i> Hub
+    </a>
+</nav>
+
+<div class="container">
+    <div class="header-section">
+        <h1>Understanding Output Hard Copy</h1>
+        <p style="opacity: 0.7; margin-top: 10px;">Select a printer to see how it creates physical copies of digital data.</p>
+    </div>
+
+    <div class="printer-grid">
+        <!-- Inkjet -->
+        <div class="printer-card" style="border-top: 5px solid var(--inkjet)">
+            <span class="type-pill" style="background: var(--inkjet)">Daily Use</span>
+            <div class="printer-visual">
+                <i class="fas fa-print" style="color: var(--inkjet)"></i>
+                <div class="paper" id="paper-inkjet"></div>
+            </div>
+            <h2>Inkjet Printer</h2>
+            <p style="font-size: 0.85rem; text-align: center; opacity: 0.7;">Uses liquid ink sprayed through tiny nozzles. Great for photos.</p>
+            
+            <div class="printer-stats">
+                <div class="stat-row"><label>Speed:</label> <span>Moderate</span></div>
+                <div class="stat-row"><label>Quality:</label> <span>High (Photos)</span></div>
+                <div class="stat-row"><label>Consumable:</label> <span style="color: var(--inkjet)">Liquid Cartridge</span></div>
+            </div>
+
+            <button class="btn-print" onclick="runPrint('inkjet')" id="btn-inkjet" style="background: var(--inkjet)">
+                <i class="fas fa-image"></i> PRINT PHOTO
+            </button>
+        </div>
+
+        <!-- Laser -->
+        <div class="printer-card" style="border-top: 5px solid var(--laser)">
+            <span class="type-pill" style="background: var(--laser)">Business Use</span>
+            <div class="printer-visual">
+                <i class="fas fa-print" style="color: var(--laser)"></i>
+                <div class="paper" id="paper-laser"></div>
+            </div>
+            <h2>Laser Printer</h2>
+            <p style="font-size: 0.85rem; text-align: center; opacity: 0.7;">Uses toner powder and a laser beam to fuse text to paper. Super fast.</p>
+            
+            <div class="printer-stats">
+                <div class="stat-row"><label>Speed:</label> <span>Very Fast</span></div>
+                <div class="stat-row"><label>Quality:</label> <span>Sharp (Text)</span></div>
+                <div class="stat-row"><label>Consumable:</label> <span style="color: var(--laser)">Toner Powder</span></div>
+            </div>
+
+            <button class="btn-print" onclick="runPrint('laser')" id="btn-laser">
+                <i class="fas fa-file-lines"></i> PRINT 100 PAGES
+            </button>
+        </div>
+
+        <!-- 3D Printer -->
+        <div class="printer-card" style="border-top: 5px solid var(--3d)">
+            <span class="type-pill" style="background: var(--3d)">Manufacturing</span>
+            <div class="printer-visual">
+                <i class="fas fa-cube" style="color: var(--3d)"></i>
+                <div class="paper" id="paper-3d" style="width: 60px; height: 60px;"></div>
+            </div>
+            <h2>3D Printer</h2>
+            <p style="font-size: 0.85rem; text-align: center; opacity: 0.7;">Builds physical objects layer by layer using melted plastic filament.</p>
+            
+            <div class="printer-stats">
+                <div class="stat-row"><label>Speed:</label> <span>Slow (Hours)</span></div>
+                <div class="stat-row"><label>Quality:</label> <span>Physical Build</span></div>
+                <div class="stat-row"><label>Consumable:</label> <span style="color: var(--3d)">Plastic Filament</span></div>
+            </div>
+
+            <button class="btn-print" onclick="runPrint('3d')" id="btn-3d" style="background: var(--3d)">
+                <i class="fas fa-cubes"></i> 3D BUILD
+            </button>
+        </div>
+    </div>
+
+    <div class="comparison-area">
+        <h2>Comparison Summary</h2>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+            <div style="background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 12px; border-left: 5px solid var(--laser);">
+                <h3>Which one for me?</h3>
+                <p style="font-size: 0.95rem; margin-top: 10px; opacity: 0.8;">If you print school assignments every day, a <strong>Laser</strong> printer is cheapest over time. If you love printing high-quality family photos, <strong>Inkjet</strong> is your best choice.</p>
+            </div>
+            <div style="background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 12px; border-left: 5px solid var(--3d);">
+                <h3>The Future</h3>
+                <p style="font-size: 0.95rem; margin-top: 10px; opacity: 0.8;">3D Printing isn't just for toys. Scientists now use them to print prosthetic limbs and even small sections of buildings!</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function runPrint(type) {
+        const paper = document.getElementById(`paper-${type}`);
+        const btn = document.getElementById(`btn-${type}`);
+        
+        btn.disabled = true;
+        btn.innerHTML = `<i class="fas fa-circle-notch fa-spin"></i> PRINTING...`;
+        
+        paper.style.display = 'block';
+        paper.style.animation = 'none';
+        void paper.offsetWidth; // trigger reflow
+        paper.style.animation = 'printOut 3s forwards cubic-bezier(0.165, 0.84, 0.44, 1)';
+        
+        if(type === '3d') {
+            paper.innerText = "🧱";
+            paper.style.display = 'flex';
+            paper.style.alignItems = 'center';
+            paper.style.justifyContent = 'center';
+            paper.style.fontSize = '2rem';
+        } else {
+            paper.innerHTML = `<div style="padding:5px; font-size:4px; color:#222; overflow:hidden">` + 
+                "LORM IPSUM ".repeat(50) + 
+                `</div>`;
+        }
+
+        setTimeout(() => {
+            btn.disabled = false;
+            btn.innerHTML = type === '3d' ? `<i class="fas fa-cubes"></i> 3D BUILD` : `<i class="fas fa-image"></i> REPRINT`;
+        }, 4000);
+    }
+</script>
+
+</body>
+</html>

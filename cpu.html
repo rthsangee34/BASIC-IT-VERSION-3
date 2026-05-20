@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPU Guide - CYBER BREAKER</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Master the Central Processing Unit (CPU): The brain of the computer. Learn about ALU, CU, Cache, Clock Speed, and more.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@400;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Modern Google Translate Stylizing */
+        #google_translate_element {
+            margin-right: 15px;
+            display: inline-block;
+            vertical-align: middle;
+            z-index: 1001;
+        }
+
+        .goog-te-gadget-simple {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid var(--glass-border) !important;
+            border-radius: 12px !important;
+            padding: 8px 12px !important;
+            font-family: 'Inter', sans-serif !important;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .goog-te-gadget-simple:hover {
+            border-color: var(--primary) !important;
+            background: rgba(59, 130, 246, 0.15) !important;
+            transform: translateY(-2px);
+        }
+
+        .goog-te-gadget-icon { display: none !important; }
+
+        .goog-te-menu-value span {
+            color: var(--text-main) !important;
+            font-weight: 600 !important;
+            text-transform: uppercase;
+            font-size: 11px !important;
+        }
+
+        .goog-te-menu-value img { display: none !important; }
+        .goog-te-menu-value:before {
+            content: "🌐";
+            margin-right: 8px;
+            font-size: 14px;
+        }
+
+        /* Hide Google Branding & Bar */
+        .goog-te-banner-frame.skiptranslate { display: none !important; }
+        body { top: 0px !important; }
+        .goog-logo-link { display: none !important; }
+        .goog-te-gadget { color: transparent !important; }
+        
+        #google_translate_element a { display: none !important; }
+        .skiptranslate.goog-te-gadget > span { display: none !important; }
+
+    </style>
+    <style>
+        :root {
+            /* High-Tech / Hardware Palette (Purple & Cyan) */
+            --bg-deep: #020617;
+            --bg-glass: rgba(15, 23, 42, 0.7);
+            --border-glass: rgba(168, 85, 247, 0.15); /* Purple hint */
+            --primary: #a855f7; /* Purple */
+            --secondary: #06b6d4; /* Cyan */
+            --accent: #f43f5e; /* Rose */
+            --text-main: #f0fdf4;
+            --text-muted: #94a3b8;
+            --glow-1: rgba(168, 85, 247, 0.2);
+            --glow-2: rgba(6, 182, 212, 0.15);
+            --card-shadow: 0 25px 60px rgba(0, 0, 0, 0.5);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        [data-theme="light"] {
+            --bg-deep: #f8fafc;
+            --bg-glass: rgba(255, 255, 255, 0.7);
+            --border-glass: rgba(168, 85, 247, 0.1);
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --glow-1: rgba(168, 85, 247, 0.05);
+            --glow-2: rgba(6, 182, 212, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+            transition: background-color 0.5s ease;
+        }
+
+        /* Circuit Background Elements */
+        .circuit-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            pointer-events: none;
+            overflow: hidden;
+            opacity: 0.5;
+        }
+
+        .glow-sphere {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(120px);
+            opacity: 0.6;
+            animation: float 25s infinite alternate ease-in-out;
+        }
+
+        .sphere-1 { width: 500px; height: 500px; background: var(--glow-1); top: -100px; right: -50px; }
+        .sphere-2 { width: 600px; height: 600px; background: var(--glow-2); bottom: -100px; left: -100px; animation-duration: 35s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(150px, 100px) scale(1.1); }
+        }
+
+        /* Loading Screen */
+        #page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-deep);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.2s ease, visibility 0.2s;
+        }
+
+        .loader-chip {
+            font-size: 60px;
+            color: var(--secondary);
+            animation: chipPulse 1.5s infinite ease-in-out;
+            filter: drop-shadow(0 0 15px var(--secondary));
+        }
+
+        @keyframes chipPulse {
+            0%, 100% { transform: rotate(0deg); opacity: 0.8; }
+            50% { transform: rotate(90deg); opacity: 1; }
+        }
+
+        .loader-text {
+            margin-top: 25px;
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--secondary);
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+
+        /* Premium Header */
+        header {
+            padding: 1.5rem 5%;
+            background: var(--bg-glass);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1400px;
+            z-index: 1000;
+            border-radius: 20px;
+            border: 1px solid var(--border-glass);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--card-shadow);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 2px solid var(--primary);
+        }
+
+        .logo span {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-btns {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .nav-btn {
+            background: var(--border-glass);
+            color: var(--text-main);
+            border: 1px solid var(--border-glass);
+            padding: 10px 22px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .nav-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(168, 85, 247, 0.3);
+        }
+
+        .theme-toggle {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: var(--border-glass);
+            border: 1px solid var(--border-glass);
+            color: var(--text-main);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            background: var(--secondary);
+            color: white;
+            transform: rotate(15deg);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 14rem 5% 8rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 5.5rem);
+            line-height: 1;
+            margin-bottom: 2rem;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-img {
+            width: 100%;
+            max-width: 900px;
+            border-radius: 30px;
+            border: 1px solid var(--border-glass);
+            box-shadow: var(--card-shadow);
+            margin: 2rem auto;
+            animation: floatHero 6s infinite ease-in-out;
+        }
+
+        @keyframes floatHero {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-15px); }
+        }
+
+        /* Glass Cards Grid */
+        .section { padding: 4rem 5%; max-width: 1400px; margin: 0 auto; }
+
+        .glass-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--border-glass);
+            border-radius: 32px;
+            padding: 3.5rem;
+            transition: var(--transition);
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+            height: 100%;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-15px);
+            border-color: var(--secondary);
+            box-shadow: 0 30px 60px rgba(6, 182, 212, 0.2);
+        }
+
+        .card-icon {
+            font-size: 3.5rem;
+            margin-bottom: 2rem;
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 2.5rem; }
+        .grid-3 { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2.5rem; }
+
+        /* Cycles/Processes Styling */
+        .cycle {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            margin-top: 3rem;
+        }
+
+        .cycle-step {
+            width: 180px;
+            height: 180px;
+            border-radius: 50%;
+            background: var(--bg-glass);
+            border: 2px solid var(--border-glass);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            transition: 0.3s;
+            position: relative;
+        }
+
+        .cycle-step:hover {
+            border-color: var(--primary);
+            background: rgba(168, 85, 247, 0.1);
+            transform: scale(1.1);
+        }
+
+        .cycle-step i { font-size: 2.5rem; margin-bottom: 15px; color: var(--primary); }
+        .cycle-step b { font-family: 'Space Grotesk', sans-serif; font-size: 1.2rem; }
+
+        .cycle-arrow { font-size: 2rem; color: var(--text-muted); animation: arrowPulse 2s infinite; }
+
+        @keyframes arrowPulse {
+            0%, 100% { opacity: 0.5; transform: translateX(0); }
+            50% { opacity: 1; transform: translateX(10px); }
+        }
+
+        /* Comparison Table */
+        .table-container {
+            background: var(--bg-glass);
+            border-radius: 24px;
+            overflow: hidden;
+            margin-top: 2rem;
+            border: 1px solid var(--border-glass);
+        }
+
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { background: var(--primary); color: white; padding: 1.5rem 2rem; font-family: 'Space Grotesk', sans-serif; }
+        td { padding: 1.5rem 2rem; border-bottom: 1px solid var(--border-glass); color: var(--text-muted); }
+        tr:hover td { background: rgba(6, 182, 212, 0.05); color: var(--text-main); }
+
+        /* Cooling Badges */
+        .cooling-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .cooling-item { padding: 2rem; background: rgba(255, 255, 255, 0.03); border-radius: 20px; text-align: center; border: 1px solid var(--border-glass); }
+
+        /* Chef Reveal Section */
+        .analogy-box {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.1), rgba(6, 182, 212, 0.1));
+            border-radius: 40px;
+            padding: 5rem;
+            text-align: center;
+            border: 2px dashed var(--primary);
+        }
+
+        /* Responsive Reveal */
+        .reveal { opacity: 0; transform: translateY(40px); transition: all 1s ease-out; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        footer { padding: 5rem 5%; text-align: center; border-top: 1px solid var(--border-glass); background: rgba(2, 6, 23, 0.9); }
+
+        @media (max-width: 768px) {
+            header { top: 10px; width: 95%; padding: 1rem; }
+            .logo span { display: none; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 3rem; }
+            .analogy-box { padding: 2rem; }
+            .cooling-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Page Loader -->
+    <div id="page-loader">
+        <i class="fas fa-microchip loader-chip"></i>
+        <div class="loader-text">Waking Up Brain...</div>
+    </div>
+
+    <div class="circuit-bg">
+        <div class="glow-sphere sphere-1"></div>
+        <div class="glow-sphere sphere-2"></div>
+    </div>
+
+    <header>
+        <a href="index.html" class="logo">
+            <img src="logo.jpeg" alt="Logo">
+            <span>CYBER BREAKER</span>
+        </a>
+        <nav class="nav-btns">
+            <a href="index.html" class="nav-btn">Home</a>
+            <a href="lessons.html" class="nav-btn">Lessons</a>
+            <a href="Labs.html" class="nav-btn">🧪 Labs</a>
+            <a href="cpuquiz.html" class="nav-btn" style="background: var(--secondary); border: none;">Take Quiz</a>
+            <div id="google_translate_element"></div>
+            <button class="theme-toggle" id="themeToggle" title="Toggle Theme">
+                <i class="fas fa-microchip" id="themeIcon"></i>
+            </button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1 class="reveal">The Processor: <span>The Digital Brain</span></h1>
+            <p class="reveal">The CPU (Central Processing Unit) is the heart of every digital miracle, from the simplest calculator to the most powerful smartphone.</p>
+            <img class="hero-img reveal" src="cpu_processor_circuitry_hero_1774099598514.png" alt="Futuristic CPU">
+        </section>
+
+        <!-- What is CPU -->
+        <section id="definition" class="section">
+            <div class="grid-2">
+                <div class="glass-card reveal">
+                    <div class="card-icon"><i class="fas fa-brain"></i></div>
+                    <h2>What is a CPU?</h2>
+                    <p style="font-size: 1.25rem;">The Central Processing Unit (CPU) is the <b>brain</b> of a computer. It performs calculations, executes instructions, and controls all operations of the entire system.</p>
+                    <div style="margin-top: 2rem; padding: 1rem; border-left: 4px solid var(--primary); background: rgba(255,255,255,0.03);">
+                        <p>👉 Every time you open an app, play a game, or browse the internet, the CPU is working behind the scenes at lightning speed.</p>
+                    </div>
+                </div>
+                <div class="glass-card reveal" style="display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center;">
+                    <div class="card-icon"><i class="fas fa-arrows-spin"></i></div>
+                    <h3>CPU processing flow</h3>
+                    <div style="font-family: 'Space Grotesk', sans-serif; font-size: 1.5rem; gap: 1rem; display: flex; align-items: center;">
+                        <span>INPUT</span>
+                        <i class="fas fa-arrow-right"></i>
+                        <span style="color: var(--primary); font-weight: 800;">CPU</span>
+                        <i class="fas fa-arrow-right"></i>
+                        <span>OUTPUT</span>
+                    </div>
+                    <p style="margin-top: 1.5rem; opacity: 0.7;">Example: Typing "2 + 2" → CPU calculates → Screen shows "4"</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Functions -->
+        <section class="section">
+            <div class="glass-card reveal" style="margin-bottom: 4rem; overflow: hidden; padding: 0;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; align-items: center;">
+                    <div style="padding: 3.5rem;">
+                        <h2 style="font-family: 'Outfit', sans-serif; margin-bottom: 1.5rem;">What Does a CPU Look Like?</h2>
+                        <p style="color: var(--text-muted);">A modern CPU is a small square silicon chip, often called a <strong>Microprocessor</strong>. It is covered by a metal heat spreader to protect the fragile circuits inside from heat and physical damage.</p>
+                        <ul style="margin-top: 2rem;">
+                            <li><i class="fas fa-check-circle" style="color: var(--primary);"></i> <b>Metal Heat Spreader:</b> Protects the silicon</li>
+                            <li><i class="fas fa-check-circle" style="color: var(--primary);"></i> <b>Pins/Contacts:</b> Connects to the motherboard</li>
+                            <li><i class="fas fa-check-circle" style="color: var(--primary);"></i> <b>Silicon Die:</b> The actual "brain" inside</li>
+                        </ul>
+                    </div>
+                    <img src="cpu_processor_circuitry_hero_1774099598514.png" alt="Physical CPU Look" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <h2 class="reveal" style="font-size: 3rem; font-family: 'Outfit', sans-serif;">The Core Lifecycle</h2>
+                <p class="reveal" style="color: var(--text-muted); font-size: 1.2rem;">How the CPU processes every single command using the <b>Fetch-Decode-Execute</b> cycle.</p>
+            </div>
+            
+            <div class="cycle reveal">
+                <div class="cycle-step">
+                    <i class="fas fa-download"></i>
+                    <b>FETCH</b>
+                    <p style="font-size: 0.8rem; margin-top: 5px;">Gets instructions from memory</p>
+                </div>
+                <div class="cycle-arrow"><i class="fas fa-chevron-right"></i></div>
+                <div class="cycle-step">
+                    <i class="fas fa-code"></i>
+                    <b>DECODE</b>
+                    <p style="font-size: 0.8rem; margin-top: 5px;">Understands the instruction</p>
+                </div>
+                <div class="cycle-arrow"><i class="fas fa-chevron-right"></i></div>
+                <div class="cycle-step">
+                    <i class="fas fa-bolt"></i>
+                    <b>EXECUTE</b>
+                    <p style="font-size: 0.8rem; margin-top: 5px;">Performs the actual action</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Components -->
+        <section class="section">
+            <div style="text-align: center; margin-bottom: 4rem;">
+                <h2 class="reveal">Components of a CPU</h2>
+                <p class="reveal" style="margin-top: 1rem; color: var(--text-muted);">A deep dive into the architecture that powers every calculation.</p>
+            </div>
+            
+            <figure class="reveal" style="margin-bottom: 4rem;">
+                <img src="cpu_internal_components_diagram_1774099839020.png" alt="CPU Internal Diagram" style="width: 100%; border-radius: 30px; border: 1px solid var(--border-glass); box-shadow: var(--card-shadow);">
+                <figcaption style="text-align: center; margin-top: 1.5rem; font-size: 0.9rem; color: var(--text-muted);">3D Visualization of ALU, Control Unit, and Internal Cache layout.</figcaption>
+            </figure>
+
+            <div class="grid-2">
+                <!-- ALU -->
+                <div class="glass-card reveal">
+                    <div class="card-icon"><i class="fas fa-calculator"></i></div>
+                    <h3>1. Arithmetic Logic Unit (ALU)</h3>
+                    <p>The "Math Engine" of the CPU.</p>
+                    <ul>
+                        <li style="margin-top: 1rem;">Performs mathematical calculations (+, -, *, /)</li>
+                        <li>Handles logical operations (AND, OR, NOT)</li>
+                    </ul>
+                </div>
+                <!-- Control Unit -->
+                <div class="glass-card reveal">
+                    <div class="card-icon"><i class="fas fa-microchip"></i></div>
+                    <h3>2. Control Unit (CU)</h3>
+                    <p>The "Manager" of the system.</p>
+                    <ul>
+                        <li style="margin-top: 1rem;">Controls how instructions are carried out</li>
+                        <li>Directs data flow between CPU and other parts</li>
+                    </ul>
+                </div>
+                <!-- Registers -->
+                <div class="glass-card reveal">
+                    <div class="card-icon"><i class="fas fa-memory"></i></div>
+                    <h3>3. Registers</h3>
+                    <p>Super-fast temporary storage.</p>
+                    <ul>
+                        <li style="margin-top: 1rem;">Smallest but fastest memory inside the CPU</li>
+                        <li>Stores data immediately needed for processing</li>
+                    </ul>
+                </div>
+                <!-- Cache -->
+                <div class="glass-card reveal">
+                    <div class="card-icon"><i class="fas fa-bolt-lightning"></i></div>
+                    <h3>4. Cache Memory</h3>
+                    <p>High-speed "Waitress" for the CPU.</p>
+                    <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <span class="nav-btn" style="font-size: 0.7rem; padding: 5px 10px;">L1: Fastest</span>
+                        <span class="nav-btn" style="font-size: 0.7rem; padding: 5px 10px;">L2: Medium</span>
+                        <span class="nav-btn" style="font-size: 0.7rem; padding: 5px 10px;">L3: Largest</span>
+                    </div>
+                    <p style="margin-top: 1rem; font-size: 0.9rem;">Stores frequently used data so the CPU doesn't have to wait for RAM.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Performance Factors -->
+        <section class="section" style="background: rgba(168, 85, 247, 0.03);">
+            <div style="text-align: center; margin-bottom: 4rem;">
+                <h2 class="reveal">CPU Performance Factors</h2>
+            </div>
+            <div class="grid-2">
+                <div class="glass-card reveal" style="border-left: 5px solid var(--secondary);">
+                    <h3 style="color: var(--secondary);"><i class="fas fa-gauge-high"></i> Clock Speed (GHz)</h3>
+                    <p>Higher speed means more instructions per second. If your CPU is 3.5GHz, it can flip signals 3.5 billion times per second!</p>
+                </div>
+                <div class="glass-card reveal" style="border-left: 5px solid var(--primary);">
+                    <h3 style="color: var(--primary);"><i class="fas fa-dna"></i> Cores & Threads</h3>
+                    <p><b>Cores:</b> Each acts like a mini CPU. More = better multitasking.</p>
+                    <p><b>Threads:</b> Virtual paths that improve efficiency of each core.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Manufacturers & Types -->
+        <section class="section">
+            <div class="grid-3">
+                <div class="glass-card reveal" style="text-align: center;">
+                    <i class="fas fa-desktop" style="font-size: 2.5rem; color: var(--secondary);"></i>
+                    <h3>Desktop CPUs</h3>
+                    <p>High power, upgradeable.</p>
+                    <p style="font-size: 0.8rem; opacity: 0.6; margin-top: 10px;">Ex: Intel i9, Ryzen 9</p>
+                </div>
+                <div class="glass-card reveal" style="text-align: center;">
+                    <i class="fas fa-laptop" style="font-size: 2.5rem; color: var(--primary);"></i>
+                    <h3>Laptop CPUs</h3>
+                    <p>Energy efficient.</p>
+                    <p style="font-size: 0.8rem; opacity: 0.6; margin-top: 10px;">Ex: Ryzen 7 Mobile</p>
+                </div>
+                <div class="glass-card reveal" style="text-align: center;">
+                    <i class="fas fa-mobile-screen" style="font-size: 2.5rem; color: var(--accent);"></i>
+                    <h3>Mobile CPUs</h3>
+                    <p>All-in-one chips (SoC).</p>
+                    <p style="font-size: 0.8rem; opacity: 0.6; margin-top: 10px;">Ex: Apple M3, Snapdragon</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparison Table -->
+        <section class="section">
+            <div class="glass-card reveal">
+                <h2 style="margin-bottom: 2rem; text-align: center;"><i class="fas fa-code-compare"></i> CPU vs GPU</h2>
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>CPU (General)</th>
+                                <th>GPU (Graphics)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><b>Purpose</b></td>
+                                <td>General tasks and logic</td>
+                                <td>Parallel visual processing</td>
+                            </tr>
+                            <tr>
+                                <td><b>Cores</b></td>
+                                <td>Few, very powerful cores</td>
+                                <td>Thousands of small cores</td>
+                            </tr>
+                            <tr>
+                                <td><b>Strength</b></td>
+                                <td>Fast for complex logic</td>
+                                <td>Massive data crunching</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+
+        <!-- Cooling -->
+        <section class="section reveal">
+            <div class="glass-card" style="padding: 0; overflow: hidden;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0;">
+                    <img src="cpu_cooling_systems_comparison_1774099872768.png" alt="CPU Cooling" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div style="padding: 3.5rem;">
+                        <h2 style="margin-bottom: 1.5rem; color: var(--accent);"><i class="fas fa-fire"></i> CPU Cooling</h2>
+                        <p>CPUs generate intense heat 🔥 during heavy processing. Without cooling, the system can crash or even melt! Use these common methods to keep things cool:</p>
+                        <div class="cooling-grid" style="margin-top: 2rem;">
+                            <div class="cooling-item">
+                                <i class="fas fa-fan" style="font-size: 2rem; color: var(--secondary);"></i>
+                                <h4>Air Cooling</h4>
+                                <p>Standard fans & heatsinks</p>
+                            </div>
+                            <div class="cooling-item">
+                                <i class="fas fa-droplet" style="font-size: 2rem; color: #3b82f6;"></i>
+                                <h4>Liquid Cooling</h4>
+                                <p>Pumps & coolants</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Analogy -->
+        <section class="section reveal">
+            <div class="analogy-box" style="overflow: hidden; padding: 0;">
+                <div style="display: grid; grid-template-columns: 1.2fr 1fr; align-items: stretch;">
+                    <div style="padding: 5rem;">
+                        <h2 style="font-family: 'Space Grotesk', sans-serif; margin-bottom: 1.5rem;">👨‍🍳 The Chef Analogy</h2>
+                        <p style="color: var(--text-muted); font-size: 1.1rem; margin-bottom: 2rem;">Think of the CPU as a master chef in a kitchen. The efficiency of the meal depends on three critical factors:</p>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 1.5rem; text-align: left;">
+                            <div>
+                                <h4 style="color: var(--secondary); font-size: 0.9rem;">Instructions</h4>
+                                <p>= The Recipe</p>
+                            </div>
+                            <div>
+                                <h4 style="color: var(--primary); font-size: 0.9rem;">Ingredients</h4>
+                                <p>= The Data</p>
+                            </div>
+                            <div>
+                                <h4 style="color: var(--accent); font-size: 0.9rem;">Cooking</h4>
+                                <p>= Processing</p>
+                            </div>
+                            <div>
+                                <h4 style="color: var(--secondary); font-size: 0.9rem;">The Dish</h4>
+                                <p>= Output</p>
+                            </div>
+                        </div>
+                    </div>
+                    <img src="digital_chef_cpu_analogy_1774099907247.png" alt="Digital Chef Analogy" style="width: 100%; height: 100%; object-fit: cover; opacity: 0.8;">
+                </div>
+            </div>
+        </section>
+
+        <!-- Summary -->
+        <section class="section reveal" style="margin-bottom: 8rem;">
+            <div class="glass-card" style="border: 2px dashed var(--secondary); text-align: center;">
+                <h2 style="color: var(--secondary); margin-bottom: 1rem;">✅ Summary</h2>
+                <p>The CPU is the <b>brain</b> of your computer. It calculates scores, manages memory, and keeps the system alive through the Fetch-Decode-Execute cycle. Understanding its parts (ALU, CU, Registers) is key to mastering computer hardware.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <span class="footer-logo">CYBER BREAKER PROJECT</span>
+        <p>Your portal to digital mastery.</p>
+        <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;">&copy; 2026 ICT Fundamental Module</p>
+    </footer>
+
+    <script>
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('page-loader');
+            loader.style.opacity = '0';
+            setTimeout(() => {
+                loader.style.visibility = 'hidden';
+            }, 100);
+        });
+
+        // Reveal Animation
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 150;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+        window.addEventListener("scroll", reveal);
+        reveal();
+
+        // Theme Toggle
+        const themeBtn = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
+
+        if (localStorage.getItem('theme') === 'light') {
+            body.setAttribute('data-theme', 'light');
+            themeIcon.classList.replace('fa-microchip', 'fa-sun');
+        }
+
+        themeBtn.addEventListener('click', () => {
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                themeIcon.classList.replace('fa-sun', 'fa-microchip');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeIcon.classList.replace('fa-microchip', 'fa-sun');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+        // Google Translate Init
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+
+</html>

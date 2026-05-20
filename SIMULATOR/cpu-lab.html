@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CPU Logic Engine | Cyber Breaker Labs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #030712;
+            --cpu-bg: #111827;
+            --accent: #38bdf8;
+            --cu: #fb923c;
+            --alu: #4ade80;
+            --reg: #a855f7;
+            --bus: #64748b;
+            --text: #f8fafc;
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Nav */
+        nav {
+            padding: 1rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.9);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            z-index: 100;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: var(--accent);
+            transform: translateX(-5px);
+        }
+
+        /* Lab Layout */
+        .lab-container {
+            flex: 1;
+            display: grid;
+            grid-template-columns: 320px 1fr 300px;
+            gap: 1rem;
+            padding: 1.5rem;
+            height: calc(100vh - 70px);
+        }
+
+        /* Left: RAM Simulator */
+        .panel {
+            background: var(--cpu-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent);
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 5px;
+        }
+
+        .ram-slots {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            overflow-y: auto;
+        }
+
+        .ram-slot {
+            padding: 10px;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .ram-slot.active {
+            border-color: var(--accent);
+            background: rgba(56, 189, 248, 0.1);
+            box-shadow: 0 0 15px rgba(56, 189, 248, 0.2);
+        }
+
+        /* Middle: CPU DIE */
+        .cpu-core {
+            display: grid;
+            grid-template-areas: 
+                "cu alu"
+                "reg reg";
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 200px;
+            gap: 1.5rem;
+            background: #000;
+            border-radius: 30px;
+            padding: 2rem;
+            border: 4px solid #1e293b;
+            position: relative;
+        }
+
+        .die-section {
+            border-radius: 20px;
+            border: 2px solid rgba(255,255,255,0.1);
+            padding: 1.5rem;
+            position: relative;
+            background: rgba(255,255,255,0.02);
+        }
+
+        .cu { grid-area: cu; border-color: var(--cu); }
+        .alu { grid-area: alu; border-color: var(--alu); }
+        .reg-bank { grid-area: reg; border-color: var(--reg); display: flex; gap: 10px; }
+
+        .label {
+            position: absolute;
+            top: 10px;
+            left: 15px;
+            font-size: 0.6rem;
+            font-family: 'Orbitron';
+            font-weight: 800;
+            color: rgba(255,255,255,0.5);
+            letter-spacing: 1px;
+        }
+
+        /* Registers */
+        .register {
+            flex: 1;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid var(--reg);
+            border-radius: 12px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+            transition: 0.3s;
+        }
+        .register.highlight {
+            background: var(--reg);
+            color: black;
+            box-shadow: 0 0 20px var(--reg);
+        }
+        .register label { font-size: 0.7rem; font-weight: 800; }
+        .register span { font-family: 'Courier New', monospace; font-size: 1.1rem; }
+
+        /* Animation Data Bus */
+        #data-bus {
+            position: absolute;
+            height: 4px;
+            background: var(--bus);
+            top: 50%;
+            left: 0;
+            width: 100%;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        .bit {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--accent);
+            z-index: 10;
+            box-shadow: 0 0 10px var(--accent);
+            display: none;
+        }
+
+        /* Control Panel */
+        .control-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .btn {
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            font-family: 'Orbitron';
+            transition: 0.2s;
+            font-size: 0.8rem;
+        }
+
+        .btn-step { background: var(--accent); color: black; }
+        .btn-run { background: var(--alu); color: black; }
+        .btn-reset { background: rgba(255,255,255,0.1); color: white; }
+        
+        .btn:hover { transform: scale(1.05); filter: brightness(1.2); }
+        .btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+        .cycle-info {
+            background: rgba(255,255,255,0.05);
+            padding: 1rem;
+            border-radius: 12px;
+            font-size: 0.85rem;
+            line-height: 1.4;
+            flex: 1;
+        }
+
+        .cycle-step {
+            margin-bottom: 20px;
+            padding-left: 15px;
+            border-left: 2px solid var(--accent);
+            opacity: 0.3;
+        }
+        .cycle-step.active {
+            opacity: 1;
+            border-left-width: 4px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div style="font-family: 'Orbitron'; font-weight: 800; font-size: 1.2rem; color: var(--accent)">
+            CPU LOGIC ENGINE
+        </div>
+        <a href="../Labs.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Labs
+        </a>
+    </nav>
+
+    <div class="lab-container">
+        <!-- RAM -->
+        <div class="panel">
+            <div class="panel-title">System RAM (Main Memory)</div>
+            <div class="ram-slots" id="ram-slots">
+                <!-- Memory items -->
+            </div>
+            <div style="margin-top: auto; font-size: 0.7rem; color: var(--accent); text-align: center; font-family: 'Orbitron'">
+                DATA BUS <i class="fas fa-arrows-left-right"></i> CPU
+            </div>
+        </div>
+
+        <!-- CPU INTERNALS -->
+        <div class="cpu-core">
+            <div class="bit" id="data-particle"></div>
+
+            <div class="die-section cu">
+                <span class="label">CONTROL UNIT (CU)</span>
+                <div style="height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 1rem;">
+                    <i class="fas fa-microchip" style="font-size: 4rem; color: var(--cu)"></i>
+                    <p style="font-size: 0.8rem; text-align: center; color: var(--cu)">Decoding & Synchronizing...</p>
+                    <div id="cu-instruction" style="background: #000; padding: 5px 15px; border-radius: 5px; font-family: 'Courier New'; font-weight: 700; color: var(--cu)">NULL</div>
+                </div>
+            </div>
+
+            <div class="die-section alu">
+                <span class="label">ARITHMETIC LOGIC UNIT (ALU)</span>
+                <div style="height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 1rem;">
+                    <i class="fas fa-calculator" style="font-size: 4rem; color: var(--alu)"></i>
+                    <p style="font-size: 0.8rem; text-align: center; color: var(--alu)">Processing Data Math...</p>
+                    <div id="alu-work" style="font-family: 'Orbitron'; color: var(--alu); font-size: 1.5rem;">0 + 0</div>
+                </div>
+            </div>
+
+            <div class="die-section reg-bank">
+                <span class="label">CPU REGISTERS</span>
+                <div class="register" id="reg-pc">
+                    <label>PC</label>
+                    <span id="val-pc">00</span>
+                </div>
+                <div class="register" id="reg-mar">
+                    <label>MAR</label>
+                    <span id="val-mar">00</span>
+                </div>
+                <div class="register" id="reg-mdr">
+                    <label>MDR</label>
+                    <span id="val-mdr">NULL</span>
+                </div>
+                <div class="register" id="reg-cir">
+                    <label>CIR</label>
+                    <span id="val-cir">NULL</span>
+                </div>
+                <div class="register" id="reg-acc">
+                    <label>ACC</label>
+                    <span id="val-acc">0</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- CONTROL PANEL -->
+        <div class="panel control-panel">
+            <div class="panel-title">FDE Control Panel</div>
+            
+            <button class="btn btn-step" onclick="nextStep()" id="btn-next">STEP FORWARD <i class="fas fa-play"></i></button>
+            <button class="btn btn-run" onclick="runFull()">AUTO RUN <i class="fas fa-forward"></i></button>
+            <button class="btn btn-reset" onclick="resetSim()">RESET ENGINE <i class="fas fa-refresh"></i></button>
+            
+            <div class="cycle-info">
+                <h4 style="margin-bottom: 10px;">FDE CYCLE STATUS:</h4>
+                <div id="step-f" class="cycle-step"><strong style="color: var(--accent)">FETCH:</strong> Instruction loaded from memory to CIR.</div>
+                <div id="step-d" class="cycle-step"><strong style="color: var(--cu)">DECODE:</strong> CU interprets binary instruction.</div>
+                <div id="step-e" class="cycle-step"><strong style="color: var(--alu)">EXECUTE:</strong> ALU performs operation and updates ACC.</div>
+                <div id="log" style="font-size: 0.75rem; color: #94a3b8; font-style: italic;">CPU is IDLE. Click Step to begin.</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const ramData = [
+            { addr: 0, val: "LOAD 5", type: "inst" },
+            { addr: 1, val: "ADD 10", type: "inst" },
+            { addr: 2, val: "STORE 8", type: "inst" },
+            { addr: 3, val: "HALT", type: "inst" },
+            { addr: 4, val: "00", type: "data" },
+            { addr: 5, val: "20", type: "data" },
+            { addr: 6, val: "00", type: "data" },
+            { addr: 7, val: "00", type: "data" },
+            { addr: 8, val: "00", type: "data" }
+        ];
+
+        let state = { pc: 0, mar: 0, mdr: null, cir: null, acc: 0, cycle: 'IDLE' };
+        
+        function initRAM() {
+            const slots = document.getElementById('ram-slots');
+            slots.innerHTML = "";
+            ramData.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'ram-slot';
+                div.id = `ram-${item.addr}`;
+                div.innerHTML = `<span>[${item.addr}]</span> <span>${item.val}</span>`;
+                slots.appendChild(div);
+            });
+            updateUI();
+        }
+
+        async function nextStep() {
+            const nextBtn = document.getElementById('btn-next');
+            nextBtn.disabled = true;
+
+            if (state.cycle === 'IDLE' || state.cycle === 'E_DONE') {
+                await fetchCycle();
+            } else if (state.cycle === 'F_DONE') {
+                await decodeCycle();
+            } else if (state.cycle === 'D_DONE') {
+                await executeCycle();
+            }
+            
+            nextBtn.disabled = false;
+        }
+
+        async function fetchCycle() {
+            setActiveStep('F');
+            log("FETCH: Loading instruction address from PC to MAR.");
+            state.mar = state.pc;
+            highlightReg('mar');
+            updateUI();
+            await wait(1000);
+
+            log("FETCH: Reading RAM data into MDR...");
+            highlightRAM(state.mar);
+            await moveData('ram', 'mdr');
+            state.mdr = ramData[state.mar].val;
+            highlightReg('mdr');
+            updateUI();
+            await wait(1000);
+
+            log("FETCH: Moving instruction to CIR for decoding.");
+            await moveData('mdr', 'cir');
+            state.cir = state.mdr;
+            highlightReg('cir');
+            state.pc++;
+            state.cycle = 'F_DONE';
+            updateUI();
+        }
+
+        async function decodeCycle() {
+            setActiveStep('D');
+            log("DECODE: Control Unit identifying instruction components.");
+            highlightReg('cir');
+            document.getElementById('cu-instruction').innerText = state.cir;
+            await wait(1500);
+            state.cycle = 'D_DONE';
+            log("DECODE: Ready to execute command: " + state.cir);
+        }
+
+        async function executeCycle() {
+            setActiveStep('E');
+            const cmd = state.cir.split(' ');
+            const inst = cmd[0];
+            const val = parseInt(cmd[1]);
+
+            log("EXECUTE: Sending control signals to ALU...");
+            
+            if (inst === "LOAD") {
+                log(`EXECUTE: Loading RAM Address ${val} into ACC.`);
+                state.acc = parseInt(ramData[val].val);
+                document.getElementById('alu-work').innerText = `ACC = ${state.acc}`;
+            } else if (inst === "ADD") {
+                log(`EXECUTE: Adding ${val} to Accumulator.`);
+                let old = state.acc;
+                state.acc += val;
+                document.getElementById('alu-work').innerText = `${old} + ${val} = ${state.acc}`;
+            } else if (inst === "STORE") {
+                log(`EXECUTE: Writing ACC to RAM Address ${val}.`);
+                ramData[val].val = state.acc.toString();
+                initRAM();
+            } else if (inst === "HALT") {
+                log("HALT: CPU Execution finished.");
+                alert("The program has halted correctly.");
+                resetSim();
+                return;
+            }
+
+            highlightReg('acc');
+            state.cycle = 'E_DONE';
+            updateUI();
+        }
+
+        // UTILS
+        function updateUI() {
+            document.getElementById('val-pc').innerText = state.pc.toString().padStart(2, '0');
+            document.getElementById('val-mar').innerText = state.mar.toString().padStart(2, '0');
+            document.getElementById('val-mdr').innerText = state.mdr || "NULL";
+            document.getElementById('val-cir').innerText = state.cir || "NULL";
+            document.getElementById('val-acc').innerText = state.acc;
+        }
+
+        function highlightReg(id) {
+            const el = document.getElementById(`reg-${id}`);
+            el.classList.add('highlight');
+            setTimeout(() => el.classList.remove('highlight'), 1000);
+        }
+
+        function highlightRAM(addr) {
+            document.querySelectorAll('.ram-slot').forEach(s => s.classList.remove('active'));
+            document.getElementById(`ram-${addr}`).classList.add('active');
+        }
+
+        function setActiveStep(s) {
+            document.querySelectorAll('.cycle-step').forEach(el => el.classList.remove('active'));
+            document.getElementById(`step-${s.toLowerCase()}`).classList.add('active');
+        }
+
+        function log(m) {
+            document.getElementById('log').innerText = "> " + m;
+        }
+
+        function wait(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+        async function moveData(from, to) {
+            // Simplified particle animation logic
+            const particle = document.getElementById('data-particle');
+            particle.style.display = 'block';
+            particle.style.left = '50%';
+            particle.style.top = '20%';
+            await wait(500);
+            particle.style.display = 'none';
+        }
+
+        function resetSim() {
+            state = { pc: 0, mar: 0, mdr: null, cir: null, acc: 0, cycle: 'IDLE' };
+            document.getElementById('cu-instruction').innerText = "NULL";
+            document.getElementById('alu-work').innerText = "0 + 0";
+            document.querySelectorAll('.cycle-step').forEach(el => el.classList.remove('active'));
+            log("CPU is IDLE. Click Step to begin.");
+            initRAM();
+        }
+
+        async function runFull() {
+            while (state.cir !== "HALT") {
+                await nextStep();
+                await wait(1000);
+                if(state.pc > 4) break;
+            }
+        }
+
+        initRAM();
+    </script>
+</body>
+</html>

@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER BREAKER - Number Systems</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Orbitron:wght@700&display=swap" rel="stylesheet">
+    <!-- Font Awesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* CYBER BREAKER UNIFIED PALETTE (Dark) */
+            --aurora-teal: #00ffcc;
+            --aurora-cyan: #00d4ff;
+            --aurora-purple: #9d00ff;
+            --primary: var(--aurora-teal);
+            --secondary: var(--aurora-cyan);
+            --accent: var(--aurora-purple);
+            --bg: #010a14;
+            --bg-radial: radial-gradient(circle at 50% 50%, #010a14 0%, #000 100%);
+            --aurora-opac: 0.6;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --text: #ffffff;
+            --text-light: rgba(255, 255, 255, 0.7);
+            --border: rgba(255, 255, 255, 0.1);
+            --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        [data-theme="light"] {
+            --aurora-teal: #008080;
+            --aurora-cyan: #005c99;
+            --aurora-purple: #6a0dad;
+            --bg: #e8f4f8;
+            --bg-radial: radial-gradient(circle at 50% 50%, #f0f8ff 0%, #dbeafe 100%);
+            --aurora-opac: 0.2;
+            --card-bg: rgba(255, 255, 255, 0.6);
+            --text: #111111;
+            --text-light: #333333;
+            --border: rgba(0, 0, 0, 0.1);
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: radial-gradient(circle at center, rgba(1, 10, 20, 0.4), transparent), url('number_system_hero_1775048422307.png');
+            background-size: cover;
+            background-position: center;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            z-index: 2;
+        }
+
+        .hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            text-shadow: 0 0 20px rgba(0, 255, 204, 0.5);
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 3vw, 1.4rem);
+            color: var(--text-light);
+            margin-bottom: 2.5rem;
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .btn-learn {
+            display: inline-block;
+            padding: 1rem 2.5rem;
+            background-color: var(--primary);
+            color: #000;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(0, 255, 204, 0.4);
+            transition: var(--transition);
+            animation: fadeInUp 0.8s ease-out 0.4s backwards;
+        }
+
+        .btn-learn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 255, 204, 0.6);
+            background-color: var(--secondary);
+            color: #fff;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            position: fixed;
+            top: 2rem;
+            right: 2rem;
+            z-index: 100;
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0.5rem;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            box-shadow: var(--card-shadow);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(15deg) scale(1.1);
+            border-color: var(--primary);
+        }
+
+        /* Section Styling */
+        section {
+            padding: 6rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            letter-spacing: 2px;
+        }
+
+        .section-title p {
+            color: var(--text-light);
+            max-width: 700px;
+            margin: 0 auto;
+            font-size: 1.2rem;
+        }
+
+        /* Cards Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 20px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 30px rgba(0, 255, 204, 0.1);
+        }
+
+        .card i {
+            font-size: 2.5rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .card h3 {
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+            color: var(--secondary);
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .card code {
+            background: rgba(0, 255, 204, 0.1);
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: var(--primary);
+            font-family: monospace;
+        }
+
+        /* Conversion Section */
+        .conversion-box {
+            background: var(--card-bg);
+            padding: 3rem;
+            border-radius: 30px;
+            box-shadow: var(--card-shadow);
+            border: 1px solid var(--border);
+            margin-top: 2rem;
+        }
+
+        .conversion-step {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .step-num {
+            background: var(--primary);
+            color: #000;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .step-content h4 {
+            color: var(--secondary);
+            margin-bottom: 0.5rem;
+            font-size: 1.2rem;
+        }
+
+        /* Table Styling */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+        }
+
+        th {
+            background: rgba(0, 255, 204, 0.1);
+            color: var(--primary);
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* Arithmetic Rules */
+        .rules-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .rule-card {
+            background: rgba(0, 255, 204, 0.05);
+            padding: 1.5rem;
+            border-radius: 12px;
+            text-align: center;
+            border: 1px dashed var(--primary);
+        }
+
+        .rule-card span {
+            display: block;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--bg);
+            border-top: 1px solid var(--border);
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .footer-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .btn-home {
+            text-decoration: none;
+            color: var(--text-light);
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .btn-home:hover {
+            color: var(--primary);
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Aurora Containers (Matches Lessons.html) */
+        .aurora-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            filter: blur(70px);
+            opacity: var(--aurora-opac);
+            overflow: hidden;
+            pointer-events: none;
+            background: var(--bg-radial);
+            transition: opacity 0.5s ease, background 0.5s ease;
+        }
+
+        .aurora {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            mix-blend-mode: screen;
+        }
+
+        .aurora-item {
+            position: absolute;
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            filter: blur(60px);
+            animation: auroraWarp 25s infinite alternate ease-in-out;
+            opacity: 0.7;
+        }
+
+        .aurora-1 { width: 1200px; height: 800px; background: linear-gradient(45deg, var(--aurora-teal), var(--aurora-cyan)); top: -10%; left: -10%; }
+        .aurora-2 { width: 1000px; height: 1000px; background: linear-gradient(-45deg, var(--aurora-purple), var(--aurora-cyan)); bottom: -10%; right: -10%; animation-delay: -5s; }
+
+        @keyframes auroraWarp {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            50% { transform: translate(15%, 10%) scale(1.1) rotate(10deg); }
+            100% { transform: translate(20%, -10%) scale(1.2) rotate(20deg); }
+        }
+
+        /* Ambient Glows */
+        .ambient-glow {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            background: var(--aurora-teal);
+            filter: blur(150px);
+            border-radius: 50%;
+            z-index: -1;
+            opacity: 0.3;
+            pointer-events: none;
+            animation: glowMove 15s infinite alternate ease-in-out;
+        }
+
+        @keyframes glowMove {
+            to { transform: translate(50vw, 50vh) scale(1.5); }
+        }
+
+    </style>
+</head>
+
+<body data-theme="dark">
+    <!-- Aurora Background -->
+    <div class="aurora-container">
+        <div class="aurora">
+            <div class="aurora-item aurora-1"></div>
+            <div class="aurora-item aurora-2"></div>
+        </div>
+    </div>
+    <div class="ambient-glow"></div>
+
+    <!-- Navigation -->
+    <nav style="position: absolute; top: 0; left: 0; width: 100%; padding: 1.5rem 5%; display: flex; justify-content: space-between; align-items: center; z-index: 101;">
+        <div class="logo" style="display: flex; align-items: center; gap: 12px; font-family: 'Outfit', sans-serif; font-weight: 700; font-size: 1.5rem; color: var(--primary);">
+            <img src="logo.jpeg" alt="CYBER BREAKER" style="width: 45px; height: 45px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary); box-shadow: 0 0 15px rgba(0, 255, 204, 0.3);">
+            <span>CYBER BREAKER</span>
+        </div>
+        <div>
+            <a href="lessons.html" class="btn-home">Back to Lessons</a>
+        </div>
+    </nav>
+
+    <!-- Theme Toggle -->
+    <button class="theme-toggle" id="themeBtn" title="Toggle Theme">
+        <i class="fas fa-sun"></i>
+    </button>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Number Systems</h1>
+            <p>Master the language of computers: Binary, Octal, Decimal, and Hexadecimal.</p>
+            <a href="#intro" class="btn-learn">Start Learning <i class="fas fa-arrow-down"></i></a>
+        </div>
+        <div class="ambient-glow glow-3"></div>
+    </header>
+
+    <!-- 1. What is a Number System? -->
+    <section id="intro">
+        <div class="section-title">
+            <h2>The Digital Foundation</h2>
+            <p>A Number System is a mathematical way to represent numbers using specific digits or symbols.</p>
+        </div>
+
+        <div class="grid">
+            <div class="card">
+                <i class="fas fa-microchip"></i>
+                <h3>Binary System</h3>
+                <p>Uses only 2 digits: <code>0</code> and <code>1</code>. The native language of all computers.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-calculator"></i>
+                <h3>Decimal System</h3>
+                <p>Uses 10 digits: <code>0-9</code>. The standard system used by humans in everyday life.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-project-diagram"></i>
+                <h3>Octal System</h3>
+                <p>Uses 8 digits: <code>0-7</code>. Often used in computing as a shorter way of representing binary.</p>
+            </div>
+            <div class="card">
+                <i class="fas fa-code"></i>
+                <h3>Hexadecimal</h3>
+                <p>Uses 16 symbols: <code>0-9</code> and <code>A-F</code>. Extremely efficient for memory addresses.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. Types & Examples -->
+    <section id="types" style="background: rgba(0, 255, 204, 0.02);">
+        <div class="section-title">
+            <h2>Detailed Comparison</h2>
+            <p>Understanding the structure and base (radix) of each system.</p>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>System</th>
+                        <th>Base (Radix)</th>
+                        <th>Symbols Used</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Decimal</td>
+                        <td>10</td>
+                        <td>0, 1, 2, 3, 4, 5, 6, 7, 8, 9</td>
+                        <td>(345)₁₀</td>
+                    </tr>
+                    <tr>
+                        <td>Binary</td>
+                        <td>2</td>
+                        <td>0, 1</td>
+                        <td>(1011)₂</td>
+                    </tr>
+                    <tr>
+                        <td>Octal</td>
+                        <td>8</td>
+                        <td>0, 1, 2, 3, 4, 5, 6, 7</td>
+                        <td>(17)₈</td>
+                    </tr>
+                    <tr>
+                        <td>Hexadecimal</td>
+                        <td>16</td>
+                        <td>0-9, A, B, C, D, E, F</td>
+                        <td>(2F)₁₆</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- 3. Important Terms -->
+    <section id="terms">
+        <div class="section-title">
+            <h2>Key Terminology</h2>
+            <p>Fundamental concepts you need to know.</p>
+        </div>
+        <div class="grid">
+            <div class="card">
+                <h3>Base (Radix)</h3>
+                <p>The total number of unique digits used in the system.</p>
+            </div>
+            <div class="card">
+                <h3>Digit</h3>
+                <p>A single symbol used in a number system. E.g., '5' in 345.</p>
+            </div>
+            <div class="card">
+                <h3>MSB</h3>
+                <p><strong>Most Significant Bit</strong>: The leftmost digit with the highest value.</p>
+            </div>
+            <div class="card">
+                <h3>LSB</h3>
+                <p><strong>Least Significant Bit</strong>: The rightmost digit with the lowest value.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4. Conversions -->
+    <section id="conversions" style="background: rgba(157, 0, 255, 0.02);">
+        <div class="section-title">
+            <h2>Number Conversions</h2>
+            <p>Step-by-step methods to switch between different bases.</p>
+        </div>
+
+        <div class="grid">
+            <div class="conversion-box">
+                <h3 style="color: var(--primary); margin-bottom: 2rem; font-family: 'Orbitron', sans-serif;">Decimal → Binary</h3>
+                <div class="conversion-step">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <h4>Repeated Division</h4>
+                        <p>Divide the decimal number by 2 and record the remainder.</p>
+                    </div>
+                </div>
+                <div class="conversion-step">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <h4>Record Remainder</h4>
+                        <p>Continue dividing the quotient until it becomes 0.</p>
+                    </div>
+                </div>
+                <div class="conversion-step">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <h4>Read Bottom-Up</h4>
+                        <p>The binary answer is the remainders read from last to first.</p>
+                    </div>
+                </div>
+                <div style="background: var(--bg); padding: 1rem; border-radius: 10px; border: 1px solid var(--border);">
+                    <strong>Example (10 to Binary):</strong><br>
+                    10 ÷ 2 = 5 (R: 0) <br>
+                    5 ÷ 2 = 2 (R: 1) <br>
+                    2 ÷ 2 = 1 (R: 0) <br>
+                    1 ÷ 2 = 0 (R: 1) <br>
+                    <strong>Result: (1010)₂</strong>
+                </div>
+            </div>
+
+            <div class="conversion-box">
+                <h3 style="color: var(--secondary); margin-bottom: 2rem; font-family: 'Orbitron', sans-serif;">Binary → Decimal</h3>
+                <div class="conversion-step">
+                    <div class="step-num">1</div>
+                    <div class="step-content">
+                        <h4>Assign Weights</h4>
+                        <p>Start from the right (LSB) and assign powers of 2 (2⁰, 2¹, 2²...).</p>
+                    </div>
+                </div>
+                <div class="conversion-step">
+                    <div class="step-num">2</div>
+                    <div class="step-content">
+                        <h4>Multiply</h4>
+                        <p>Multiply each bit by its assigned power of 2.</p>
+                    </div>
+                </div>
+                <div class="conversion-step">
+                    <div class="step-num">3</div>
+                    <div class="step-content">
+                        <h4>Sum Up</h4>
+                        <p>Add all the results to get the decimal value.</p>
+                    </div>
+                </div>
+                <div style="background: var(--bg); padding: 1rem; border-radius: 10px; border: 1px solid var(--border);">
+                    <strong>Example (1011)₂:</strong><br>
+                    (1 × 2³) + (0 × 2²) + (1 × 2¹) + (1 × 2⁰) <br>
+                    8 + 0 + 2 + 1 = <strong>11₁₀</strong>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. Arithmetic -->
+    <section id="arithmetic">
+        <div class="section-title">
+            <h2>Binary Arithmetic</h2>
+            <p>Rules for adding binary numbers, just like computers do.</p>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>A</th>
+                        <th>B</th>
+                        <th>Sum</th>
+                        <th>Carry</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                    <tr><td>0</td><td>1</td><td>1</td><td>0</td></tr>
+                    <tr><td>1</td><td>0</td><td>1</td><td>0</td></tr>
+                    <tr><td>1</td><td>1</td><td>0</td><td>1</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="rules-grid">
+            <div class="rule-card"><span>1 + 1</span>0 (Carry 1)</div>
+            <div class="rule-card"><span>Grouping</span>3 bits for Octal</div>
+            <div class="rule-card"><span>Grouping</span>4 bits for Hex</div>
+        </div>
+    </section>
+
+    <!-- 6. Applications & Summary -->
+    <section id="summary" style="background: rgba(0, 255, 204, 0.05); border-radius: 40px;">
+        <div class="section-title">
+            <h2>Exam Tips & Summary</h2>
+        </div>
+        <div class="grid">
+            <div class="card" style="border: 2px solid var(--primary);">
+                <h3>💡 Exam Tips</h3>
+                <ul>
+                    <li>Always write the base (e.g., 1010₂)</li>
+                    <li>Practice grouping (3 for Octal, 4 for Hex)</li>
+                    <li>Double-check your subtraction/carries</li>
+                </ul>
+            </div>
+            <div class="card">
+                <h3>🚀 Applications</h3>
+                <ul>
+                    <li>Digital Electronics (Binary)</li>
+                    <li>Networking (Hex / MAC Addresses)</li>
+                    <li>Programming (Memory Management)</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-logo">CYBER BREAKER</div>
+        <p>&copy; 2026 ICT Fundamentals Guide. All rights reserved.</p>
+        <div style="margin-top: 1rem; display: flex; flex-direction: column; gap: 0.5rem; align-items: center;">
+            <p>Ready for a challenge?</p>
+            <div style="display: flex; gap: 1.5rem;">
+                <a href="numbersystemquiz.html" style="color: var(--primary); font-weight: bold; text-decoration: none;">📝 Take the Quiz</a>
+                <a href="SIMULATOR/number-system-lab.html" style="color: var(--secondary); font-weight: bold; text-decoration: none;">🧪 Open Practice Lab</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Theme Toggle Logic
+        const themeBtn = document.getElementById('themeBtn');
+        const body = document.body;
+
+        themeBtn.onclick = () => {
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            body.setAttribute('data-theme', newTheme);
+            themeBtn.innerHTML = newTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            localStorage.setItem('cyberTheme', newTheme);
+        };
+
+        // Load saved theme
+        window.onload = () => {
+            const savedTheme = localStorage.getItem('cyberTheme') || 'dark';
+            body.setAttribute('data-theme', savedTheme);
+            themeBtn.innerHTML = savedTheme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+        };
+
+        // Scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('section').forEach(section => {
+            section.style.opacity = '0';
+            section.style.transform = 'translateY(30px)';
+            section.style.transition = 'all 0.8s ease-out';
+            observer.observe(section);
+        });
+    </script>
+</body>
+
+</html>

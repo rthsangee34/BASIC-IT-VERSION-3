@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER BREAKER - Hardware Quiz</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #00ffcc;
+            --secondary: #00d4ff;
+            --accent: #9d00ff;
+            --bg-main: #010a14;
+            --text-main: #ffffff;
+            --text-sub: rgba(255, 255, 255, 0.7);
+            --glass-card: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-shadow: rgba(0, 0, 0, 0.4);
+            --nav-bg: rgba(0, 0, 0, 0.4);
+            
+            --aurora-1: rgba(0, 255, 204, 0.2);
+            --aurora-2: rgba(157, 0, 255, 0.1);
+        }
+
+        body[data-theme="light"] {
+            --primary: #008080;
+            --secondary: #005c99;
+            --accent: #6a0dad;
+            --bg-main: #e8f4f8;
+            --text-main: #111111;
+            --text-sub: #444444;
+            --glass-card: rgba(255, 255, 255, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.6);
+            --glass-shadow: rgba(31, 38, 135, 0.1);
+            --nav-bg: rgba(255, 255, 255, 0.6);
+            --aurora-1: rgba(0, 128, 128, 0.1);
+            --aurora-2: rgba(106, 13, 173, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.5s ease;
+        }
+
+        /* Animated Background */
+        .aurora-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            filter: blur(80px);
+            opacity: 0.6;
+        }
+
+        .blob {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: var(--aurora-1);
+            border-radius: 50%;
+            animation: move 20s infinite alternate ease-in-out;
+        }
+
+        .blob-2 {
+            background: var(--aurora-2);
+            right: 0;
+            bottom: 0;
+            animation-delay: -5s;
+        }
+
+        @keyframes move {
+            from { transform: translate(-10%, -10%); }
+            to { transform: translate(10%, 10%); }
+        }
+
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            background: var(--nav-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 
+                1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 15px var(--primary);
+        }
+
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--primary);
+            letter-spacing: 2px;
+        }
+
+        /* Quiz Container */
+        .quiz-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .quiz-card {
+            background: var(--glass-card);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 700px;
+            padding: 40px;
+            box-shadow: 0 10px 40px var(--glass-shadow);
+            position: relative;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .quiz-header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .timer-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 68, 68, 0.1);
+            color: #ef4444;
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 68, 68, 0.2);
+            font-size: 0.9rem;
+        }
+
+        .timer-box.warning {
+            animation: pulse-timer 1s infinite;
+        }
+
+        @keyframes pulse-timer {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            text-align: center;
+            color: var(--text-main);
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            padding: 16px 24px;
+            border-radius: 12px;
+            color: var(--text-main);
+            font-size: 1rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .option-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: var(--primary);
+            transform: translateX(10px);
+        }
+
+        .option-btn.selected {
+            background: var(--primary);
+            color: #000;
+            border-color: var(--primary);
+            font-weight: 700;
+        }
+
+        .quiz-footer {
+            margin-top: 35px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .next-btn {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: #000;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            display: none;
+        }
+
+        .next-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        /* Result Screen */
+        .result-screen {
+            text-align: center;
+            display: none;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border: 5px solid var(--primary);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .score-num {
+            font-size: 3rem;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .score-text {
+            font-size: 0.9rem;
+            color: var(--text-sub);
+        }
+
+        .result-msg {
+            font-size: 1.5rem;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .result-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn-action {
+            width: 250px;
+            padding: 14px;
+            border-radius: 10px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            border: none;
+        }
+
+        .retry-btn {
+            background: var(--primary);
+            color: #000;
+        }
+
+        .learn-btn {
+            background: transparent;
+            border: 2px solid var(--secondary);
+            color: var(--secondary);
+            display: none;
+        }
+
+        .learn-btn:hover {
+            background: var(--secondary);
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .quiz-card { padding: 30px 20px; }
+            .question-text { font-size: 1.1rem; }
+            .option-btn { font-size: 0.9rem; padding: 12px 18px; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="aurora-bg">
+        <div class="blob"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <nav>
+        <div class="logo-container">
+            <img src="logo.jpeg" alt="Logo" class="logo-img">
+            <div class="logo-text">CYBER BREAKER</div>
+        </div>
+        <button id="themeToggle" style="background: transparent; border: 1px solid var(--primary); color: var(--primary); padding: 5px 12px; border-radius: 5px; cursor: pointer;" onclick="toggleTheme()">Go Light ☀️</button>
+    </nav>
+
+    <div class="quiz-wrapper">
+        <div class="quiz-card" id="quiz-container">
+            <div class="quiz-header">
+                <h1>Hardware Mastery Quiz</h1>
+                <div class="timer-box" id="timer-box">
+                    <i class="fas fa-clock"></i> <span id="time-left">30</span>s
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p id="q-counter" style="color: var(--text-sub); font-size: 0.9rem;">Question 1 of 10</p>
+            </div>
+
+            <div id="quiz-body">
+                <div class="question-text" id="question">What is Computer Hardware?</div>
+                <div class="options-grid" id="options">
+                    <!-- Options populated by JS -->
+                </div>
+            </div>
+
+            <div class="quiz-footer">
+                <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question <i class="fas fa-arrow-right"></i></button>
+            </div>
+
+            <!-- Result Screen -->
+            <div class="result-screen" id="resultArea">
+                <div class="score-circle">
+                    <span class="score-num" id="finalScore">0</span>
+                    <span class="score-text">out of 10</span>
+                </div>
+                <div class="result-msg" id="resultMsg">Good effort!</div>
+                <div id="hardwareFailurePanel" style="display: none; background: rgba(239, 68, 68, 0.1); padding: 25px; border-radius: 20px; border: 1px solid rgba(239, 68, 68, 0.2); margin-bottom: 2rem;">
+                    <p style="color: #ef4444; font-weight: 700; font-size: 1.2rem; margin-bottom: 0.5rem;">Score Low!</p>
+                    <p style="color: var(--text-sub); font-size: 0.95rem;">You need at least 7 correct answers to pass. Let's try again to improve!</p>
+                </div>
+                <div class="result-buttons">
+                    <button class="btn-action retry-btn" id="hwRetryBtn" onclick="startQuiz()">
+                        <i class="fas fa-undo"></i> Try Again
+                    </button>
+                    <button class="btn-action learn-btn" id="learnBtn" onclick="location.href='hardware.html'">
+                        <i class="fas fa-book-open"></i> Back to Learn
+                    </button>
+                    <button class="btn-action" style="background: rgba(255,255,255,0.1); color: var(--text-main);" onclick="location.href='lessons.html'">
+                        More Lessons
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questionsData = [
+            {
+                q: "What is Computer Hardware?",
+                a: [
+                    { t: "Physical parts of a computer", c: true },
+                    { t: "Computer programs", c: false },
+                    { t: "Internet connection", c: false },
+                    { t: "Operating system", c: false }
+                ]
+            },
+            {
+                q: "Which of the following is an input device?",
+                a: [
+                    { t: "Keyboard", c: true },
+                    { t: "Monitor", c: false },
+                    { t: "Printer", c: false },
+                    { t: "Speaker", c: false }
+                ]
+            },
+            {
+                q: "Which device is used to display visual output?",
+                a: [
+                    { t: "Monitor", c: true },
+                    { t: "Mouse", c: false },
+                    { t: "Scanner", c: false },
+                    { t: "Microphone", c: false }
+                ]
+            },
+            {
+                q: "Which component is called the brain of the computer?",
+                a: [
+                    { t: "CPU", c: true },
+                    { t: "Keyboard", c: false },
+                    { t: "Hard Disk", c: false },
+                    { t: "Speaker", c: false }
+                ]
+            },
+            {
+                q: "Which device stores data permanently in a computer?",
+                a: [
+                    { t: "Hard Disk Drive (HDD)", c: true },
+                    { t: "Mouse", c: false },
+                    { t: "Keyboard", c: false },
+                    { t: "Monitor", c: false }
+                ]
+            },
+            {
+                q: "Which device is used to print documents on paper?",
+                a: [
+                    { t: "Printer", c: true },
+                    { t: "Scanner", c: false },
+                    { t: "Speaker", c: false },
+                    { t: "Mouse", c: false }
+                ]
+            },
+            {
+                q: "Which of these is an output device?",
+                a: [
+                    { t: "Speaker", c: true },
+                    { t: "Keyboard", c: false },
+                    { t: "Microphone", c: false },
+                    { t: "Scanner", c: false }
+                ]
+            },
+            {
+                q: "Which storage device is faster than a traditional hard disk?",
+                a: [
+                    { t: "SSD (Solid State Drive)", c: true },
+                    { t: "DVD", c: false },
+                    { t: "Floppy Disk", c: false },
+                    { t: "Keyboard", c: false }
+                ]
+            },
+            {
+                q: "Which device converts paper documents into digital format?",
+                a: [
+                    { t: "Scanner", c: true },
+                    { t: "Printer", c: false },
+                    { t: "Speaker", c: false },
+                    { t: "Monitor", c: false }
+                ]
+            },
+            {
+                q: "Which hardware component temporarily stores data while the computer is running?",
+                a: [
+                    { t: "RAM (Random Access Memory)", c: true },
+                    { t: "Hard Disk", c: false },
+                    { t: "Keyboard", c: false },
+                    { t: "Mouse", c: false }
+                ]
+            }
+        ];
+
+        let currentQIndex = 0;
+        let score = 0;
+        let shuffledQuestions = [];
+        let timeLeft = 30;
+        let timerInterval;
+        let soundContext;
+
+        function playSoundEffect(freq = 400, type = 'sine', dur = 0.1) {
+            if (!soundContext) soundContext = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = soundContext.createOscillator();
+            const gain = soundContext.createGain();
+            osc.className = 'quiz-osc';
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, soundContext.currentTime);
+            gain.gain.setValueAtTime(0.1, soundContext.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, soundContext.currentTime + dur);
+            osc.connect(gain);
+            gain.connect(soundContext.destination);
+            osc.start();
+            osc.stop(soundContext.currentTime + dur);
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 30;
+            const display = document.getElementById('time-left');
+            const box = document.getElementById('timer-box');
+            display.innerText = timeLeft;
+            box.classList.remove('warning');
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                display.innerText = timeLeft;
+                if (timeLeft <= 10) {
+                    box.classList.add('warning');
+                    playSoundEffect(200, 'square', 0.05);
+                }
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    autoSubmit();
+                }
+            }, 1000);
+        }
+
+        function autoSubmit() {
+            // Disable all options
+            const allOptions = document.querySelectorAll('.option-btn');
+            allOptions.forEach(opt => opt.disabled = true);
+            // Show next button
+            const nextBtn = document.getElementById('nextBtn');
+            nextBtn.style.display = 'block';
+            nextBtn.innerText = "Time's up! Next Question";
+            playSoundEffect(150, 'sawtooth', 0.3);
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function startQuiz() {
+            currentQIndex = 0;
+            score = 0;
+            shuffledQuestions = shuffle([...questionsData]).map(question => ({
+                ...question,
+                a: shuffle([...question.a])
+            }));
+            
+            document.getElementById('quiz-body').style.display = 'block';
+            document.getElementById('resultArea').style.display = 'none';
+            document.querySelector('.quiz-header').style.display = 'block';
+            document.querySelector('.quiz-footer').style.display = 'flex';
+            
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const questionObj = shuffledQuestions[currentQIndex];
+            const qCounter = document.getElementById('q-counter');
+            const qText = document.getElementById('question');
+            const optionsDiv = document.getElementById('options');
+            const nextBtn = document.getElementById('nextBtn');
+            const progress = document.getElementById('progressFill');
+
+            qCounter.innerText = `Question ${currentQIndex + 1} of 10`;
+            qText.innerText = questionObj.q;
+            optionsDiv.innerHTML = '';
+            nextBtn.style.display = 'none';
+            progress.style.width = `${(currentQIndex / 10) * 100}%`;
+
+            questionObj.a.forEach((ans, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<span style="opacity: 0.5;">${String.fromCharCode(65 + idx)})</span> ${ans.t}`;
+                btn.onclick = () => {
+                    playSoundEffect(400);
+                    selectOption(btn, ans.c);
+                };
+                optionsDiv.appendChild(btn);
+            });
+            startTimer();
+        }
+
+        function selectOption(btn, isCorrect) {
+            clearInterval(timerInterval);
+            const allOptions = document.querySelectorAll('.option-btn');
+            allOptions.forEach(opt => opt.classList.remove('selected'));
+            btn.classList.add('selected');
+            
+            // Store result temporarily
+            btn.dataset.correct = isCorrect;
+            if (isCorrect) playSoundEffect(600, 'triangle');
+            else playSoundEffect(200, 'square');
+            
+            document.getElementById('nextBtn').style.display = 'block';
+            document.getElementById('nextBtn').innerText = "Next Question";
+        }
+
+        function nextQuestion() {
+            playSoundEffect(500);
+            const selected = document.querySelector('.option-btn.selected');
+            if (selected && selected.dataset.correct === 'true') {
+                score++;
+            }
+
+            currentQIndex++;
+            if (currentQIndex < 10) {
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quiz-body').style.display = 'none';
+            document.querySelector('.quiz-header').style.display = 'none';
+            document.querySelector('.quiz-footer').style.display = 'none';
+            document.getElementById('resultArea').style.display = 'block';
+
+            document.getElementById('finalScore').innerText = score;
+            const progress = document.getElementById('progressFill');
+            progress.style.width = '100%';
+
+            const msg = document.getElementById('resultMsg');
+            const learnBtn = document.getElementById('learnBtn');
+            const failurePanel = document.getElementById('hardwareFailurePanel');
+            const retryBtn = document.getElementById('hwRetryBtn');
+
+            if (score >= 7) {
+                failurePanel.style.display = 'none';
+                retryBtn.innerHTML = '<i class="fas fa-undo"></i> Restart Quiz';
+                
+                if (score >= 9) {
+                    msg.innerText = "hardware Mastery Achieved!";
+                } else {
+                    msg.innerText = "Great job! You passed!";
+                }
+
+                confetti({
+                    particleCount: 150,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+                playSoundEffect(800, 'triangle', 0.5);
+            } else {
+                failurePanel.style.display = 'block';
+                retryBtn.innerHTML = '<i class="fas fa-arrow-rotate-right"></i> Try Again Now';
+                msg.innerText = "Keep Learning!";
+                playSoundEffect(150, 'sawtooth', 0.5);
+            }
+
+            if (score < 7) {
+                learnBtn.style.display = 'block';
+            } else {
+                learnBtn.style.display = 'none';
+            }
+        }
+
+        // Theme Toggle
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.getElementById('themeToggle');
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                btn.innerText = 'Go Light ☀️';
+                localStorage.setItem('hardwareQuizTheme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                btn.innerText = 'Go Dark 🌙';
+                localStorage.setItem('hardwareQuizTheme', 'light');
+            }
+        }
+
+        // Initialization
+        window.onload = () => {
+            if (localStorage.getItem('hardwareQuizTheme') === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                document.getElementById('themeToggle').innerText = 'Go Dark 🌙';
+            }
+            startQuiz();
+        };
+
+        // Global click sound
+        const btnClickSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
+        btnClickSound.preload = 'auto';
+
+        const playSound = () => {
+            btnClickSound.currentTime = 0;
+            btnClickSound.play().catch(err => {});
+        };
+
+        document.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                playSound();
+            }
+        });
+
+        const unlockAudio = () => {
+            btnClickSound.play().then(() => {
+                btnClickSound.pause();
+                btnClickSound.currentTime = 0;
+            }).catch(() => { });
+            document.removeEventListener('click', unlockAudio);
+            document.removeEventListener('keydown', unlockAudio);
+        };
+        document.addEventListener('click', unlockAudio);
+        document.addEventListener('keydown', unlockAudio);
+    </script>
+</body>
+</html>

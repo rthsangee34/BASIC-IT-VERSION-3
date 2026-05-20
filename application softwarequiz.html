@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Software Quiz - CYBER BREAKER</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            /* Light Mode */
+            --bg-body: #fdf2ff;
+            --bg-glass: rgba(255, 255, 255, 0.7);
+            --border-glass: rgba(255, 255, 255, 0.3);
+            --shadow-glass: rgba(168, 85, 247, 0.1);
+            --text-primary: #1e1b4b;
+            --text-secondary: #4338ca;
+            --accent-primary: #a855f7;
+            --accent-secondary: #3b82f6;
+            --correct: #10b981;
+            --wrong: #ef4444;
+        }
+
+        body.dark-theme {
+            /* Dark Mode */
+            --bg-body: #0f172a;
+            --bg-glass: rgba(30, 41, 59, 0.7);
+            --border-glass: rgba(255, 255, 255, 0.1);
+            --shadow-glass: rgba(0, 0, 0, 0.4);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-primary: #c084fc;
+            --accent-secondary: #60a5fa;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.4s ease, color 0.4s ease;
+            overflow-x: hidden;
+        }
+
+        .glass {
+            background: var(--bg-glass);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glass);
+            box-shadow: 0 8px 32px 0 var(--shadow-glass);
+        }
+
+        nav {
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--accent-primary);
+            text-decoration: none;
+        }
+
+        .logo img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-primary);
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .theme-toggle, .back-link {
+            background: var(--bg-glass);
+            color: var(--text-primary);
+            border: 1px solid var(--border-glass);
+            padding: 10px 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .theme-toggle:hover, .back-link:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-primary);
+        }
+
+        .quiz-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px 5%;
+        }
+
+        .quiz-card {
+            width: 100%;
+            max-width: 850px;
+            padding: 40px;
+            border-radius: 30px;
+            position: relative;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .quiz-header h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.2rem;
+            margin-bottom: 15px;
+            background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 10px;
+            background: rgba(0,0,0,0.05);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+            width: 0%;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .timer-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 24px;
+            background: rgba(168, 85, 247, 0.1);
+            color: var(--accent-primary);
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            border: 1px solid rgba(168, 85, 247, 0.2);
+        }
+
+        .timer-badge.warning {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.3);
+            animation: pulse-red 1s infinite;
+        }
+
+        @keyframes pulse-red {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .q-count {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .question-text {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin: 25px 0;
+            line-height: 1.3;
+            text-align: center;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 16px;
+        }
+
+        .option-btn {
+            background: var(--bg-glass);
+            border: 2px solid var(--border-glass);
+            padding: 22px 28px;
+            border-radius: 18px;
+            cursor: pointer;
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            transform: translateY(-5px);
+            border-color: var(--accent-primary);
+            background: rgba(168, 85, 247, 0.08);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+        }
+
+        .option-btn.correct {
+            border-color: var(--correct) !important;
+            background: rgba(16, 185, 129, 0.15) !important;
+            color: var(--correct);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.2);
+        }
+
+        .option-btn.wrong {
+            border-color: var(--wrong) !important;
+            background: rgba(239, 68, 68, 0.15) !important;
+            color: var(--wrong);
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .next-btn {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            border: none;
+            padding: 18px 50px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 1.25rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: none;
+            margin: 30px auto 0;
+            box-shadow: 0 10px 25px rgba(168, 85, 247, 0.3);
+        }
+
+        .next-btn:hover {
+            transform: scale(1.05) translateY(-3px);
+            box-shadow: 0 15px 30px rgba(168, 85, 247, 0.4);
+        }
+
+        /* Result Screen */
+        .result-screen {
+            display: none;
+            text-align: center;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .score-circle {
+            width: 220px;
+            height: 220px;
+            border: 12px solid var(--accent-primary);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            background: var(--bg-glass);
+            box-shadow: 0 15px 45px var(--shadow-glass);
+        }
+
+        .score-num {
+            font-size: 5.5rem;
+            font-weight: 800;
+            color: var(--accent-primary);
+            line-height: 1;
+        }
+
+        .score-text {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            font-weight: 700;
+        }
+
+        .result-title {
+            font-size: 2.8rem;
+            margin-bottom: 10px;
+            font-family: 'Space Grotesk', sans-serif;
+            background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .result-btns {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 40px;
+            flex-wrap: wrap;
+        }
+
+        .btn-main {
+            padding: 18px 45px;
+            border-radius: 18px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            border: none;
+        }
+
+        .btn-retry {
+            background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            color: white;
+            box-shadow: 0 10px 25px rgba(168, 85, 247, 0.2);
+        }
+
+        .btn-lesson {
+            background: var(--bg-glass);
+            color: var(--text-primary);
+            border: 2px solid var(--border-glass);
+        }
+
+        .btn-main:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .bg-glow {
+            position: fixed;
+            width: 75vw;
+            height: 75vw;
+            background: radial-gradient(circle, var(--accent-primary), transparent 75%);
+            opacity: 0.08;
+            z-index: -1;
+            border-radius: 50%;
+            filter: blur(100px);
+        }
+
+        #glow-1 { top: -20%; left: -10%; }
+        #glow-2 { bottom: -10%; right: -10%; }
+    </style>
+</head>
+
+<body>
+
+    <div class="bg-glow" id="glow-1"></div>
+    <div class="bg-glow" id="glow-2"></div>
+
+    <nav>
+        <a href="index.html" class="logo">
+            <img src="logo.jpeg" alt="Logo">
+            <span>CYBER BREAKER</span>
+        </a>
+        <div class="nav-actions">
+            <button class="theme-toggle" id="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+            <a href="application software.html" class="back-link">
+                <i class="fas fa-book-open"></i> Lesson
+            </a>
+        </div>
+    </nav>
+
+    <div class="quiz-container">
+        <div class="quiz-card glass">
+            
+            <div id="quiz-area">
+                <div class="quiz-header">
+                    <h1>Application Software Quiz</h1>
+                    <div class="timer-badge" id="timer-display">
+                        <i class="fas fa-clock"></i> <span id="time-left">30</span> Seconds
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progress-bar"></div>
+                    </div>
+                    <div class="q-count" id="q-count">Question 1 of 20</div>
+                </div>
+
+                <div class="question-box">
+                    <h2 class="question-text" id="question-text">Preparing Quiz...</h2>
+                    <div class="options-grid" id="options-grid"></div>
+                </div>
+
+                <div style="text-align: center;">
+                    <button class="next-btn" id="next-btn">Continue <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="result-screen" id="result-screen">
+                <div id="result-icon-area" style="margin-bottom: 20px;"></div>
+                <h2 class="result-title" id="result-title">Quiz Complete!</h2>
+                <div class="score-circle">
+                    <span class="score-num" id="final-score">0</span>
+                    <span class="score-text">out of 20</span>
+                </div>
+                <p id="result-msg" style="font-size: 1.3rem; color: var(--text-secondary); max-width: 600px; margin: 0 auto 30px; line-height: 1.5;"></p>
+                <div class="result-btns">
+                    <button class="btn-main btn-retry" id="retry-btn">
+                        <i class="fas fa-redo"></i> Try Again
+                    </button>
+                    <a href="application software.html" class="btn-main btn-lesson">
+                        <i class="fas fa-book-open"></i> Back to Lesson
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const QUESTIONS = [
+            {"q": "What is Application Software?", "o": ["Software that controls hardware", "Software designed to perform specific user tasks", "Software used to repair computers", "Software used to build hardware"], "c": 1},
+            {"q": "Application software is mainly used by:", "o": ["Hardware engineers", "The operating system", "Computer users to perform tasks", "Computer processors"], "c": 2},
+            {"q": "Which of the following is an example of application software?", "o": ["Microsoft Word", "Device Driver", "Compiler", "BIOS"], "c": 0},
+            {"q": "Which software is used for browsing the internet?", "o": ["Google Chrome", "Antivirus", "Driver", "Operating System"], "c": 0},
+            {"q": "Application software runs on top of:", "o": ["Hardware", "System software", "CPU", "RAM"], "c": 1},
+            {"q": "Which application software is used for editing images?", "o": ["Calculator", "Adobe Photoshop", "Google Chrome", "Microsoft Excel"], "c": 1},
+            {"q": "Which of the following is used to play videos and music?", "o": ["VLC Media Player", "Microsoft Word", "Device Driver", "BIOS"], "c": 0},
+            {"q": "Word processing software is used for:", "o": ["Editing videos", "Writing and formatting documents", "Browsing the internet", "Running hardware"], "c": 1},
+            {"q": "Which of the following is NOT application software?", "o": ["Google Chrome", "Microsoft Word", "Adobe Photoshop", "Device Driver"], "c": 3},
+            {"q": "Application software helps users to:", "o": ["Build hardware", "Perform specific tasks", "Replace the operating system", "Manage the CPU"], "c": 1},
+            {"q": "Which software is used to create documents?", "o": ["Microsoft Word", "Device Driver", "BIOS", "Compiler"], "c": 0},
+            {"q": "Which type of software is used to watch movies?", "o": ["Web browser", "Multimedia software", "System software", "Utility software"], "c": 1},
+            {"q": "Application software is mainly designed for:", "o": ["Hardware control", "System maintenance", "User tasks", "Device communication"], "c": 2},
+            {"q": "Which of the following is a web browser?", "o": ["Google Chrome", "Photoshop", "Word", "Excel"], "c": 0},
+            {"q": "Which type of application software is used for graphic design?", "o": ["Word Processor", "Multimedia Player", "Graphic Software", "Utility Software"], "c": 2},
+            {"q": "Application software depends on:", "o": ["Hardware only", "System software", "Keyboard", "Printer"], "c": 1},
+            {"q": "Which of the following is used to edit photos?", "o": ["Calculator", "Adobe Photoshop", "Browser", "Text Editor"], "c": 1},
+            {"q": "Which software helps users search information on the internet?", "o": ["Google Chrome", "Word", "Excel", "PowerPoint"], "c": 0},
+            {"q": "Application software is installed according to:", "o": ["System needs", "Hardware requirements", "User needs", "BIOS settings"], "c": 2},
+            {"q": "Which statement is correct about application software?", "o": ["It manages hardware", "It runs in BIOS", "It helps users perform tasks", "It replaces the operating system"], "c": 2}
+        ];
+
+        let index = 0;
+        let score = 0;
+        let timerVal = 30;
+        let timer;
+        let shuffledQ = [];
+        let audioCtx;
+
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[arr.length - 1]] = [arr[arr.length - 1], arr[i]]; // Dummy shuffle lines for safety
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function playSound(freq = 400, type = 'sine', duration = 0.1) {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+        }
+
+        function startQuiz() {
+            playSound(600, 'sine', 0.1);
+            shuffledQ = shuffle([...QUESTIONS]);
+            index = 0;
+            score = 0;
+            document.getElementById('quiz-area').style.display = 'block';
+            document.getElementById('result-screen').style.display = 'none';
+            loadQ();
+        }
+
+        function loadQ() {
+            const q = shuffledQ[index];
+            document.getElementById('question-text').innerText = q.q;
+            document.getElementById('q-count').innerText = `Question ${index + 1} of 20`;
+            document.getElementById('progress-bar').style.width = `${((index + 1) / 20) * 100}%`;
+            
+            const grid = document.getElementById('options-grid');
+            grid.innerHTML = '';
+            
+            const options = q.o.map((txt, i) => ({ txt, isCorrect: i === q.c }));
+            shuffle(options).forEach((opt, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<span>${String.fromCharCode(65 + i)}.</span> ${opt.txt}`;
+                btn.onclick = () => {
+                    playSound(450, 'sine', 0.05);
+                    handleChoice(opt.isCorrect, btn);
+                };
+                grid.appendChild(btn);
+            });
+
+            document.getElementById('next-btn').style.display = 'none';
+            startTimer();
+        }
+
+        function startTimer() {
+            clearInterval(timer);
+            timerVal = 30;
+            updateUI();
+            timer = setInterval(() => {
+                timerVal--;
+                updateUI();
+                if (timerVal <= 0) {
+                    clearInterval(timer);
+                    revealCorrect();
+                }
+            }, 1000);
+        }
+
+        function updateUI() {
+            const disp = document.getElementById('time-left');
+            const b = document.getElementById('timer-display');
+            disp.innerText = timerVal;
+            if (timerVal <= 10) b.classList.add('warning');
+            else b.classList.remove('warning');
+        }
+
+        function handleChoice(isCorrect, btn) {
+            clearInterval(timer);
+            const btns = document.querySelectorAll('.option-btn');
+            btns.forEach(b => b.disabled = true);
+
+            if (isCorrect) {
+                btn.classList.add('correct');
+                score++;
+                playSound(800, 'sine', 0.1);
+            } else {
+                btn.classList.add('wrong');
+                revealCorrect();
+                playSound(200, 'square', 0.2);
+            }
+            document.getElementById('next-btn').style.display = 'inline-block';
+        }
+
+        function revealCorrect() {
+            clearInterval(timer);
+            document.querySelectorAll('.option-btn').forEach(btn => {
+                btn.disabled = true;
+                const correctT = shuffledQ[index].o[shuffledQ[index].c];
+                if (btn.innerText.includes(correctT)) {
+                    btn.classList.add('correct');
+                }
+            });
+            document.getElementById('next-btn').style.display = 'inline-block';
+        }
+
+        document.getElementById('next-btn').onclick = () => {
+            playSound(500, 'sine', 0.08);
+            index++;
+            if (index < 20) loadQ();
+            else showResult();
+        };
+
+        function showResult() {
+            document.getElementById('quiz-area').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            document.getElementById('final-score').innerText = score;
+            
+            const p = (score / 20) * 100;
+            const t = document.getElementById('result-title');
+            const m = document.getElementById('result-msg');
+            const icon = document.getElementById('result-icon-area');
+            const retry = document.getElementById('retry-btn');
+            
+            if (p >= 70) {
+                playSound(1000, 'triangle', 0.6);
+                t.innerText = "Excellent Achievement!";
+                m.innerText = "You've proven yourself an expert in Application Software! Fantastic job!";
+                icon.innerHTML = '<i class="fas fa-trophy" style="font-size: 6rem; color: #fbbf24;"></i>';
+                retry.innerText = "Refresh Quiz";
+                confetti({
+                    particleCount: 200,
+                    spread: 120,
+                    origin: { y: 0.6 },
+                    colors: ['#a855f7', '#3b82f6', '#10b981']
+                });
+            } else {
+                playSound(150, 'sawtooth', 0.4);
+                t.innerText = "Keep Learning!";
+                m.innerText = "You need a score of 70% to pass. Go back to the lesson and try again!";
+                icon.innerHTML = '<i class="fas fa-heart-crack" style="font-size: 6rem; color: #ef4444;"></i>';
+                retry.innerText = "Try Once More";
+            }
+        }
+
+        document.getElementById('retry-btn').onclick = startQuiz;
+
+        const tBtn = document.getElementById('theme-toggle');
+        const tIcon = tBtn.querySelector('i');
+        
+        tBtn.onclick = () => {
+            playSound(550, 'sine', 0.08);
+            document.body.classList.toggle('dark-theme');
+            const isD = document.body.classList.contains('dark-theme');
+            tIcon.className = isD ? 'fas fa-sun' : 'fas fa-moon';
+            localStorage.setItem('theme', isD ? 'dark' : 'light');
+        };
+
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.classList.add('dark-theme');
+            tIcon.className = 'fas fa-sun';
+        }
+
+        startQuiz();
+    </script>
+</body>
+</html>

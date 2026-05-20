@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER BREAKER - Computer Devices Quiz</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #2563eb;
+            --secondary: #3b82f6;
+            --accent: #1d4ed8;
+            --bg-main: #010a14;
+            --text-main: #ffffff;
+            --text-sub: rgba(255, 255, 255, 0.7);
+            --glass-card: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --glass-shadow: rgba(0, 0, 0, 0.4);
+            --nav-bg: rgba(0, 0, 0, 0.4);
+            
+            --aurora-1: rgba(37, 99, 235, 0.2);
+            --aurora-2: rgba(59, 130, 246, 0.1);
+        }
+
+        body[data-theme="light"] {
+            --primary: #2563eb;
+            --secondary: #3b82f6;
+            --accent: #1d4ed8;
+            --bg-main: #f8fafc;
+            --text-main: #1e293b;
+            --text-sub: #64748b;
+            --glass-card: rgba(255, 255, 255, 0.8);
+            --glass-border: rgba(37, 99, 235, 0.1);
+            --glass-shadow: rgba(37, 99, 235, 0.1);
+            --nav-bg: rgba(255, 255, 255, 0.8);
+            --aurora-1: rgba(37, 99, 235, 0.05);
+            --aurora-2: rgba(59, 130, 246, 0.02);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.5s ease;
+        }
+
+        /* Animated Background */
+        .aurora-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            filter: blur(80px);
+            opacity: 0.6;
+        }
+
+        .blob {
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: var(--aurora-1);
+            border-radius: 50%;
+            animation: move 20s infinite alternate ease-in-out;
+        }
+
+        .blob-2 {
+            background: var(--aurora-2);
+            right: 0;
+            bottom: 0;
+            animation-delay: -5s;
+        }
+
+        @keyframes move {
+            from { transform: translate(-10%, -10%); }
+            to { transform: translate(10%, 10%); }
+        }
+
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            background: var(--nav-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 15px var(--primary);
+        }
+
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--primary);
+            letter-spacing: 2px;
+        }
+
+        /* Quiz Container */
+        .quiz-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .quiz-card {
+            background: var(--glass-card);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 750px;
+            padding: 40px;
+            box-shadow: 0 10px 40px var(--glass-shadow);
+            position: relative;
+            animation: slideUp 0.6s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .quiz-header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .timer-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary);
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            border: 1px solid rgba(37, 99, 235, 0.2);
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+
+        .timer-box.warning {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.2);
+            animation: pulse-timer 1s infinite;
+        }
+
+        @keyframes pulse-timer {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .question-text {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            text-align: center;
+            color: var(--text-main);
+            min-height: 3.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            padding: 18px 24px;
+            border-radius: 12px;
+            color: var(--text-main);
+            font-size: 1rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            background: rgba(37, 99, 235, 0.08);
+            border-color: var(--primary);
+            transform: translateX(10px);
+        }
+
+        .option-btn.selected {
+            background: var(--primary) !important;
+            color: #fff !important;
+            border-color: var(--primary);
+            font-weight: 700;
+        }
+
+        .option-btn.correct {
+            background: rgba(34, 197, 94, 0.2);
+            border-color: #22c55e;
+            color: #22c55e;
+        }
+
+        .option-btn.wrong {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #ef4444;
+            color: #ef4444;
+        }
+
+        .quiz-footer {
+            margin-top: 35px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .next-btn {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            display: none;
+        }
+
+        .next-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px var(--primary);
+        }
+
+        /* Result Screen */
+        .result-screen {
+            text-align: center;
+            display: none;
+        }
+
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border: 8px solid var(--primary);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .score-num {
+            font-size: 3.5rem;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .score-text {
+            font-size: 1rem;
+            color: var(--text-sub);
+        }
+
+        .result-msg {
+            font-size: 1.8rem;
+            margin-bottom: 30px;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+        }
+
+        .result-stats {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .stat-item {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 1rem;
+            border-radius: 12px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .result-buttons {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn-action {
+            width: 280px;
+            padding: 16px;
+            border-radius: 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            border: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .retry-btn {
+            background: var(--primary);
+            color: white;
+        }
+
+        .home-btn {
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--text-main);
+        }
+
+        .home-btn:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .quiz-card { padding: 30px 20px; }
+            .question-text { font-size: 1.1rem; }
+            .option-btn { font-size: 0.9rem; padding: 14px 18px; }
+            .result-msg { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="aurora-bg">
+        <div class="blob"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <nav>
+        <div class="logo-container">
+            <img src="logo.jpeg" alt="Logo" class="logo-img">
+            <div class="logo-text">CYBER BREAKER</div>
+        </div>
+        <button id="themeToggle" style="background: transparent; border: 1px solid var(--primary); color: var(--primary); padding: 8px 16px; border-radius: 10px; cursor: pointer; font-weight: 600;" onclick="toggleTheme()">Go Light ☀️</button>
+    </nav>
+
+    <div class="quiz-wrapper">
+        <div class="quiz-card" id="quiz-container">
+            <div class="quiz-header">
+                <h1>Computer Devices Mastery Quiz</h1>
+                <div class="timer-box" id="timer-box">
+                    <i class="fas fa-clock"></i> <span id="time-left">30</span>s
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p id="q-counter" style="color: var(--text-sub); font-size: 0.9rem; font-weight: 600;">Question 1 of 20</p>
+            </div>
+
+            <div id="quiz-body">
+                <div class="question-text" id="question">Loading Question...</div>
+                <div class="options-grid" id="options">
+                    <!-- Options populated by JS -->
+                </div>
+            </div>
+
+            <div class="quiz-footer">
+                <button class="next-btn" id="nextBtn" onclick="nextQuestion()">Next Question <i class="fas fa-arrow-right"></i></button>
+            </div>
+
+            <!-- Result Screen -->
+            <div class="result-screen" id="resultArea">
+                <div class="score-circle">
+                    <span class="score-num" id="finalScore">0</span>
+                    <span class="score-text">out of 20</span>
+                </div>
+                <div class="result-msg" id="resultMsg">Quiz Completed!</div>
+                
+                <div class="result-stats">
+                    <div class="stat-item">
+                        <p style="font-size: 0.8rem; color: var(--text-sub); margin-bottom: 5px;">Accuracy</p>
+                        <p id="accuracy-text" style="font-size: 1.2rem; font-weight: 700; color: var(--primary);">0%</p>
+                    </div>
+                </div>
+
+                <div class="result-buttons">
+                    <button class="btn-action retry-btn" onclick="startQuiz()">
+                        <i class="fas fa-undo"></i> Try Again
+                    </button>
+                    <button class="btn-action home-btn" onclick="location.href='lessons.html'">
+                        <i class="fas fa-home"></i> Back to Lessons
+                    </button>
+                    <button class="btn-action" style="background: rgba(255,255,255,0.05); color: var(--text-main);" onclick="location.href='index.html'">
+                         Main Dashboard
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questionsData = [
+            { q: "Which of these is an input device?", a: [{ t: "Monitor", c: false }, { t: "Mouse", c: true }, { t: "Printer", c: false }, { t: "Speaker", c: false }] },
+            { q: "What is the main function of a CPU?", a: [{ t: "Display output", c: false }, { t: "Process data", c: true }, { t: "Store data", c: false }, { t: "Input data", c: false }] },
+            { q: "Which part of the CPU performs arithmetic and logical operations?", a: [{ t: "Control Unit", c: false }, { t: "Register", c: false }, { t: "ALU", c: true }, { t: "Cache", c: false }] },
+            { q: "Which device provides a hard copy of processed data?", a: [{ t: "Monitor", c: false }, { t: "Printer", c: true }, { t: "Speaker", c: false }, { t: "Microphone", c: false }] },
+            { q: "Which storage device is volatile?", a: [{ t: "HDD", c: false }, { t: "SSD", c: false }, { t: "RAM", c: true }, { t: "USB Drive", c: false }] },
+            { q: "The IPO cycle stands for:", a: [{ t: "Input → Process → Output", c: true }, { t: "Input → Print → Output", c: false }, { t: "Instruction → Processing → Operation", c: false }, { t: "Input → Power → Output", c: false }] },
+            { q: "Which of the following is not a processing device?", a: [{ t: "CPU", c: false }, { t: "GPU", c: false }, { t: "RAM", c: false }, { t: "Monitor", c: true }] },
+            { q: "Which of these is a soft copy output device?", a: [{ t: "Printer", c: false }, { t: "Monitor", c: true }, { t: "Paper", c: false }, { t: "USB", c: false }] },
+            { q: "Which input device captures sound?", a: [{ t: "Webcam", c: false }, { t: "Microphone", c: true }, { t: "Scanner", c: false }, { t: "Keyboard", c: false }] },
+            { q: "Which storage device is faster for reading/writing data?", a: [{ t: "HDD", c: false }, { t: "SSD", c: true }, { t: "CD", c: false }, { t: "DVD", c: false }] },
+            { q: "A joystick is mainly used for:", a: [{ t: "Typing", c: false }, { t: "Gaming", c: true }, { t: "Printing", c: false }, { t: "Listening", c: false }] },
+            { q: "Which CPU component controls all operations?", a: [{ t: "Register", c: false }, { t: "Control Unit", c: true }, { t: "ALU", c: false }, { t: "Cache", c: false }] },
+            { q: "Touchscreens are a type of:", a: [{ t: "Output device", c: false }, { t: "Input device", c: true }, { t: "Processing device", c: false }, { t: "Storage device", c: false }] },
+            { q: "Which storage device is non-volatile?", a: [{ t: "RAM", c: false }, { t: "Cache", c: false }, { t: "SSD", c: true }, { t: "CPU", c: false }] },
+            { q: "Which output device converts digital data to audio?", a: [{ t: "Printer", c: false }, { t: "Monitor", c: false }, { t: "Speakers", c: true }, { t: "Webcam", c: false }] },
+            { q: "Which of these is used to scan documents into digital form?", a: [{ t: "Mouse", c: false }, { t: "Scanner", c: true }, { t: "Printer", c: false }, { t: "Keyboard", c: false }] },
+            { q: "Registers in CPU are used for:", a: [{ t: "Permanent storage", c: false }, { t: "Fast temporary storage", c: true }, { t: "Output data", c: false }, { t: "Input signals", c: false }] },
+            { q: "Which of these is an example of primary storage?", a: [{ t: "HDD", c: false }, { t: "RAM", c: true }, { t: "SSD", c: false }, { t: "USB", c: false }] },
+            { q: "What is the main purpose of output devices?", a: [{ t: "Enter data", c: false }, { t: "Store data", c: false }, { t: "Show results of processed data", c: true }, { t: "Control CPU", c: false }] },
+            { q: "Which device allows direct touch input on the screen?", a: [{ t: "Keyboard", c: false }, { t: "Touchscreen", c: true }, { t: "Mouse", c: false }, { t: "Printer", c: false }] }
+        ];
+
+        let currentQIndex = 0;
+        let score = 0;
+        let shuffledQuestions = [];
+        let timeLeft = 30;
+        let timerInterval;
+        let soundContext;
+
+        function playSoundEffect(freq = 400, type = 'sine', dur = 0.1) {
+            try {
+                if (!soundContext) soundContext = new (window.AudioContext || window.webkitAudioContext)();
+                if (soundContext.state === 'suspended') soundContext.resume();
+                const osc = soundContext.createOscillator();
+                const gain = soundContext.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, soundContext.currentTime);
+                gain.gain.setValueAtTime(0.05, soundContext.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, soundContext.currentTime + dur);
+                osc.connect(gain);
+                gain.connect(soundContext.destination);
+                osc.start();
+                osc.stop(soundContext.currentTime + dur);
+            } catch(e) {}
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 30;
+            const display = document.getElementById('time-left');
+            const box = document.getElementById('timer-box');
+            display.innerText = timeLeft;
+            box.classList.remove('warning');
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                display.innerText = timeLeft;
+                if (timeLeft <= 10) {
+                    box.classList.add('warning');
+                    playSoundEffect(300, 'sine', 0.05);
+                }
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    autoSubmit();
+                }
+            }, 1000);
+        }
+
+        function autoSubmit() {
+            const allOptions = document.querySelectorAll('.option-btn');
+            allOptions.forEach(opt => opt.disabled = true);
+            
+            // Show correct answer
+            const questionObj = shuffledQuestions[currentQIndex];
+            const correctIdx = questionObj.a.findIndex(a => a.c);
+            allOptions[correctIdx].classList.add('correct');
+            
+            const nextBtn = document.getElementById('nextBtn');
+            nextBtn.style.display = 'block';
+            nextBtn.innerText = "Time's up! Next Question";
+            playSoundEffect(150, 'sawtooth', 0.3);
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function startQuiz() {
+            currentQIndex = 0;
+            score = 0;
+            // Shuffling questions and their answers
+            shuffledQuestions = shuffle([...questionsData]).map(q => ({
+                ...q,
+                a: shuffle([...q.a])
+            }));
+            
+            document.getElementById('quiz-body').style.display = 'block';
+            document.getElementById('resultArea').style.display = 'none';
+            document.querySelector('.quiz-header').style.display = 'block';
+            document.querySelector('.quiz-footer').style.display = 'flex';
+            
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const questionObj = shuffledQuestions[currentQIndex];
+            const qCounter = document.getElementById('q-counter');
+            const qText = document.getElementById('question');
+            const optionsDiv = document.getElementById('options');
+            const nextBtn = document.getElementById('nextBtn');
+            const progress = document.getElementById('progressFill');
+
+            qCounter.innerText = `Question ${currentQIndex + 1} of 20`;
+            qText.innerText = questionObj.q;
+            optionsDiv.innerHTML = '';
+            nextBtn.style.display = 'none';
+            progress.style.width = `${(currentQIndex / 20) * 100}%`;
+
+            questionObj.a.forEach((ans, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<span style="opacity: 0.5; font-weight: 700;">${String.fromCharCode(65 + idx)}</span> ${ans.t}`;
+                btn.onclick = () => selectOption(btn, ans.c);
+                optionsDiv.appendChild(btn);
+            });
+            startTimer();
+        }
+
+        function selectOption(btn, isCorrect) {
+            clearInterval(timerInterval);
+            const allOptions = document.querySelectorAll('.option-btn');
+            allOptions.forEach(opt => opt.disabled = true);
+            
+            if (isCorrect) {
+                btn.classList.add('selected', 'correct');
+                score++;
+                playSoundEffect(800, 'sine', 0.2);
+            } else {
+                btn.classList.add('selected', 'wrong');
+                // Highlight the correct one
+                const questionObj = shuffledQuestions[currentQIndex];
+                const correctIdx = questionObj.a.findIndex(a => a.c);
+                allOptions[correctIdx].classList.add('correct');
+                playSoundEffect(200, 'square', 0.2);
+            }
+            
+            document.getElementById('nextBtn').style.display = 'block';
+            document.getElementById('nextBtn').innerText = currentQIndex === 19 ? "Finish Quiz" : "Next Question";
+        }
+
+        function nextQuestion() {
+            currentQIndex++;
+            if (currentQIndex < 20) {
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quiz-body').style.display = 'none';
+            document.querySelector('.quiz-header').style.display = 'none';
+            document.querySelector('.quiz-footer').style.display = 'none';
+            document.getElementById('resultArea').style.display = 'block';
+
+            document.getElementById('finalScore').innerText = score;
+            const accuracy = Math.round((score / 20) * 100);
+            document.getElementById('accuracy-text').innerText = accuracy + '%';
+            
+            const msg = document.getElementById('resultMsg');
+            if (accuracy >= 80) {
+                msg.innerText = "Master Architect!";
+                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+            } else if (accuracy >= 60) {
+                msg.innerText = "Great Job!";
+            } else {
+                msg.innerText = "Keep Practicing!";
+            }
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const btn = document.getElementById('themeToggle');
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                btn.innerText = 'Go Light ☀️';
+            } else {
+                body.setAttribute('data-theme', 'light');
+                btn.innerText = 'Go Dark 🌙';
+            }
+        }
+
+        window.onload = startQuiz;
+    </script>
+</body>
+</html>

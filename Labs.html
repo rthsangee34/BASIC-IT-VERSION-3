@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER BREAKER - Labs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --aurora-deep: #010a14;
+            --aurora-teal: #00ffcc;
+            --aurora-cyan: #00d4ff;
+            --aurora-purple: #9d00ff;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #ffffff;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: var(--aurora-deep);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* Animated Background */
+        .bg-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            background: radial-gradient(circle at 20% 30%, rgba(0, 255, 204, 0.1) 0%, transparent 40%),
+                        radial-gradient(circle at 80% 70%, rgba(157, 0, 255, 0.1) 0%, transparent 40%);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 10%;
+            background: rgba(1, 10, 20, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--aurora-teal);
+            font-weight: 700;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 1px solid var(--aurora-teal);
+        }
+
+        nav .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            transition: 0.3s;
+        }
+
+        nav .nav-links a:hover {
+            color: var(--aurora-teal);
+            text-shadow: 0 0 10px var(--aurora-teal);
+        }
+
+        header {
+            text-align: center;
+            padding: 5rem 10%;
+        }
+
+        header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            background: linear-gradient(to right, var(--aurora-teal), var(--aurora-cyan), var(--aurora-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 1rem;
+        }
+
+        header p {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .lab-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2.5rem;
+            padding: 2rem 10%;
+        }
+
+        .lab-card {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            transition: 0.4s ease;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .lab-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--aurora-teal);
+            box-shadow: 0 20px 40px rgba(0, 255, 204, 0.1);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .lab-card i {
+            font-size: 3rem;
+            color: var(--aurora-teal);
+        }
+
+        .lab-card h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            margin: 0;
+        }
+
+        .lab-card p {
+            color: var(--text-muted);
+            margin: 0;
+            line-height: 1.6;
+        }
+
+        .btn-enter-lab {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            background: linear-gradient(135deg, var(--aurora-teal), var(--aurora-cyan));
+            color: black;
+            text-decoration: none;
+            padding: 0.8rem 1.5rem;
+            border-radius: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            margin-top: auto;
+        }
+
+        .btn-enter-lab:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 20px rgba(0, 255, 204, 0.3);
+        }
+
+        footer {
+            text-align: center;
+            padding: 4rem;
+            color: var(--text-muted);
+            border-top: 1px solid var(--glass-border);
+            margin-top: 5rem;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow"></div>
+
+    <nav>
+        <div class="logo">
+            <img src="logo.jpeg" alt="Logo">
+            CYBER BREAKER
+        </div>
+        <div class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="lessons.html">Lessons</a>
+            <a href="#" style="color: var(--aurora-teal);">🧪 Labs</a>
+        </div>
+    </nav>
+
+    <header>
+        <h1>INTERACTIVE LABS</h1>
+        <p>Master ICT concepts through hands-on simulations and virtual real-world experiments.</p>
+    </header>
+
+    <div class="lab-grid">
+        
+        <!-- IPOS Simulator -->
+        <div class="lab-card">
+            <i class="fas fa-microchip"></i>
+            <div>
+                <h2>IPOS Simulator</h2>
+                <p>Learn the Input-Process-Output-Storage cycle by transforming raw data into meaningful results through the computer system.</p>
+            </div>
+            <a href="SIMULATOR/index.html" class="btn-enter-lab">
+                Enter Simulator <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <!-- Hardware Architect -->
+        <div class="lab-card">
+            <i class="fas fa-tools"></i>
+            <div>
+                <h2>Hardware Architect</h2>
+                <p>Build your own virtual PC! Drag and drop components onto a motherboard and learn what each part does for the system.</p>
+            </div>
+            <a href="SIMULATOR/hardware-lab.html" class="btn-enter-lab">
+                Enter Lab <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <!-- Software Explorer -->
+        <div class="lab-card">
+            <i class="fas fa-window-restore"></i>
+            <div>
+                <h2>Software Explorer</h2>
+                <p>Explore the "Cyber Breaker OS" and identify the differences between System, Application, and Utility software in a live desktop env.</p>
+            </div>
+            <a href="SIMULATOR/software-explorer.html" class="btn-enter-lab">
+                Enter Explorer <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <!-- Computer Generations -->
+        <div class="lab-card">
+            <i class="fas fa-history"></i>
+            <div>
+                <h2>Gen-Tech Odyssey</h2>
+                <p>Travel through time from vacuum tubes to modern AI. See how computer size decreased while power increased exponentially.</p>
+            </div>
+            <a href="SIMULATOR/generations-lab.html" class="btn-enter-lab">
+                Start Journey <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <!-- CPU Logic Engine -->
+        <div class="lab-card">
+            <i class="fas fa-brain"></i>
+            <div>
+                <h2>CPU Logic Engine</h2>
+                <p>Dive deep into the Fetch-Decode-Execute cycle. See how instructions actually move through the ALU and CU in real-time.</p>
+            </div>
+            <a href="SIMULATOR/cpu-lab.html" class="btn-enter-lab">
+                Run Engine <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <!-- Real-World Impact -->
+        <div class="lab-card">
+            <i class="fas fa-city"></i>
+            <div>
+                <h2>Impact Explorer</h2>
+                <p>How does ICT change our world? Explore a virtual city and see how technology powers Hospitals, Schools, and Banks.</p>
+            </div>
+            <a href="SIMULATOR/impact-lab.html" class="btn-enter-lab">
+                Explore Impact <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <!-- Printer Lab -->
+        <div class="lab-card">
+            <i class="fas fa-print"></i>
+            <div>
+                <h2>Printer Lab</h2>
+                <p>Learn the difference between Inkjet, Laser, and 3D printing. Witness the mechanical process and compare output quality.</p>
+            </div>
+            <a href="SIMULATOR/printer-lab.html" class="btn-enter-lab">
+                Enter Lab <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <!-- Device Classifier -->
+        <div class="lab-card">
+            <i class="fas fa-arrows-split-up-and-left"></i>
+            <div>
+                <h2>Device Classifier</h2>
+                <p>Can you identify your peripherals? Drag and sort various devices into Input, Output, or Storage categories.</p>
+            </div>
+            <a href="SIMULATOR/device-classifier.html" class="btn-enter-lab">
+                Start Sorting <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <!-- Network Virtualizer -->
+        <div class="lab-card">
+            <i class="fas fa-network-wired"></i>
+            <div>
+                <h2>Network Visualizer</h2>
+                <p>Visualize how data packets travel across the web. Send data through routers and see how noise affects speed.</p>
+            </div>
+            <a href="SIMULATOR/network-lab.html" class="btn-enter-lab">
+                Connect Now <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+        <!-- Number System Lab -->
+        <div class="lab-card">
+            <i class="fas fa-barcode"></i>
+            <div>
+                <h2>Number System Lab</h2>
+                <p>Master binary-to-decimal conversion through interactive bit-toggling. Challenge yourself with real practice modes and target matching.</p>
+            </div>
+            <a href="SIMULATOR/number-system-lab.html" class="btn-enter-lab">
+                Start Practicing <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+
+    </div>
+
+    <footer>
+        <p>&copy; 2026 CYBER BREAKER Education Initiative. All rights reserved.</p>
+    </footer>
+
+</body>
+</html>

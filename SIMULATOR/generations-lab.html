@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gen-Tech Odyssey | Cyber Breaker Labs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #0f172a;
+            --card: #1e293b;
+            --accent: #00ffcc;
+            --g1: #94a3b8;
+            --g2: #3b82f6;
+            --g3: #a855f7;
+            --g4: #f43f5e;
+            --g5: #10b981;
+            --text: #f8fafc;
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Nav */
+        nav {
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: var(--g2);
+            transform: translateX(-5px);
+        }
+
+        /* Timeline Container */
+        .timeline-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            padding: 2rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .header-section {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .header-section h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(to right, var(--g2), var(--g5));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+        }
+
+        /* ERA Selector Slider */
+        .era-slider {
+            display: flex;
+            justify-content: space-between;
+            position: relative;
+            margin: 2rem 0 4rem;
+            padding: 0 50px;
+        }
+
+        .era-slider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50px;
+            right: 50px;
+            height: 4px;
+            background: rgba(255,255,255,0.1);
+            z-index: 1;
+        }
+
+        .era-line {
+            position: absolute;
+            top: 50%;
+            left: 50px;
+            width: 0%;
+            height: 4px;
+            background: linear-gradient(to right, var(--g1), var(--g5));
+            z-index: 2;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .era-point {
+            position: relative;
+            z-index: 3;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--card);
+            border: 3px solid #334155;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.3s;
+            font-weight: 800;
+        }
+
+        .era-point:hover {
+            transform: scale(1.1);
+            border-color: var(--accent);
+        }
+
+        .era-point.active {
+            background: var(--bg);
+            border-color: var(--accent);
+            box-shadow: 0 0 20px var(--accent);
+        }
+
+        .era-label {
+            position: absolute;
+            top: 60px;
+            white-space: nowrap;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #94a3b8;
+            text-transform: uppercase;
+        }
+
+        /* Display Area */
+        .display-area {
+            display: grid;
+            grid-template-columns: 1fr 1.5fr;
+            gap: 3rem;
+            background: var(--card);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            padding: 3rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            min-height: 500px;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Left: Component Visual */
+        .visual-panel {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.2);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid rgba(255,255,255,0.05);
+            gap: 2rem;
+        }
+
+        .component-img {
+            width: 200px;
+            height: 200px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 80px;
+            box-shadow: 0 0 40px rgba(0,0,0,0.4);
+            transition: 0.5s;
+        }
+
+        /* Right: Stats & Info */
+        .info-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .era-title {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--accent);
+        }
+
+        .period {
+            font-size: 1.1rem;
+            color: #94a3b8;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+        }
+
+        .stat-card {
+            background: rgba(255,255,255,0.05);
+            padding: 1rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--accent);
+        }
+
+        .stat-card label {
+            display: block;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: #94a3b8;
+            margin-bottom: 5px;
+        }
+
+        .stat-card span {
+            font-weight: 700;
+            font-size: 1.1rem;
+        }
+
+        .description {
+            line-height: 1.6;
+            color: #94a3b8;
+        }
+
+        .boot-btn {
+            background: var(--accent);
+            color: black;
+            border: none;
+            padding: 1rem;
+            border-radius: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .boot-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 20px rgba(0, 255, 204, 0.4);
+        }
+
+        /* Boot Animation Overlay */
+        .boot-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #000;
+            color: #0f0;
+            padding: 20px;
+            font-family: 'Courier New', Courier, monospace;
+            display: none;
+            z-index: 1000;
+            font-size: 0.8rem;
+        }
+
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div style="font-family: 'Orbitron'; font-weight: 800; font-size: 1.2rem; color: var(--accent)">
+            GENTECH ODYSSEY
+        </div>
+        <a href="../Labs.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Hub
+        </a>
+    </nav>
+
+    <div class="timeline-container">
+        <div class="header-section">
+            <h1>Travel Through Eras</h1>
+            <p style="color: #94a3b8;">Click the points on the timeline to explore different computer generations.</p>
+        </div>
+
+        <div class="era-slider">
+            <div class="era-line" id="era-line"></div>
+            <div class="era-point active" onclick="setEra(1)">1<div class="era-label">1946-59</div></div>
+            <div class="era-point" onclick="setEra(2)">2<div class="era-label">1959-65</div></div>
+            <div class="era-point" onclick="setEra(3)">3<div class="era-label">1965-71</div></div>
+            <div class="era-point" onclick="setEra(4)">4<div class="era-label">1971-80</div></div>
+            <div class="era-point" onclick="setEra(5)">5<div class="era-label">PRESENT</div></div>
+        </div>
+
+        <div class="display-area" id="display-area">
+            <div class="visual-panel">
+                <div class="component-img" id="comp-img">
+                    <i class="fas fa-microchip"></i>
+                </div>
+                <h3 id="comp-name" style="text-align: center;">Vacuum Tubes</h3>
+            </div>
+
+            <div class="info-panel">
+                <div class="period" id="gen-num">FIRST GENERATION</div>
+                <h1 class="era-title" id="era-title">The Age of Tubes</h1>
+                
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <label>Main Component</label>
+                        <span id="stat-main">Vacuum Tubes</span>
+                    </div>
+                    <div class="stat-card">
+                        <label>Physical Size</label>
+                        <span id="stat-size">Room Sized</span>
+                    </div>
+                    <div class="stat-card">
+                        <label>Processing Speed</label>
+                        <span id="stat-speed">Milliseconds</span>
+                    </div>
+                    <div class="stat-card">
+                        <label>Example System</label>
+                        <span id="stat-example">ENIAC, UNIVAC</span>
+                    </div>
+                </div>
+
+                <p class="description" id="gen-desc">
+                    These computers used vacuum tubes for circuitry and magnetic drums for memory. They were expensive, huge, and generated immense heat.
+                </p>
+
+                <button class="boot-btn" onclick="bootSystem()">
+                    <i class="fas fa-power-off"></i> Boot Era System
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Boot Terminal -->
+    <div id="boot-overlay" class="boot-overlay">
+        <div id="boot-text"></div>
+    </div>
+
+    <script>
+        const eraData = {
+            1: {
+                gen: "FIRST GENERATION",
+                title: "Age of Vacuum Tubes",
+                main: "Vacuum Tubes",
+                size: "Massive (Rooms)",
+                speed: "Slow (ms)",
+                example: "ENIAC, UNIVAC",
+                desc: "The first mechanical computers use thousands of vacuum tubes. They are bulky, consume massive electricity, and break down often. Programming is done in pure Binary (0s and 1s).",
+                icon: "fa-vial",
+                color: "#94a3b8",
+                boot: ["LOADING ENIAC OS...", "READING CARDS...", "TUBES WARMING UP...", "CALCULATING MATH...", "SYSTEM READY."]
+            },
+            2: {
+                gen: "SECOND GENERATION",
+                title: "Transistor Revolution",
+                main: "Transistors",
+                size: "Small Building",
+                speed: "Faster (μs)",
+                example: "IBM 7094",
+                desc: "Vacuum tubes are replaced by Transistors. Computers become smaller, faster, and more reliable. This era sees the birth of COBOL and FORTRAN languages.",
+                icon: "fa-microchip",
+                color: "#3b82f6",
+                boot: ["IBM 7094 KERNEL INIT...", "TRANSISTORS ACTIVE...", "MEMORY CHECK: 12KB...", "LOAD FORTRAN...", "SYSTEM READY."]
+            },
+            3: {
+                gen: "THIRD GENERATION",
+                title: "Integrated Circuits",
+                main: "IC Chips",
+                size: "Desk Sized",
+                speed: "Fast (ns)",
+                example: "IBM System/360",
+                desc: "Silicon chips called Integrated Circuits hold many transistors at once. This leads to the arrival of 'Operating Systems' that allow running many apps at once.",
+                icon: "fa-square-check",
+                color: "#a855f7",
+                boot: ["OS/360 BOOTING...", "CHECKING SILICON CHIPS...", "STARTING MULTI-TASKING...", "GUI EMULATOR LOADED...", "SYSTEM READY."]
+            },
+            4: {
+                gen: "FOURTH GENERATION",
+                title: "Microprocessor Age",
+                main: "VLSI / CPU",
+                size: "Palm/Desk Sized",
+                speed: "Super Fast (ps)",
+                example: "Apple II, Altair",
+                desc: "Thousands of ICs are built onto a single silicon chip: the Microprocessor. This gave birth to the PC revolution and the internet as we know it.",
+                icon: "fa-laptop",
+                color: "#f43f5e",
+                boot: ["INTEL 8086 DETECTED...", "AUTO-CONFIGURING RAM...", "BOOTING MS-DOS...", "WINDOWS UI STARTING...", "SYSTEM READY."]
+            },
+            5: {
+                gen: "FIFTH GENERATION",
+                title: "AI & Neural Nets",
+                main: "ULSI / AI",
+                size: "Ultra Portable",
+                speed: "Ultra Fast (fs)",
+                example: "Siri, GPT, DeepBlue",
+                desc: "Computers use Artificial Intelligence to learn and solve problems like humans. They can recognize voices, shapes, and patterns across huge datasets.",
+                icon: "fa-brain",
+                color: "#10b981",
+                boot: ["NEURAL ENGINE ACTIVE...", "SYNCING CLOUD DATA...", "AI ASSISTANT ONLINE...", "PREDICTING USER NEEDS...", "READY TO ASSIST."]
+            }
+        };
+
+        function setEra(num) {
+            const data = eraData[num];
+            
+            // UI Points
+            document.querySelectorAll('.era-point').forEach((p, i) => {
+                if(i < num) p.classList.add('active');
+                else p.classList.remove('active');
+            });
+            document.getElementById('era-line').style.width = ((num - 1) / 4 * 100) + "%";
+
+            // Visuals
+            const disp = document.getElementById('display-area');
+            disp.style.opacity = '0';
+            
+            setTimeout(() => {
+                document.getElementById('gen-num').innerText = data.gen;
+                document.getElementById('era-title').innerText = data.title;
+                document.getElementById('stat-main').innerText = data.main;
+                document.getElementById('stat-size').innerText = data.size;
+                document.getElementById('stat-speed').innerText = data.speed;
+                document.getElementById('stat-example').innerText = data.example;
+                document.getElementById('gen-desc').innerText = data.desc;
+                
+                const img = document.getElementById('comp-img');
+                img.innerHTML = `<i class="fas ${data.icon}" style="color: ${data.color}"></i>`;
+                img.style.boxShadow = `0 0 40px ${data.color + '44'}`;
+                document.getElementById('comp-name').innerText = data.main;
+                
+                document.documentElement.style.setProperty('--accent', data.color);
+                
+                disp.style.opacity = '1';
+                currentEra = num;
+            }, 300);
+        }
+
+        let currentEra = 1;
+
+        async function bootSystem() {
+            const overlay = document.getElementById('boot-overlay');
+            const textDiv = document.getElementById('boot-text');
+            overlay.style.display = 'block';
+            textDiv.innerHTML = "";
+            
+            const logs = eraData[currentEra].boot;
+            for(let log of logs) {
+                textDiv.innerHTML += `> ${log}<br>`;
+                await new Promise(r => setTimeout(r, 700));
+            }
+            
+            setTimeout(() => {
+                overlay.style.display = 'none';
+                alert("The " + eraData[currentEra].gen + " system boot emulation finished.");
+            }, 1000);
+        }
+
+    </script>
+</body>
+</html>

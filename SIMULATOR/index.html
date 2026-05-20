@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en" class="active-mode-learn">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IPOS Simulator | Educational Tech Tool</title>
+  <!-- SEO -->
+  <meta name="description" content="Master the computer's core lifecycle: Input, Process, Output, and Storage with our interactive 3D simulator.">
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+  
+  <!-- Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Custom CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <div class="container">
+    <!-- HEADER -->
+    <header>
+      <div class="logo-container">
+        <div class="logo-icon"><i class="fas fa-microchip"></i></div>
+        <div class="title-group">
+          <h1>IPOS Simulator</h1>
+          <p>The Computer System Cycle Explained</p>
+        </div>
+      </div>
+      
+      <div class="header-actions">
+        <button class="back-btn" onclick="location.href='../Labs.html'">
+          <i class="fas fa-arrow-left"></i> Back to Labs
+        </button>
+        <div class="mode-toggle">
+          <button id="learn-btn" class="mode-btn active" onclick="setMode('learn')">
+            <i class="fas fa-book-open"></i> Learn
+          </button>
+          <button id="practice-btn" class="mode-btn" onclick="setMode('practice')">
+            <i class="fas fa-gamepad"></i> Practice
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- HERO SECTION (Learn Mode only) -->
+    <section id="hero" class="learn-content" style="margin-bottom: 2rem;">
+      <div style="background: url('assets/hero.png') no-repeat center center; background-size: cover; height: 300px; border-radius: 1rem; position: relative; border: 1px solid var(--glass-border); overflow: hidden;">
+        <div style="position: absolute; bottom: 0; left: 0; right: 0; background: linear-gradient(transparent, var(--bg-primary)); padding: 2rem;">
+          <p style="color: white; font-weight: 600; font-size: 1.1rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5);">Explore how computers handle data step-by-step!</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- SIMULATOR MAIN FLOW -->
+    <main class="ipos-flow" id="main-flow">
+      
+      <!-- 1. INPUT -->
+      <section class="panel input-panel" id="panel-input">
+        <div class="panel-header">
+          <i class="fas fa-keyboard"></i>
+          <h2>1. Input</h2>
+        </div>
+        
+        <div class="field-group">
+          <label for="input-type">Data Type</label>
+          <select id="input-type" onchange="toggleInputs()">
+            <option value="text">Text Data</option>
+            <option value="number">Numeric Data</option>
+            <option value="list">Data Array (List)</option>
+          </select>
+        </div>
+
+        <!-- Text Input View -->
+        <div id="view-text" class="input-view">
+          <div class="field-group">
+            <label>Raw Data</label>
+            <textarea id="data-text" placeholder="Type something to process..."></textarea>
+          </div>
+        </div>
+
+        <!-- Number Input View -->
+        <div id="view-number" class="input-view" style="display:none">
+          <div class="field-group">
+            <label>Value A</label>
+            <input type="number" id="num-a" placeholder="Enter first number">
+          </div>
+          <div class="field-group">
+            <label>Value B</label>
+            <input type="number" id="num-b" placeholder="Enter second number">
+          </div>
+        </div>
+
+        <!-- List View -->
+        <div id="view-list" class="input-view" style="display:none">
+          <div class="field-group">
+            <label>Comma Sep. Values</label>
+            <input type="text" id="data-list" placeholder="e.g. 5, 2, 9, 1">
+          </div>
+        </div>
+
+        <button class="run-btn" id="btn-run" onclick="startFlow()">
+          <span>RUN SYSTEM</span>
+          <i class="fas fa-play"></i>
+        </button>
+      </section>
+
+      <!-- 2. PROCESS -->
+      <section class="panel process-panel" id="panel-process">
+        <div class="panel-header">
+          <i class="fas fa-cog"></i>
+          <h2>2. Process</h2>
+        </div>
+        
+        <div class="field-group">
+          <label>Operation Selection</label>
+          <select id="op-select">
+            <!-- Dynamic based on input type -->
+            <optgroup label="Text Operations" id="ops-text">
+              <option value="upper">UPPERCASE</option>
+              <option value="lower">lowercase</option>
+              <option value="reverse">Reverse String</option>
+            </optgroup>
+            <optgroup label="Math Operations" id="ops-math" style="display:none">
+              <option value="add">Add Sum (+)</option>
+              <option value="multiply">Multiply (×)</option>
+            </optgroup>
+            <optgroup label="Data Operations" id="ops-list" style="display:none">
+              <option value="sort">Sort Ascending</option>
+              <option value="max">Find Maximum</option>
+            </optgroup>
+          </select>
+        </div>
+
+        <div class="process-display">
+          <div class="cog-container">
+            <i class="fas fa-cog cog" id="cog-icon"></i>
+          </div>
+          <p class="process-text" id="status-text">System Idle...</p>
+        </div>
+      </section>
+
+      <!-- 3. OUTPUT -->
+      <section class="panel output-panel" id="panel-output">
+        <div class="panel-header">
+          <i class="fas fa-desktop"></i>
+          <h2>3. Output</h2>
+        </div>
+        
+        <div class="output-display">
+          <p class="result-placeholder" id="output-placeholder">Waiting for processing...</p>
+          <div id="output-value" class="result-value" style="display:none"></div>
+        </div>
+        
+        <div style="font-size: 0.8rem; color: var(--text-muted);">
+          <i class="fas fa-info-circle"></i> This is the result presented back to you.
+        </div>
+      </section>
+
+      <!-- 4. STORAGE -->
+      <section class="panel storage-panel" id="panel-storage">
+        <div class="panel-header">
+          <i class="fas fa-database"></i>
+          <h2>4. Storage</h2>
+        </div>
+        
+        <label>Recent History</label>
+        <div class="history-list" id="storage-history">
+          <!-- History items here -->
+        </div>
+        
+        <button class="clear-btn" onclick="clearStorage()">
+          <i class="fas fa-trash"></i> Wipe Memory
+        </button>
+      </section>
+
+    </main>
+
+    <!-- EDUCATIONAL CONTENT -->
+    <section class="info-section learn-content">
+      <h2 style="font-size: 1.5rem; margin-bottom: 1rem;"><i class="fas fa-graduation-cap"></i> Mastering IPOS Cycle</h2>
+      <p>The IPOS Cycle represents the main phases of data transformation in every computer system.</p>
+      
+      <div class="info-cards">
+        <div class="info-card" style="border-color: var(--input-color);">
+          <h3><i class="fas fa-keyboard"></i> Input</h3>
+          <p>Any data or instructions sent to a computer. Think of it as the 'Ingredients' for a recipe.</p>
+        </div>
+        <div class="info-card" style="border-color: var(--process-color);">
+          <h3><i class="fas fa-cog"></i> Process</h3>
+          <p>The CPU executing instructions on the input. This is the 'Cooking' phase.</p>
+        </div>
+        <div class="info-card" style="border-color: var(--output-color);">
+          <h3><i class="fas fa-desktop"></i> Output</h3>
+          <p>The final result of the process. This is the 'Served Meal'.</p>
+        </div>
+        <div class="info-card" style="border-color: var(--storage-color);">
+          <h3><i class="fas fa-database"></i> Storage</h3>
+          <p>Saving data for later use. This is the 'Leftovers' kept in the fridge.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PRACTICE MODE OVERLAY (Placeholder for mini-challenge) -->
+    <div id="practice-container" style="display:none; margin-top: 2rem;">
+      <div class="panel" style="border-bottom: 4px solid var(--process-color);">
+        <h2><i class="fas fa-star"></i> Challenge Mode</h2>
+        <p>Complete the missions by running correct processes!</p>
+        <div id="challenge-desc" style="padding: 1rem; background: var(--bg-accent); margin: 1rem 0; border-radius: 0.5rem; font-weight: 600;">
+          MISSION: Convert the text "antigravity" to uppercase.
+        </div>
+        <div style="font-size: 0.9rem;">
+          Progress: <span id="progress">0</span> / 3
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <div id="particle-container"></div>
+
+  <!-- Custom JS -->
+  <script src="js/script.js"></script>
+</body>
+</html>

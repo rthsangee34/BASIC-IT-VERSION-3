@@ -1,0 +1,727 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Importance of ICT - Interactive Quiz</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Confetti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        :root {
+            /* Light Theme Variables */
+            --primary: #4361ee;
+            --secondary: #3f37c9;
+            --accent: #4cc9f0;
+            --bg-page: #f8faff;
+            --bg-card: #ffffff;
+            --text-main: #2b2d42;
+            --text-muted: #6c757d;
+            --border: #e2e8f0;
+            --option-hover: #f1f5f9;
+            --correct: #22c55e;
+            --wrong: #ef4444;
+            --timer-bar: #4361ee;
+            --shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme Variables */
+            --primary: #4cc9f0;
+            --secondary: #4361ee;
+            --accent: #f72585;
+            --bg-page: #0b0e14;
+            --bg-card: #161b22;
+            --text-main: #f0f2f5;
+            --text-muted: #a0aab8;
+            --border: #30363d;
+            --option-hover: #1c2128;
+            --correct: #238636;
+            --wrong: #da3633;
+            --timer-bar: #4cc9f0;
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s, color 0.2s, border-color 0.3s;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background-color: var(--bg-page);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Header & Theme Toggle */
+        header {
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-card);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            z-index: 10;
+        }
+
+        .logo {
+            font-family: 'Outfit', sans-serif;
+            font-weight: 800;
+            font-size: 1.5rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .theme-toggle-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 4px 15px rgba(67, 97, 238, 0.3);
+        }
+
+        /* Main Container */
+        main {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .quiz-card {
+            background: var(--bg-card);
+            max-width: 700px;
+            width: 100%;
+            border-radius: 24px;
+            padding: 40px;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+            animation: slideUp 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Welcome Screen */
+        .welcome-screen { text-align: center; }
+        .welcome-screen i { font-size: 5rem; color: var(--primary); margin-bottom: 20px; }
+        .welcome-screen h2 { font-size: 2rem; margin-bottom: 15px; font-family: 'Outfit', sans-serif; }
+        .welcome-screen p { color: var(--text-muted); margin-bottom: 30px; }
+
+        /* Quiz UI Elements */
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .timer-container {
+            flex: 1;
+            margin: 0 20px;
+            height: 10px;
+            background: var(--border);
+            border-radius: 10px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .timer-bar {
+            height: 100%;
+            background: var(--timer-bar);
+            width: 100%;
+            transition: width 1s linear;
+        }
+
+        .progress-text {
+            font-weight: 700;
+            color: var(--primary);
+            font-size: 0.9rem;
+        }
+
+        .timer-text { font-weight: 800; font-size: 1.1rem; width: 30px; text-align: right;}
+
+        .question-box {
+            margin-bottom: 30px;
+        }
+
+        .question-box h3 {
+            font-size: 1.35rem;
+            line-height: 1.4;
+            margin-bottom: 20px;
+        }
+
+        /* Options Grid */
+        .options-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option-btn {
+            background: transparent;
+            border: 2px solid var(--border);
+            padding: 16px 20px;
+            border-radius: 16px;
+            text-align: left;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-main);
+            transition: 0.3s cubic-bezier(0.075, 0.82, 0.165, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            border-color: var(--primary);
+            background-color: var(--option-hover);
+            transform: translateX(10px);
+        }
+
+        .option-btn.correct {
+            background-color: var(--correct) !important;
+            border-color: var(--correct) !important;
+            color: white !important;
+        }
+
+        .option-btn.wrong {
+            background-color: var(--wrong) !important;
+            border-color: var(--wrong) !important;
+            color: white !important;
+        }
+
+        /* Feedback Animation */
+        .feedback-overlay {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(var(--bg-card-rgb), 0.8);
+            z-index: 5;
+            display: none;
+        }
+
+        /* Result Screen */
+        .result-screen {
+            text-align: center;
+            display: none;
+        }
+
+        .result-screen h2 { font-size: 2.5rem; margin-bottom: 10px; font-family: 'Outfit', sans-serif;}
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border: 8px solid var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 20px auto;
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary);
+            animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .result-message {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: var(--text-muted);
+        }
+
+        .quote-container {
+            background: var(--option-hover);
+            padding: 24px;
+            border-radius: 16px;
+            border-left: 5px solid var(--accent);
+            margin: 20px 0 30px;
+            font-style: italic;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: 0.8s ease forwards;
+        }
+
+        .quote-container.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 16px 32px;
+            border-radius: 16px;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.3);
+        }
+
+        .btn-primary:hover {
+            background: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(67, 97, 238, 0.4);
+        }
+
+        /* Footer */
+        footer {
+            padding: 30px 5%;
+            text-align: center;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 600px) {
+            .quiz-card { padding: 30px 20px; border-radius: 0; height: 100%; border-radius: 20px;}
+            header { padding: 15px 5%; }
+            .logo span { display: none; }
+            .timer-container { margin: 0 10px; }
+            .question-box h3 { font-size: 1.15rem; }
+            .option-btn { font-size: 0.9rem; padding: 14px 16px; }
+        }
+    </style>
+</head>
+<body data-theme="light">
+
+    <!-- Header -->
+    <header>
+        <div class="logo">
+            <i class="fas fa-microchip"></i>
+            <span>CYBER BREAKER</span>
+        </div>
+        <button class="theme-toggle-btn" id="theme-btn">
+            <i class="fas fa-moon"></i>
+        </button>
+    </header>
+
+    <main>
+        <div class="quiz-card">
+            
+            <!-- Welcome Screen -->
+            <div id="welcome-screen" class="welcome-screen">
+                <i class="fas fa-brain"></i>
+                <h2>ICT Importance Quiz</h2>
+                <p>Test your knowledge about Information and Communication Technology. 10 questions, 30 seconds each!</p>
+                <button class="btn btn-primary" onclick="startQuiz()">
+                    Start Assessment <i class="fas fa-play"></i>
+                </button>
+            </div>
+
+            <!-- Quiz Display -->
+            <div id="quiz-container" style="display: none;">
+                <div class="quiz-header">
+                    <span class="progress-text" id="progress-text">Question 1 of 10</span>
+                    <div class="timer-container">
+                        <div class="timer-bar" id="timer-bar"></div>
+                    </div>
+                    <span class="timer-text" id="timer-count">30</span>
+                </div>
+
+                <div class="question-box">
+                    <h3 id="question-text">Question goes here?</h3>
+                    <div class="options-grid" id="options-grid">
+                        <!-- Options will be generated here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Result Screen -->
+            <div id="result-screen" class="result-screen">
+                <div id="result-emoji" style="font-size: 4rem; margin-bottom: 20px;">🎉</div>
+                <h2 id="result-title">Excellent Work!</h2>
+                <div class="score-circle" id="score-text">0/10</div>
+                <p class="result-message" id="result-message">You have strong ICT knowledge!</p>
+                
+                <div id="quote-box" class="quote-container">
+                    <p id="quote-text">"Success is not final, failure is not fatal: it is the courage to continue that counts."</p>
+                </div>
+
+                <button class="btn btn-primary" onclick="restartQuiz()">
+                    Try Again <i class="fas fa-redo"></i>
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>Interactive ICT Learning Quiz – Designed for Students | Supports Mobile and Desktop Devices.</p>
+    </footer>
+
+    <script>
+        const questions = [
+            {
+                q: "What does ICT stand for?",
+                options: [
+                    "Information and Computer Technology",
+                    "Information and Communication Technology",
+                    "Internet and Computer Tools",
+                    "Integrated Communication Technology"
+                ],
+                a: 1
+            },
+            {
+                q: "Which of the following is an example of ICT communication?",
+                options: [
+                    "Sending a letter by post",
+                    "Sending a message through WhatsApp",
+                    "Writing on paper",
+                    "Using a notice board"
+                ],
+                a: 1
+            },
+            {
+                q: "How does ICT help students learn better?",
+                options: [
+                    "By removing books",
+                    "By providing online learning resources and videos",
+                    "By stopping internet access",
+                    "By reducing teachers"
+                ],
+                a: 1
+            },
+            {
+                q: "Which platform can students use for online classes?",
+                options: [
+                    "Zoom",
+                    "Calculator",
+                    "Printer",
+                    "Keyboard"
+                ],
+                a: 0
+            },
+            {
+                q: "How does ICT help businesses?",
+                options: [
+                    "By increasing paperwork",
+                    "By helping companies sell products online and communicate faster",
+                    "By reducing customers",
+                    "By stopping advertisements"
+                ],
+                a: 1
+            },
+            {
+                q: "Which tool helps students search for information on the internet?",
+                options: [
+                    "Google Search",
+                    "Scanner",
+                    "Flash Drive",
+                    "Printer"
+                ],
+                a: 0
+            },
+            {
+                q: "How does ICT help hospitals?",
+                options: [
+                    "By destroying medical records",
+                    "By storing and sharing patient information digitally",
+                    "By removing doctors",
+                    "By stopping communication"
+                ],
+                a: 1
+            },
+            {
+                q: "What is one main benefit of ICT communication?",
+                options: [
+                    "Slower communication",
+                    "Instant communication anywhere in the world",
+                    "Limited information",
+                    "Higher paper usage"
+                ],
+                a: 1
+            },
+            {
+                q: "Which of the following is an ICT device?",
+                options: [
+                    "Computer",
+                    "Book",
+                    "Pencil",
+                    "Chalk"
+                ],
+                a: 0
+            },
+            {
+                q: "Why does ICT save time?",
+                options: [
+                    "Because it automates tasks and allows faster communication",
+                    "Because it removes electricity",
+                    "Because it slows work",
+                    "Because it increases manual work"
+                ],
+                a: 0
+            }
+        ];
+
+        const quotes = [
+            "Success is not final, failure is not fatal: it is the courage to continue that counts.",
+            "Mistakes are proof that you are trying. Keep learning and improving.",
+            "Learning is a treasure that will follow its owner everywhere.",
+            "The beautiful thing about learning is that nobody can take it away from you.",
+            "Don't let what you cannot do interfere with what you can do."
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let timeLeft = 30;
+        let timerInterval;
+        let isAnswered = false;
+        let shuffledQuestions = [];
+        let soundContext;
+
+        // Sound Engine (Web Audio API)
+        function playClickSound(frequency = 400, type = 'sine', volume = 0.1) {
+            try {
+                if (!soundContext) soundContext = new (window.AudioContext || window.webkitAudioContext)();
+                if (soundContext.state === 'suspended') soundContext.resume();
+                
+                const osc = soundContext.createOscillator();
+                const gain = soundContext.createGain();
+                
+                osc.type = type;
+                osc.frequency.setValueAtTime(frequency, soundContext.currentTime);
+                
+                gain.gain.setValueAtTime(volume, soundContext.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.0001, soundContext.currentTime + 0.1);
+                
+                osc.connect(gain);
+                gain.connect(soundContext.destination);
+                
+                osc.start();
+                osc.stop(soundContext.currentTime + 0.1);
+            } catch (e) {
+                console.log('Audio not supported or blocked');
+            }
+        }
+
+        // Theme Toggle Logic
+        const themeBtn = document.getElementById('theme-btn');
+        themeBtn.addEventListener('click', () => {
+            playClickSound(440, 'sine', 0.05);
+            const currentTheme = document.body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            document.body.setAttribute('data-theme', newTheme);
+            themeBtn.innerHTML = newTheme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+            localStorage.setItem('ict-quiz-theme', newTheme);
+        });
+
+        // Initialize theme from localStorage
+        const savedTheme = localStorage.getItem('ict-quiz-theme');
+        if (savedTheme) {
+            document.body.setAttribute('data-theme', savedTheme);
+            themeBtn.innerHTML = savedTheme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+        }
+
+        function startQuiz() {
+            playClickSound(500, 'sine', 0.1);
+            document.getElementById('welcome-screen').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'none';
+            document.getElementById('quiz-container').style.display = 'block';
+            
+            shuffledQuestions = shuffle([...questions]);
+            currentQuestionIndex = 0;
+            score = 0;
+            
+            showQuestion();
+        }
+
+        function showQuestion() {
+            isAnswered = false;
+            const qData = shuffledQuestions[currentQuestionIndex];
+            
+            // Shuffling options while keeping track of correct one
+            const correctOptionText = qData.options[qData.a];
+            const shuffledOptions = shuffle([...qData.options]);
+            const newCorrectIndex = shuffledOptions.indexOf(correctOptionText);
+            
+            document.getElementById('progress-text').innerText = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+            document.getElementById('question-text').innerText = qData.q;
+            
+            const optionsGrid = document.getElementById('options-grid');
+            optionsGrid.innerHTML = '';
+            
+            shuffledOptions.forEach((option, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = option;
+                btn.onclick = () => selectOption(index, newCorrectIndex, btn);
+                optionsGrid.appendChild(btn);
+            });
+
+            resetTimer();
+        }
+
+        function selectOption(index, correctIndex, btn) {
+            if (isAnswered) return;
+            isAnswered = true;
+            clearInterval(timerInterval);
+
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach(b => b.disabled = true);
+
+            if (index === correctIndex) {
+                btn.classList.add('correct');
+                playClickSound(600, 'triangle', 0.1);
+                score++;
+            } else {
+                btn.classList.add('wrong');
+                playClickSound(200, 'square', 0.1);
+                allBtns[correctIndex].classList.add('correct');
+            }
+
+            setTimeout(nextQuestion, 1500);
+        }
+
+        function nextQuestion() {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < shuffledQuestions.length) {
+                showQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function showResults() {
+            document.getElementById('quiz-container').style.display = 'none';
+            const resultScreen = document.getElementById('result-screen');
+            resultScreen.style.display = 'block';
+            
+            document.getElementById('score-text').innerText = `${score}/${questions.length}`;
+            
+            const emojiEl = document.getElementById('result-emoji');
+            const titleEl = document.getElementById('result-title');
+            const messageEl = document.getElementById('result-message');
+            const quoteBox = document.getElementById('quote-box');
+            
+            if (score > 7) {
+                emojiEl.innerText = '🎉';
+                titleEl.innerText = 'Excellent Work!';
+                messageEl.innerText = 'You have strong ICT knowledge!';
+                quoteBox.classList.remove('show');
+                triggerConfetti();
+                playClickSound(800, 'triangle', 0.2);
+            } else {
+                emojiEl.innerText = '💡';
+                titleEl.innerText = 'Keep It Up!';
+                messageEl.innerText = 'Good attempt. Learning never stops!';
+                const randomQuote = quotes[Math.floor(Math.random() * quotes.length)];
+                document.getElementById('quote-text').innerText = randomQuote;
+                setTimeout(() => quoteBox.classList.add('show'), 500);
+                playClickSound(150, 'sawtooth', 0.2);
+            }
+        }
+
+        function restartQuiz() {
+            playClickSound(500, 'sine', 0.1);
+            startQuiz();
+        }
+
+        // Timer Logic
+        function resetTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 30;
+            updateTimerUI();
+            
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerUI();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    autoNext();
+                }
+            }, 1000);
+        }
+
+        function updateTimerUI() {
+            document.getElementById('timer-count').innerText = timeLeft;
+            const bar = document.getElementById('timer-bar');
+            const percentage = (timeLeft / 30) * 100;
+            bar.style.width = percentage + '%';
+            
+            if (timeLeft <= 5) {
+                bar.style.backgroundColor = 'var(--wrong)';
+            } else {
+                bar.style.backgroundColor = 'var(--timer-bar)';
+            }
+        }
+
+        function autoNext() {
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach(b => b.disabled = true);
+            // Highlight correct one even if user didn't pick
+            // This is a bit complex since we shuffle, but for auto-next we just skip
+            setTimeout(nextQuestion, 1000);
+        }
+
+        // Utils
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function triggerConfetti() {
+            var count = 200;
+            var defaults = { origin: { y: 0.7 } };
+
+            function fire(particleRatio, opts) {
+                confetti({
+                    ...defaults,
+                    ...opts,
+                    particleCount: Math.floor(count * particleRatio)
+                });
+            }
+
+            fire(0.25, { spread: 26, startVelocity: 55 });
+            fire(0.2, { spread: 60 });
+            fire(0.35, { spread: 100, decay: 0.91, scalar: 0.8 });
+            fire(0.1, { spread: 120, startVelocity: 25, decay: 0.92, scalar: 1.2 });
+            fire(0.1, { spread: 120, startVelocity: 45 });
+        }
+    </script>
+</body>
+</html>

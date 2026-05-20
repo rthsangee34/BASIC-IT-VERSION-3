@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER BREAKER - Computer Generations Quiz</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            /* Light Mode */
+            --bg-body: #f0f7ff;
+            --bg-glass: rgba(255, 255, 255, 0.7);
+            --border-glass: rgba(255, 255, 255, 0.3);
+            --shadow-glass: rgba(0, 102, 255, 0.1);
+            --text-primary: #1a2b4b;
+            --text-secondary: #4a5d7e;
+            --accent-primary: #008080;
+            --accent-secondary: #00d2ff;
+            --correct: #10b981;
+            --wrong: #ef4444;
+        }
+
+        [data-theme="dark"] {
+            /* Dark Mode */
+            --bg-body: #050a15;
+            --bg-glass: rgba(15, 23, 42, 0.7);
+            --border-glass: rgba(255, 255, 255, 0.1);
+            --shadow-glass: rgba(0, 0, 0, 0.4);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --accent-primary: #00ffcc;
+            --accent-secondary: #818cf8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
+        }
+
+        /* Glassmorphism Classes */
+        .glass {
+            background: var(--bg-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass);
+            box-shadow: 0 8px 32px 0 var(--shadow-glass);
+        }
+
+        /* Navigation */
+        nav {
+            padding: 20px 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            z-index: 100;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--accent-primary);
+        }
+
+        .logo img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid var(--accent-primary);
+            box-shadow: 0 0 15px var(--accent-primary);
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        .theme-toggle, .back-btn {
+            background: var(--bg-glass);
+            color: var(--text-primary);
+            border: 1px solid var(--border-glass);
+            padding: 10px 15px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .theme-toggle:hover, .back-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--accent-primary);
+        }
+
+        /* Quiz Container */
+        .quiz-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 5%;
+        }
+
+        .quiz-card {
+            width: 100%;
+            max-width: 800px;
+            padding: 40px;
+            border-radius: 30px;
+            position: relative;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .quiz-header h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2rem;
+            color: var(--accent-primary);
+            margin-bottom: 15px;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(0,0,0,0.05);
+            border-radius: 10px;
+            margin-bottom: 10px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+            width: 0%;
+            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .timer-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: rgba(255, 68, 68, 0.1);
+            color: #ef4444;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+            border: 1px solid rgba(239, 68, 68, 0.2);
+        }
+
+        .timer-badge.warning {
+            animation: pulse-red 1s infinite;
+        }
+
+        @keyframes pulse-red {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .q-count {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        .question-box {
+            margin-bottom: 30px;
+        }
+
+        .question-text {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 25px;
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option-btn {
+            background: var(--bg-glass);
+            border: 2px solid var(--border-glass);
+            padding: 18px 25px;
+            border-radius: 16px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            transition: 0.3s;
+            text-align: left;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .option-btn:hover:not(:disabled) {
+            transform: translateX(10px);
+            border-color: var(--accent-primary);
+            background: rgba(0, 128, 128, 0.05);
+        }
+
+        .option-btn.correct {
+            border-color: var(--correct);
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--correct);
+        }
+
+        .option-btn.wrong {
+            border-color: var(--wrong);
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--wrong);
+        }
+
+        .option-btn:disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        .footer-controls {
+            margin-top: 30px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .next-btn {
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            display: none;
+        }
+
+        .next-btn:hover {
+            transform: scale(1.05);
+            background: var(--accent-secondary);
+            box-shadow: 0 10px 20px rgba(0, 128, 128, 0.2);
+        }
+
+        /* Result Screen */
+        .result-screen {
+            display: none;
+            text-align: center;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .score-circle {
+            width: 180px;
+            height: 180px;
+            border: 8px solid var(--accent-primary);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 30px;
+        }
+
+        .score-num {
+            font-size: 4rem;
+            font-weight: 700;
+            color: var(--accent-primary);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .score-text {
+            font-size: 1rem;
+            color: var(--text-secondary);
+        }
+
+        .result-btns {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .restart-btn {
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .restart-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0, 128, 128, 0.3);
+        }
+
+        /* Background Decorations */
+        .bg-glow {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, var(--accent-primary), transparent 70%);
+            opacity: 0.05;
+            z-index: -1;
+            border-radius: 50%;
+        }
+
+        #glow-1 { top: -250px; left: -250px; }
+        #glow-2 { bottom: -250px; right: -250px; }
+
+        /* Mobile Specific */
+        @media (max-width: 600px) {
+            .quiz-card {
+                padding: 25px 20px;
+            }
+            .question-text {
+                font-size: 1.2rem;
+            }
+            .option-btn {
+                padding: 15px 20px;
+                font-size: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="bg-glow" id="glow-1"></div>
+    <div class="bg-glow" id="glow-2"></div>
+
+    <nav>
+        <div class="logo">
+            <img src="logo.jpeg" alt="CYBER BREAKER">
+            <span>CYBER BREAKER</span>
+        </div>
+        <div class="nav-actions">
+            <button class="theme-toggle" id="theme-toggle">
+                <i class="fas fa-moon"></i>
+            </button>
+            <a href="generations.html" class="back-btn">
+                <i class="fas fa-book-open"></i> Learn
+            </a>
+        </div>
+    </nav>
+
+    <div class="quiz-container">
+        <div class="quiz-card glass">
+            
+            <div id="quiz-area">
+                <div class="quiz-header">
+                    <h1>Computer Generations Quiz</h1>
+                    <div class="timer-badge" id="timer-display">
+                        <i class="fas fa-clock"></i> <span id="time-left">30</span>s
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" id="progress-bar"></div>
+                    </div>
+                    <div class="q-count" id="q-count">Question 1 of 10</div>
+                </div>
+
+                <div class="question-box">
+                    <h2 class="question-text" id="question-text">Loading question...</h2>
+                    <div class="options-grid" id="options-grid">
+                        <!-- Options populated by JS -->
+                    </div>
+                </div>
+
+                <div class="footer-controls">
+                    <button class="next-btn" id="next-btn">Next Question <i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+
+            <div class="result-screen" id="result-screen">
+                <div id="result-header-area">
+                    <!-- Icon/Sticker will be injected here -->
+                </div>
+                <div class="score-circle">
+                    <span class="score-num" id="final-score">0</span>
+                    <span class="score-text">out of 10</span>
+                </div>
+                <h2 style="margin-bottom: 20px;" id="result-msg">Great Job!</h2>
+                <div id="failure-panel" style="display: none; background: rgba(239, 68, 68, 0.1); padding: 20px; border-radius: 20px; border: 1px solid rgba(239, 68, 68, 0.2); margin-bottom: 25px;">
+                    <p style="color: #ef4444; font-weight: 700; font-size: 1.1rem; margin-bottom: 10px;">Don't Give Up!</p>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem;">You need at least 7 correct answers to pass. Study the generations guide again!</p>
+                </div>
+                <div class="result-btns">
+                    <button class="restart-btn" id="retry-main-btn" onclick="initQuiz()">Try Again</button>
+                    <a href="lessons.html" class="back-btn" style="text-decoration: none;">All Lessons</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            {
+                q: "Which technology was used in first-generation computers (1940-1956)?",
+                o: ["Transistors", "Vacuum Tubes", "Integrated Circuits", "Microprocessors"],
+                c: 1
+            },
+            {
+                q: "In which computer generation were transistors first introduced?",
+                o: ["First", "Second", "Third", "Fourth"],
+                c: 1
+            },
+            {
+                q: "What massive technological leap defined the Third Generation (1964-1971)?",
+                o: ["Microprocessors", "Vacuum Tubes", "Integrated Circuits (ICs)", "Artificial Intelligence"],
+                c: 2
+            },
+            {
+                q: "Which generation saw the invention of the Microprocessor?",
+                o: ["Second", "Third", "Fourth", "Fifth"],
+                c: 2
+            },
+            {
+                q: "Artificial Intelligence and Quantum Computing are the focus of which generation?",
+                o: ["Third", "Fourth", "Fifth", "Sixth"],
+                c: 2
+            },
+            {
+                q: "Who were the inventors of the transistor at Bell Labs?",
+                o: ["Eckert and Mauchly", "Bardeen, Brattain, and Shockley", "Jack Kilby and Robert Noyce", "Bill Gates and Steve Jobs"],
+                c: 1
+            },
+            {
+                q: "Which of the following is an example of a first-generation computer?",
+                o: ["IBM 1401", "Apple II", "ENIAC", "IBM PC"],
+                c: 2
+            },
+            {
+                q: "Operating systems, monitors, and keyboards were first introduced in which generation?",
+                o: ["First", "Second", "Third", "Fourth"],
+                c: 2
+            },
+            {
+                q: "The IBM PC (1981) is a classic example of which generation?",
+                o: ["Second", "Third", "Fourth", "Fifth"],
+                c: 2
+            },
+            {
+                q: "What type of programming language was used in the first generation of computers?",
+                o: ["Assembly Language", "Machine Language", "C++", "Python"],
+                c: 1
+            }
+        ];
+
+        let currentQIndex = 0;
+        let score = 0;
+        let shuffledQuestions = [];
+        let timerSeconds = 30;
+        let timerInterval;
+        let soundContext;
+
+        function playClickSound(freq = 400, type = 'sine', duration = 0.1) {
+            if (!soundContext) soundContext = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = soundContext.createOscillator();
+            const gain = soundContext.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, soundContext.currentTime);
+            gain.gain.setValueAtTime(0.1, soundContext.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, soundContext.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(soundContext.destination);
+            osc.start();
+            osc.stop(soundContext.currentTime + duration);
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timerSeconds = 30;
+            const display = document.getElementById('time-left');
+            const badge = document.getElementById('timer-display');
+            display.innerText = timerSeconds;
+            badge.classList.remove('warning');
+
+            timerInterval = setInterval(() => {
+                timerSeconds--;
+                display.innerText = timerSeconds;
+
+                if (timerSeconds <= 10) {
+                    badge.classList.add('warning');
+                    playClickSound(200, 'square', 0.05); // Ticking sound
+                }
+
+                if (timerSeconds <= 0) {
+                    clearInterval(timerInterval);
+                    autoSubmit();
+                }
+            }, 1000);
+        }
+
+        function autoSubmit() {
+            handleAnswer(null, false);
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        function initQuiz() {
+            currentQIndex = 0;
+            score = 0;
+            shuffledQuestions = shuffleArray([...quizData]);
+            
+            document.getElementById('quiz-area').style.display = 'block';
+            document.getElementById('result-screen').style.display = 'none';
+            
+            loadQuestion();
+            startTimer();
+        }
+
+        function loadQuestion() {
+            startTimer();
+            const questionData = shuffledQuestions[currentQIndex];
+            const qText = document.getElementById('question-text');
+            const optionsGrid = document.getElementById('options-grid');
+            const nextBtn = document.getElementById('next-btn');
+            const qCount = document.getElementById('q-count');
+            const progressBar = document.getElementById('progress-bar');
+
+            qText.innerText = questionData.q;
+            qCount.innerText = `Question ${currentQIndex + 1} of 10`;
+            progressBar.style.width = `${((currentQIndex + 1) / 10) * 100}%`;
+            nextBtn.style.display = 'none';
+
+            optionsGrid.innerHTML = '';
+            
+            const originalOptions = questionData.o.map((text, index) => ({ text, isCorrect: index === questionData.c }));
+            const shuffledOptions = shuffleArray([...originalOptions]);
+
+            shuffledOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerText = opt.text;
+                btn.onclick = () => {
+                    playClickSound(400);
+                    handleAnswer(btn, opt.isCorrect);
+                };
+                optionsGrid.appendChild(btn);
+            });
+        }
+
+        function handleAnswer(selectedBtn, isCorrect) {
+            clearInterval(timerInterval);
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns.forEach(btn => btn.disabled = true);
+
+            if (selectedBtn) {
+                if (isCorrect) {
+                    selectedBtn.classList.add('correct');
+                    selectedBtn.innerHTML += ' <i class="fas fa-check-circle"></i>';
+                    playClickSound(600, 'triangle'); 
+                    score++;
+                } else {
+                    selectedBtn.classList.add('wrong');
+                    selectedBtn.innerHTML += ' <i class="fas fa-times-circle"></i>';
+                    playClickSound(200, 'square');
+                }
+            } else {
+                playClickSound(150, 'sawtooth', 0.5);
+            }
+
+            const questionData = shuffledQuestions[currentQIndex];
+            const correctText = questionData.o[questionData.c];
+            allBtns.forEach(btn => {
+                if (btn.innerText.includes(correctText)) {
+                    btn.classList.add('correct');
+                }
+            });
+
+            document.getElementById('next-btn').style.display = 'block';
+        }
+
+        document.getElementById('next-btn').addEventListener('click', () => {
+            playClickSound(500);
+            currentQIndex++;
+            if (currentQIndex < 10) {
+                loadQuestion();
+            } else {
+                showResults();
+            }
+        });
+
+        function showResults() {
+            document.getElementById('quiz-area').style.display = 'none';
+            document.getElementById('result-screen').style.display = 'block';
+            document.getElementById('final-score').innerText = score;
+            
+            const msg = document.getElementById('result-msg');
+            const failPanel = document.getElementById('failure-panel');
+            const retryBtn = document.getElementById('retry-main-btn');
+            const headerArea = document.getElementById('result-header-area');
+
+            if (score >= 7) {
+                failPanel.style.display = 'none';
+                retryBtn.innerText = "Restart Quiz";
+                headerArea.innerHTML = '<i class="fas fa-trophy" style="font-size: 4rem; color: #fbbf24; margin-bottom: 20px; display: block;"></i>';
+                
+                if (score === 10) {
+                    msg.innerText = "True Historian! Perfect Score!";
+                } else {
+                    msg.innerText = "Excellent Job! You passed!";
+                }
+
+                confetti({
+                    particleCount: 150,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+                playClickSound(800, 'triangle', 0.5);
+            } else {
+                failPanel.style.display = 'block';
+                retryBtn.innerText = "Try Again Now";
+                headerArea.innerHTML = '<i class="fas fa-heart-crack" style="font-size: 4rem; color: #ef4444; margin-bottom: 20px; display: block;"></i>';
+                msg.innerText = "Keep Reviewing!";
+                playClickSound(150, 'sawtooth', 0.5);
+            }
+        }
+
+        const themeBtn = document.getElementById('theme-toggle');
+        const icon = themeBtn.querySelector('i');
+        
+        themeBtn.addEventListener('click', () => {
+            if (document.body.hasAttribute('data-theme')) {
+                document.body.removeAttribute('data-theme');
+                icon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('theme', 'light');
+            } else {
+                document.body.setAttribute('data-theme', 'dark');
+                icon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('theme', 'dark');
+            }
+        });
+
+        if (localStorage.getItem('theme') === 'dark') {
+            document.body.setAttribute('data-theme', 'dark');
+            icon.classList.replace('fa-moon', 'fa-sun');
+        }
+
+        initQuiz();
+    </script>
+</body>
+</html>

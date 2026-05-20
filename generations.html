@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Computer Generations - Evolution of Technology</title>
+    <meta name="description"
+        content="Explore the five generations of computers, from vacuum tubes to artificial intelligence. Learn about the history, key inventors, and characteristics of each era.">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Poppins:wght@300;400;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            /* Light Theme (Default) */
+            --aurora-deep: #e0f7fa;
+            --aurora-teal: #008080;
+            --aurora-cyan: #005c99;
+            --aurora-purple: #6a0dad;
+            --glass-card: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --text-main: #111111;
+            --text-accent: #008080;
+            --text-sub: #333333;
+            --shine: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.9) 50%, transparent);
+            --bg-main: #e8f4f8;
+            --bg-radial: radial-gradient(circle at 50% 50%, #f0f8ff 0%, #dbeafe 100%);
+            --nav-bg: rgba(255, 255, 255, 0.7);
+            --card-hover-bg: rgba(255, 255, 255, 0.9);
+            --aurora-blend: multiply;
+            --aurora-opac: 0.3;
+            --btn-text: #111111;
+            --btn-border: rgba(0, 0, 0, 0.2);
+            --glow-intense: rgba(0, 128, 128, 0.3);
+            --header-glow: drop-shadow(0 0 15px rgba(0, 128, 128, 0.4));
+            --btn-hover-bg: rgba(255, 255, 255, 0.8);
+            --card-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme */
+            --aurora-deep: #010a14;
+            --aurora-teal: #00ffcc;
+            --aurora-cyan: #00d4ff;
+            --aurora-purple: #9d00ff;
+            --glass-card: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --text-main: #ffffff;
+            --text-accent: #00ffcc;
+            --text-sub: rgba(255, 255, 255, 0.8);
+            --shine: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.2) 50%, transparent);
+            --bg-main: #010a14;
+            --bg-radial: radial-gradient(circle at 50% 50%, #010a14 0%, #000 100%);
+            --nav-bg: rgba(0, 0, 0, 0.6);
+            --card-hover-bg: rgba(255, 255, 255, 0.1);
+            --aurora-blend: screen;
+            --aurora-opac: 0.6;
+            --btn-text: #ffffff;
+            --btn-border: var(--glass-border);
+            --glow-intense: rgba(0, 255, 204, 0.5);
+            --header-glow: drop-shadow(0 0 20px rgba(0, 255, 204, 0.7));
+            --btn-hover-bg: rgba(255, 255, 255, 0.05);
+            --card-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            transition: background 0.5s ease, color 0.5s ease;
+        }
+
+        /* Ambient Background Background */
+        .aurora-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -2;
+            filter: blur(80px);
+            opacity: var(--aurora-opac);
+            overflow: hidden;
+            pointer-events: none;
+            background: var(--bg-radial);
+            transition: opacity 0.5s ease, background 0.5s ease;
+        }
+
+        .aurora {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            top: -50%;
+            left: -50%;
+            mix-blend-mode: var(--aurora-blend);
+        }
+
+        .aurora-item {
+            position: absolute;
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            filter: blur(60px);
+            animation: auroraWarp 25s infinite alternate ease-in-out;
+            opacity: 0.7;
+        }
+
+        .aurora-1 {
+            width: 1200px;
+            height: 800px;
+            background: linear-gradient(45deg, var(--aurora-teal), var(--aurora-cyan));
+            top: -10%;
+            left: -10%;
+        }
+
+        .aurora-2 {
+            width: 1000px;
+            height: 1000px;
+            background: linear-gradient(-45deg, var(--aurora-purple), var(--aurora-cyan));
+            bottom: -10%;
+            right: -10%;
+            animation-delay: -5s;
+        }
+
+        @keyframes auroraWarp {
+            0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+            100% { transform: translate(15%, 10%) scale(1.2) rotate(20deg); }
+        }
+
+        /* NAVBAR */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 60px;
+            background: var(--nav-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-img {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            border: 2px solid var(--aurora-teal);
+            box-shadow: 0 0 15px var(--aurora-teal);
+            object-fit: cover;
+        }
+
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--aurora-teal);
+            letter-spacing: 1px;
+        }
+
+        .nav-right {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        nav button {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid var(--btn-border);
+            color: var(--btn-text);
+            padding: 8px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 11px;
+            text-transform: uppercase;
+            font-weight: 600;
+        }
+
+        nav button:hover {
+            background: var(--aurora-teal);
+            color: white;
+            box-shadow: 0 0 15px var(--glow-intense);
+            transform: translateY(-2px);
+        }
+
+        #themeToggle {
+            background: linear-gradient(45deg, var(--aurora-teal), var(--aurora-purple));
+            color: white;
+            border: none;
+        }
+
+        /* HERO SECTION */
+        header.hero {
+            text-align: center;
+            padding: 100px 20px 60px;
+        }
+
+        header.hero h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: clamp(2rem, 8vw, 4rem);
+            letter-spacing: 4px;
+            background: linear-gradient(to right, var(--aurora-teal), var(--aurora-cyan), var(--aurora-purple));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            filter: var(--header-glow);
+            animation: titleFloat 4s infinite ease-in-out;
+        }
+
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .hero p {
+            font-size: 1.1rem;
+            max-width: 800px;
+            margin: 0 auto;
+            color: var(--text-sub);
+            line-height: 1.8;
+        }
+
+        /* GENERATIONS CONTAINER */
+        .generations-container {
+            padding: 40px 10%;
+            display: flex;
+            flex-direction: column;
+            gap: 100px;
+        }
+
+        .gen-card {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            background: var(--glass-card);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: 40px;
+            padding: 60px;
+            box-shadow: var(--card-shadow);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: all 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .gen-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .gen-card:nth-child(even) {
+            grid-template-areas: "img content";
+        }
+        
+        .gen-card:nth-child(odd) {
+            grid-template-areas: "content img";
+        }
+
+        .gen-card .content {
+            grid-area: content;
+        }
+
+        .gen-card .image-side {
+            grid-area: img;
+            position: relative;
+        }
+
+        .gen-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 30px;
+            border: 1px solid var(--glass-border);
+            transition: transform 0.5s ease;
+        }
+
+        .gen-card:hover img {
+            transform: scale(1.05);
+        }
+
+        .gen-badge {
+            display: inline-block;
+            background: linear-gradient(45deg, var(--aurora-teal), var(--aurora-cyan));
+            color: white;
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            margin-bottom: 20px;
+            box-shadow: 0 5px 15px rgba(0, 128, 128, 0.3);
+        }
+
+        .gen-card h2 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+            color: var(--aurora-teal);
+        }
+
+        .gen-years {
+            font-weight: 700;
+            color: var(--aurora-purple);
+            margin-bottom: 25px;
+            display: block;
+            font-style: italic;
+        }
+
+        .tech-box {
+            background: rgba(0, 0, 0, 0.05);
+            padding: 15px;
+            border-radius: 15px;
+            margin-bottom: 25px;
+            border-left: 4px solid var(--aurora-teal);
+        }
+
+        [data-theme="dark"] .tech-box { background: rgba(255, 255, 255, 0.05); }
+
+        .tech-box h4 { margin-bottom: 5px; font-size: 0.9rem; text-transform: uppercase; color: var(--aurora-teal); }
+
+        .characteristics h4 { margin-top: 20px; margin-bottom: 10px; border-bottom: 1px solid var(--glass-border); padding-bottom: 5px; }
+
+        .characteristics ul { list-style: none; }
+        .characteristics ul li { position: relative; padding-left: 25px; margin-bottom: 8px; }
+        .characteristics ul li::before { content: '◈'; position: absolute; left: 0; color: var(--aurora-cyan); }
+
+        .creators, .examples { margin-top: 20px; }
+        .creators span, .examples span { font-weight: 700; color: var(--text-main); }
+
+        .example-explanation {
+            margin-top: 25px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            font-style: italic;
+            border: 1px dashed var(--aurora-teal);
+        }
+
+        /* SUMMARY TABLE */
+        .summary-section {
+            padding: 100px 10%;
+            text-align: center;
+        }
+
+        .table-container {
+            margin-top: 50px;
+            overflow-x: auto;
+            border-radius: 30px;
+            box-shadow: var(--card-shadow);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--glass-card);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            min-width: 600px;
+        }
+
+        th {
+            background: linear-gradient(to right, var(--aurora-teal), var(--aurora-cyan));
+            color: white;
+            padding: 20px;
+            font-family: 'Orbitron', sans-serif;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+        }
+
+        td {
+            padding: 20px;
+            border-bottom: 1px solid var(--glass-border);
+            color: var(--text-main);
+        }
+
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background: rgba(0, 128, 128, 0.05); }
+
+        /* CONCLUSION */
+        .conclusion {
+            padding: 100px 10%;
+            text-align: center;
+        }
+
+        .conclusion-card {
+            background: linear-gradient(135deg, var(--aurora-teal), var(--aurora-purple));
+            color: white;
+            padding: 60px;
+            border-radius: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .conclusion-card h2 { font-family: 'Orbitron', sans-serif; font-size: 2.5rem; margin-bottom: 20px; }
+        .conclusion-card p { font-size: 1.25rem; opacity: 0.9; }
+
+        /* FOOTER */
+        footer {
+            text-align: center;
+            padding: 40px;
+            border-top: 1px solid var(--glass-border);
+            background: var(--nav-bg);
+            backdrop-filter: blur(10px);
+        }
+
+        .footer-logo { font-family: 'Orbitron', sans-serif; color: var(--aurora-teal); font-weight: 800; margin-bottom: 10px; }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .gen-card { grid-template-columns: 1fr; grid-template-areas: "img" "content" !important; padding: 40px; }
+            .gen-card img { height: 300px; }
+        }
+
+        @media (max-width: 768px) {
+            nav { padding: 15px 20px; }
+            .nav-right { display: none; } /* Hide on mobile for simplicity or replace with hamburger */
+            .generations-container { padding: 40px 5%; }
+            .summary-section, .conclusion { padding: 80px 5%; }
+        }
+        /* Page Loader */
+        #page-preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-main);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+
+        .preloader-glow {
+            width: 60px;
+            height: 60px;
+            background: var(--aurora-teal);
+            border-radius: 50%;
+            filter: blur(20px);
+            animation: preloaderPulse 2s infinite ease-in-out;
+        }
+
+        @keyframes preloaderPulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.5); opacity: 0.8; }
+        }
+
+        .preloader-text {
+            margin-top: 30px;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--aurora-teal);
+            letter-spacing: 5px;
+            font-size: 14px;
+            animation: pulse 1s infinite alternate;
+        }
+
+        /* Image Lazy Loading */
+        img[data-src] {
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            transform: scale(0.95);
+        }
+
+        img.loaded {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+    </style>
+</head>
+
+<body data-theme="light">
+    <!-- Premium Page Loader -->
+    <div id="page-preloader">
+        <div class="preloader-glow"></div>
+        <div class="preloader-text">Please wait...</div>
+    </div>
+
+    <div class="aurora-container">
+        <div class="aurora">
+            <div class="aurora-item aurora-1"></div>
+            <div class="aurora-item aurora-2"></div>
+        </div>
+    </div>
+
+    <nav>
+        <div class="logo-container">
+            <img src="logo.jpeg" alt="Logo" class="logo-img">
+            <div class="logo-text">CYBER BREAKER</div>
+        </div>
+        <div class="nav-right">
+            <button id="themeToggle">Go Dark 🌙</button>
+            <button onclick="location.href='index.html'">Home</button>
+            <button onclick="location.href='lessons.html'">Lessons</button>
+            <button onclick="location.href='Labs.html'">Labs</button>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="gen-badge">Evolution Journey</div>
+        <h1>Computer Generations</h1>
+        <p>Explore the fascinating path of computing technology. From the massive room-sized machines of the 1940s to the invisible yet powerful AI brains of today, each generation represents a massive leap in human innovation.</p>
+    </header>
+
+    <main class="generations-container">
+        <!-- 1st Generation -->
+        <section class="gen-card" id="gen1">
+            <div class="image-side">
+                <img data-src="firstgen.jpeg" alt="First Generation Computer - ENIAC">
+            </div>
+            <div class="content">
+                <div class="gen-badge">Generation 1</div>
+                <h2>Vacuum Tubes</h2>
+                <span class="gen-years">1940 – 1956</span>
+
+                <div class="tech-box">
+                    <h4>Primary Technology</h4>
+                    <p>Vacuum Tubes & Magnetic Drums for memory</p>
+                </div>
+
+                <div class="characteristics">
+                    <h4>Key Characteristics</h4>
+                    <ul>
+                        <li>Very large in size (filling entire rooms)</li>
+                        <li>Consumed huge amounts of electricity</li>
+                        <li>Produced a massive amount of heat</li>
+                        <li>Programmed using Machine Language (binary)</li>
+                        <li>Extremely expensive to build and maintain</li>
+                    </ul>
+                </div>
+
+                <div class="creators">
+                    <h4>Key People:</h4>
+                    <p><span>J. Presper Eckert</span>, <span>John Mauchly</span>, and <span>Alan Turing</span> (Theory)</p>
+                </div>
+
+                <div class="examples">
+                    <h4>Examples:</h4>
+                    <p>ENIAC, UNIVAC I, EDVAC</p>
+                </div>
+
+                <div class="example-explanation">
+                    <strong>ENIAC (1945)</strong> was one of the first general-purpose computers. It filled an entire room and used about 18,000 vacuum tubes.
+                </div>
+            </div>
+        </section>
+
+        <!-- 2nd Generation -->
+        <section class="gen-card" id="gen2">
+            <div class="image-side">
+                <img data-src="secondgen.jpeg" alt="Second Generation Computer - IBM 1401">
+            </div>
+            <div class="content">
+                <div class="gen-badge">Generation 2</div>
+                <h2>Transistors</h2>
+                <span class="gen-years">1956 – 1963</span>
+
+                <div class="tech-box">
+                    <h4>Primary Technology</h4>
+                    <p>Transistors replaced vacuum tubes</p>
+                </div>
+
+                <div class="characteristics">
+                    <h4>Key Characteristics</h4>
+                    <ul>
+                        <li>Smaller than first generation machines</li>
+                        <li>Faster processing speeds</li>
+                        <li>Generated significantly less heat</li>
+                        <li>Used Assembly Language (symbolic)</li>
+                        <li>More reliable and energy efficient</li>
+                    </ul>
+                </div>
+
+                <div class="creators">
+                    <h4>Key People:</h4>
+                    <p><span>John Bardeen</span>, <span>Walter Brattain</span>, and <span>William Shockley</span> (Invented at Bell Labs)</p>
+                </div>
+
+                <div class="examples">
+                    <h4>Examples:</h4>
+                    <p>IBM 1401, IBM 7094, CDC 1604</p>
+                </div>
+
+                <div class="example-explanation">
+                    <strong>IBM 1401</strong> became very popular for business data processing during the 1960s, marking the start of commercial computing.
+                </div>
+            </div>
+        </section>
+
+        <!-- 3rd Generation -->
+        <section class="gen-card" id="gen3">
+            <div class="image-side">
+                <img data-src="thirdgen.jpeg" alt="Third Generation Computer - Integrated Circuits">
+            </div>
+            <div class="content">
+                <div class="gen-badge">Generation 3</div>
+                <h2>Integrated Circuits (ICs)</h2>
+                <span class="gen-years">1964 – 1971</span>
+
+                <div class="tech-box">
+                    <h4>Primary Technology</h4>
+                    <p>Integrated Circuits (Silicon Chips)</p>
+                </div>
+
+                <div class="characteristics">
+                    <h4>Key Characteristics</h4>
+                    <ul>
+                        <li>Much smaller size (Minicomputers)</li>
+                        <li>Higher processing speed and efficiency</li>
+                        <li>Significantly more reliable</li>
+                        <li>Operating systems were introduced</li>
+                        <li>Keyboards and monitors began to be used</li>
+                    </ul>
+                </div>
+
+                <div class="creators">
+                    <h4>Key People:</h4>
+                    <p><span>Jack Kilby</span> and <span>Robert Noyce</span></p>
+                </div>
+
+                <div class="examples">
+                    <h4>Examples:</h4>
+                    <p>IBM System/360, PDP-8, Honeywell 6000</p>
+                </div>
+
+                <div class="example-explanation">
+                    <strong>IBM System/360</strong> was a revolutionary mainframe because it allowed many different models to run the same software.
+                </div>
+            </div>
+        </section>
+
+        <!-- 4th Generation -->
+        <section class="gen-card" id="gen4">
+            <div class="image-side">
+                <img data-src="fourthgen.jpeg" alt="Fourth Generation Computer - Microprocessors">
+            </div>
+            <div class="content">
+                <div class="gen-badge">Generation 4</div>
+                <h2>Microprocessors</h2>
+                <span class="gen-years">1971 – Present</span>
+
+                <div class="tech-box">
+                    <h4>Primary Technology</h4>
+                    <p>Microprocessors & Very Large Scale Integration (VLSI)</p>
+                </div>
+
+                <div class="characteristics">
+                    <h4>Key Characteristics</h4>
+                    <ul>
+                        <li>Personal Computers (PCs) introduced</li>
+                        <li>Very small, portable sizes (Laptops)</li>
+                        <li>Incredibly fast and powerful</li>
+                        <li>Low cost and accessible to everyone</li>
+                        <li>Graphical User Interfaces (GUI) started appearing</li>
+                    </ul>
+                </div>
+
+                <div class="creators">
+                    <h4>Key Person:</h4>
+                    <p><span>Ted Hoff</span> (Microprocessor developer at Intel)</p>
+                </div>
+
+                <div class="examples">
+                    <h4>Examples:</h4>
+                    <p>Intel 4004, Apple II, IBM PC</p>
+                </div>
+
+                <div class="example-explanation">
+                    The <strong>IBM PC (1981)</strong> and <strong>Apple II</strong> helped make computers common in homes, schools, and offices everywhere.
+                </div>
+            </div>
+        </section>
+
+        <!-- 5th Generation -->
+        <section class="gen-card" id="gen5">
+            <div class="image-side">
+                <img data-src="fifth_generation_of_computer.jpg.jpeg" alt="Fifth Generation Computer - AI">
+            </div>
+            <div class="content">
+                <div class="gen-badge">Generation 5</div>
+                <h2>Artificial Intelligence (AI)</h2>
+                <span class="gen-years">Present & Future</span>
+
+                <div class="tech-box">
+                    <h4>Primary Technology</h4>
+                    <p>AI, Machine Learning, Quantum Computing, Parallel Processing</p>
+                </div>
+
+                <div class="characteristics">
+                    <h4>Key Characteristics</h4>
+                    <ul>
+                        <li>Smart systems and intelligent agents</li>
+                        <li>Natural Language Processing (NLP)</li>
+                        <li>Advanced Robotics and Self-driving cars</li>
+                        <li>Self-learning and adaptive computers</li>
+                        <li>Ultra-high speed computation</li>
+                    </ul>
+                </div>
+
+                <div class="creators">
+                    <h4>Leading Organizations:</h4>
+                    <p><span>IBM</span>, <span>Google</span>, <span>Microsoft</span>, <span>OpenAI</span></p>
+                </div>
+
+                <div class="examples">
+                    <h4>Examples:</h4>
+                    <p>IBM Watson, Google Assistant, ChatGPT</p>
+                </div>
+
+                <div class="example-explanation">
+                    AI systems like <strong>IBM Watson</strong> or <strong>ChatGPT</strong> can analyze trillions of data points and answer complex questions like a human.
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <section class="summary-section">
+        <h2 class="section-title">📊 Summary Table</h2>
+        <p>A quick comparison of all computer generations.</p>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Generation</th>
+                        <th>Year Period</th>
+                        <th>Core Technology</th>
+                        <th>Key Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1st Generation</td>
+                        <td>1940 – 1956</td>
+                        <td>Vacuum Tubes</td>
+                        <td>ENIAC</td>
+                    </tr>
+                    <tr>
+                        <td>2nd Generation</td>
+                        <td>1956 – 1963</td>
+                        <td>Transistors</td>
+                        <td>IBM 1401</td>
+                    </tr>
+                    <tr>
+                        <td>3rd Generation</td>
+                        <td>1964 – 1971</td>
+                        <td>Integrated Circuits (ICs)</td>
+                        <td>IBM System/360</td>
+                    </tr>
+                    <tr>
+                        <td>4th Generation</td>
+                        <td>1971 – Present</td>
+                        <td>Microprocessors (VLSI)</td>
+                        <td>IBM PC</td>
+                    </tr>
+                    <tr>
+                        <td>5th Generation</td>
+                        <td>Present – Future</td>
+                        <td>Artificial Intelligence</td>
+                        <td>IBM Watson / ChatGPT</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <section class="conclusion">
+        <div class="conclusion-card">
+            <h2>✅ Simple Conclusion</h2>
+            <p>Each computer generation became smaller, faster, cheaper, and more powerful, evolving from huge vacuum-tube machines to today’s AI-powered smart computers. The future of computing continues to push the limits of what we thought was possible.</p>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-logo">CYBER BREAKER PROJECT</div>
+        <p>Empowering students to master the digital age.</p>
+        <p style="margin-top: 10px; font-size: 0.8rem;">&copy; 2026 ICT BASICS LVL 3 & 4</p>
+    </footer>
+
+    <script>
+        // Page Preloader Logic
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('page-preloader');
+            setTimeout(() => {
+                preloader.style.opacity = '0';
+                setTimeout(() => {
+                    preloader.style.visibility = 'hidden';
+                    initLazyLoading();
+                }, 800);
+            }, 1000);
+        });
+
+        // Lazy Loading Logic
+        function initLazyLoading() {
+            const images = document.querySelectorAll('img[data-src]');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        img.onload = () => img.classList.add('loaded');
+                        observer.unobserve(img);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            images.forEach(img => observer.observe(img));
+        }
+
+        // Theme Toggle Logic
+        const themeToggle = document.getElementById('themeToggle');
+        const body = document.body;
+
+        function updateThemeIcon(isDark) {
+            themeToggle.innerHTML = isDark ? 'Go Light ☀️' : 'Go Dark 🌙';
+        }
+
+        // Apply saved theme
+        const savedTheme = localStorage.getItem('cyberTheme');
+        if (savedTheme === 'dark') {
+            body.setAttribute('data-theme', 'dark');
+            updateThemeIcon(true);
+        }
+
+        themeToggle.addEventListener('click', () => {
+            const isDark = body.getAttribute('data-theme') === 'dark';
+            if (isDark) {
+                body.removeAttribute('data-theme');
+                localStorage.setItem('cyberTheme', 'light');
+                updateThemeIcon(false);
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('cyberTheme', 'dark');
+                updateThemeIcon(true);
+            }
+        });
+
+        // Scroll Reveal Logic
+        const observerOptions = {
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.gen-card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Click Sound Interaction
+        const clickSound = new Audio('https://assets.mixkit.co/active_storage/sfx/2568/2568-preview.mp3');
+        document.addEventListener('click', (e) => {
+            if (e.target.tagName === 'BUTTON' || e.target.closest('button')) {
+                clickSound.currentTime = 0;
+                clickSound.play().catch(() => {});
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER BREAKER - Software and Its Types</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Learn about software and its types, including system, application, utility, and programming software with examples.">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            /* Light Mode */
+            --bg-body: #f0f7ff;
+            --bg-glass: rgba(255, 255, 255, 0.7);
+            --border-glass: rgba(255, 255, 255, 0.3);
+            --shadow-glass: rgba(0, 102, 255, 0.1);
+            --text-primary: #1a2b4b;
+            --text-secondary: #4a5d7e;
+            --accent-primary: #0066ff;
+            --accent-secondary: #00d2ff;
+            --nav-bg: rgba(255, 255, 255, 0.8);
+            --card-gradient: linear-gradient(135deg, #ffffff, #f0f7ff);
+        }
+
+        [data-theme="dark"] {
+            /* Dark Mode */
+            --bg-body: #050a15;
+            --bg-glass: rgba(15, 23, 42, 0.7);
+            --border-glass: rgba(255, 255, 255, 0.1);
+            --shadow-glass: rgba(0, 0, 0, 0.4);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --accent-primary: #38bdf8;
+            --accent-secondary: #818cf8;
+            --nav-bg: rgba(15, 23, 42, 0.8);
+            --card-gradient: linear-gradient(135deg, #1e293b, #0f172a);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* Smooth scroll */
+        html {
+            scroll-behavior: smooth;
+        }
+
+        /* Glassmorphism Styles */
+        .glass {
+            background: var(--bg-glass);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--border-glass);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 var(--shadow-glass);
+        }
+
+        /* Navbar */
+        nav {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1200px;
+            padding: 15px 30px;
+            z-index: 1000;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: var(--accent-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            font-size: 1.8rem;
+        }
+
+        .nav-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .theme-toggle, .back-btn {
+            background: var(--accent-primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: transform 0.2s, background 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+        }
+
+        .theme-toggle:hover, .back-btn:hover {
+            transform: scale(1.05);
+            background: var(--accent-secondary);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 160px 5% 80px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1200px;
+            margin: 0 auto;
+            min-height: 80vh;
+            gap: 50px;
+        }
+
+        .hero-content {
+            flex: 1;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            margin-bottom: 20px;
+            line-height: 1.1;
+            background: linear-gradient(to right, var(--accent-primary), var(--accent-secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            max-width: 500px;
+        }
+
+        .hero-img {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            position: relative;
+        }
+
+        .hero-img img {
+            width: 100%;
+            max-width: 500px;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+            animation: float 6s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        /* Section Title */
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+            padding: 0 5%;
+        }
+
+        .section-title h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 2.5rem;
+            color: var(--text-primary);
+            margin-bottom: 15px;
+        }
+
+        .section-title p {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        /* Content Sections */
+        section {
+            padding: 80px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Definitions Section */
+        .definition-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .def-card {
+            padding: 40px;
+            height: 100%;
+            transition: transform 0.3s;
+        }
+
+        .def-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .def-card i {
+            font-size: 3rem;
+            color: var(--accent-primary);
+            margin-bottom: 25px;
+        }
+
+        .def-card h3 {
+            font-size: 1.8rem;
+            margin-bottom: 15px;
+        }
+
+        /* Types Grid */
+        .types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        .type-card {
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow: hidden;
+            transition: 0.3s;
+        }
+
+        .type-card:hover {
+            border-color: var(--accent-primary);
+            box-shadow: 0 15px 40px var(--shadow-glass);
+        }
+
+        .type-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 16px;
+        }
+
+        .type-card .icon-head {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .type-card .icon-head i {
+            font-size: 1.5rem;
+            color: var(--accent-primary);
+            background: rgba(0, 102, 255, 0.1);
+            padding: 12px;
+            border-radius: 12px;
+        }
+
+        .type-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.4rem;
+        }
+
+        .type-card ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .type-card li {
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .type-card li::before {
+            content: "•";
+            color: var(--accent-primary);
+            font-weight: bold;
+        }
+
+        /* Table Section */
+        .table-wrapper {
+            overflow-x: auto;
+            margin-top: 40px;
+            border-radius: 20px;
+            border: 1px solid var(--border-glass);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-glass);
+        }
+
+        th, td {
+            padding: 20px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        th {
+            background: var(--accent-primary);
+            color: white;
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover {
+            background: rgba(0, 102, 255, 0.05);
+        }
+
+        /* Summary Section */
+        .summary {
+            text-align: center;
+            margin-top: 60px;
+        }
+
+        .summary-card {
+            display: inline-block;
+            max-width: 800px;
+            padding: 50px;
+            border: 2px dashed var(--accent-primary);
+        }
+
+        .summary-list {
+            text-align: left;
+            margin-top: 25px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .summary-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            font-size: 1.1rem;
+        }
+
+        .summary-item i {
+            color: var(--accent-primary);
+            font-size: 1.2rem;
+        }
+
+        /* Footer */
+        footer {
+            padding: 60px 5%;
+            text-align: center;
+            border-top: 1px solid var(--border-glass);
+            margin-top: 100px;
+            color: var(--text-secondary);
+        }
+
+        /* Mobile Adjustments */
+        @media (max-width: 968px) {
+            .hero {
+                flex-direction: column;
+                text-align: center;
+                padding-top: 120px;
+            }
+            .hero p { margin: 0 auto 30px; }
+            .hero h1 { font-size: 3rem; }
+        }
+
+        @media (max-width: 768px) {
+            nav {
+                width: 95%;
+                padding: 10px 20px;
+            }
+            .logo span { display: none; }
+            .hero h1 { font-size: 2.5rem; }
+            .definition-grid, .types-grid {
+                grid-template-columns: 1fr;
+            }
+            section { padding: 40px 5%; }
+            .section-title h2 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="glass">
+        <div class="logo">
+            <img src="logo.jpeg" alt="CYBER BREAKER" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--accent-primary);">
+            <span>CYBER BREAKER</span>
+        </div>
+        <div class="nav-actions">
+        <a href="lessons.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Lessons
+        </a>
+        <a href="Labs.html" class="back-btn" style="background: rgba(0, 210, 255, 0.2); color: var(--accent-secondary); border: 1px solid var(--accent-secondary);">
+            <i class="fas fa-flask"></i> Labs
+        </a>
+        <button class="theme-toggle" id="theme-toggle">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1>Software and Its Types</h1>
+            <p>Learn what software is and how different types of software work in a computer system to power our digital world.</p>
+            <a href="#definition" class="theme-toggle" style="display:inline-flex; width: auto; padding: 15px 30px; border-radius: 50px; text-decoration: none;">
+                Get Started
+            </a>
+        </div>
+        <div class="hero-img">
+            <img src="SOFTWARE/software.jpeg" alt="Computer System Illustration">
+        </div>
+    </header>
+
+    <!-- Definition Section -->
+    <section id="definition">
+        <div class="section-title reveal">
+            <h2>What is Software?</h2>
+            <p>The brain behind the machine.</p>
+        </div>
+        <div class="definition-grid">
+            <div class="def-card glass reveal">
+                <i class="fas fa-code"></i>
+                <h3>Definition</h3>
+                <p>Software is a collection of <strong>programs</strong> and <strong>instructions</strong> that tell a computer hardware exactly what to do and how to perform specific tasks.</p>
+            </div>
+            <div class="def-card glass reveal">
+                <i class="fas fa-layer-group"></i>
+                <h3>Hardware vs Software</h3>
+                <p>Hardware is the physical body (tangible), while Software is the "human mind" (intangible). Without software, hardware is just an empty shell.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Types Section -->
+    <section id="types">
+        <div class="section-title reveal">
+            <h2>Types of Software</h2>
+            <p>Exploring the four main categories of software.</p>
+        </div>
+        <div class="types-grid">
+            <!-- System Software -->
+            <div class="type-card glass reveal">
+                <img src="SOFTWARE/system.jpeg" alt="System Software">
+                <div class="icon-head">
+                    <i class="fas fa-gears"></i>
+                    <h3>System Software</h3>
+                </div>
+                <p>Manages hardware resources and provides a platform for other software to run.</p>
+                <ul>
+                    <li><strong>Windows, macOS, Linux</strong></li>
+                    <li>Controls memory and CPU usage</li>
+                    <li>Acts as a bridge to hardware</li>
+                </ul>
+            </div>
+
+            <!-- Application Software -->
+            <div class="type-card glass reveal">
+                <img src="SOFTWARE/application.jpeg" alt="Application Software">
+                <div class="icon-head">
+                    <i class="fas fa-window-maximize"></i>
+                    <h3>Application Software</h3>
+                </div>
+                <p>Programs designed for end-users to perform specific real-world tasks.</p>
+                <ul>
+                    <li><strong>MS Word, Google Chrome</strong></li>
+                    <li>Used for work or entertainment</li>
+                    <li>User-friendly interfaces</li>
+                </ul>
+            </div>
+
+            <!-- Utility Software -->
+            <div class="type-card glass reveal">
+                <img src="SOFTWARE/utility.jpeg" alt="Utility Software">
+                <div class="icon-head">
+                    <i class="fas fa-shield-halved"></i>
+                    <h3>Utility Software</h3>
+                </div>
+                <p>Tools used to maintain, configure, and protect the computer system.</p>
+                <ul>
+                    <li><strong>Antivirus, Disk Cleaner</strong></li>
+                    <li>Enhances computer performance</li>
+                    <li>Manages data and security</li>
+                </ul>
+            </div>
+
+            <!-- Programming Software -->
+            <div class="type-card glass reveal">
+                <!-- Using a fallback icon as no image was in folder, but styled to match -->
+                <div style="height: 180px; background: linear-gradient(45deg, #0066ff, #00d2ff); border-radius: 16px; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-laptop-code" style="font-size: 5rem; color: white;"></i>
+                </div>
+                <div class="icon-head">
+                    <i class="fas fa-code-branch"></i>
+                    <h3>Programming Tools</h3>
+                </div>
+                <p>Specialized tools used by developers to create and test other software.</p>
+                <ul>
+                    <li><strong>Compilers, Debuggers, IDEs</strong></li>
+                    <li>Translates code to machine language</li>
+                    <li>Used to build apps and games</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Comparison Table -->
+    <section>
+        <div class="section-title reveal">
+            <h2>Quick Comparison</h2>
+            <p>Summary of software categories at a glance.</p>
+        </div>
+        <div class="table-wrapper glass reveal">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Software Type</th>
+                        <th>Main Purpose</th>
+                        <th>Common Examples</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>System</strong></td>
+                        <td>Operates the hardware</td>
+                        <td>Windows 11, Android, iOS</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Application</strong></td>
+                        <td>Helps users complete tasks</td>
+                        <td>WhatsApp, Photoshop, Chrome</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Utility</strong></td>
+                        <td>Maintains & protects system</td>
+                        <td>Avast, WinZip, CCleaner</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Programming</strong></td>
+                        <td>Used to create new software</td>
+                        <td>VS Code, Python, Java JDK</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <!-- Summary Section -->
+    <section>
+        <div class="summary">
+            <div class="summary-card glass reveal">
+                <h2>Key Takeaways</h2>
+                <div class="summary-list">
+                    <div class="summary-item">
+                        <i class="fas fa-check-circle"></i>
+                        <p>Software is the set of instructions that makes hardware useful.</p>
+                    </div>
+                    <div class="summary-item">
+                        <i class="fas fa-check-circle"></i>
+                        <p>System software is mandatory for a computer to turn on and function.</p>
+                    </div>
+                    <div class="summary-item">
+                        <i class="fas fa-check-circle"></i>
+                        <p>Application software is what we use daily for specific needs (Social media, Work, etc.).</p>
+                    </div>
+                    <div class="summary-item">
+                        <i class="fas fa-check-circle"></i>
+                        <p>Utility and Programming tools help in maintenance and creation.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 ICT Basics Educational Project. Designed for Students.</p>
+    </footer>
+
+    <script>
+        // Dark Mode Toggle
+        const themeToggle = document.getElementById('theme-toggle');
+        const body = document.body;
+        const icon = themeToggle.querySelector('i');
+
+        // Check for saved theme
+        const savedTheme = localStorage.getItem('theme');
+        if (savedTheme === 'dark') {
+            body.setAttribute('data-theme', 'dark');
+            icon.classList.replace('fa-moon', 'fa-sun');
+        }
+
+        themeToggle.addEventListener('click', () => {
+            if (body.hasAttribute('data-theme')) {
+                body.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+                icon.classList.replace('fa-sun', 'fa-moon');
+            } else {
+                body.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
+                icon.classList.replace('fa-moon', 'fa-sun');
+            }
+        });
+
+        // Scroll Reveal Animation
+        function reveal() {
+            var reveals = document.querySelectorAll(".reveal");
+            for (var i = 0; i < reveals.length; i++) {
+                var windowHeight = window.innerHeight;
+                var elementTop = reveals[i].getBoundingClientRect().top;
+                var elementVisible = 150;
+                if (elementTop < windowHeight - elementVisible) {
+                    reveals[i].classList.add("active");
+                }
+            }
+        }
+
+        window.addEventListener("scroll", reveal);
+        // Initial check
+        reveal();
+
+        // Parallax effect for hero image
+        window.addEventListener('scroll', () => {
+            const img = document.querySelector('.hero-img img');
+            const scrolled = window.pageYOffset;
+            img.style.transform = `translateY(${scrolled * 0.1}px)`;
+        });
+    </script>
+</body>
+</html>

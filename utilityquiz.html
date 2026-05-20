@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER BREAKER - Utility Software Quiz</title>
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+    <style>
+        :root {
+            /* Utility Theme - Emerald/Teal */
+            --primary: #10b981;
+            --secondary: #0ea5e9;
+            --accent: #3b82f6;
+            --bg-main: #020617;
+            --text-main: #f0fdf4;
+            --text-sub: #94a3b8;
+            --glass-card: rgba(15, 23, 42, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --glass-shadow: rgba(0, 0, 0, 0.6);
+            --nav-bg: rgba(2, 6, 23, 0.8);
+            
+            --aurora-1: rgba(16, 185, 129, 0.15);
+            --aurora-2: rgba(14, 165, 233, 0.1);
+        }
+
+        [data-theme="light"] {
+            --primary: #059669;
+            --secondary: #0284c7;
+            --accent: #2563eb;
+            --bg-main: #f0fdf4;
+            --text-main: #064e3b;
+            --text-sub: #475569;
+            --glass-card: rgba(255, 255, 255, 0.6);
+            --glass-border: rgba(16, 185, 129, 0.2);
+            --glass-shadow: rgba(0, 0, 0, 0.05);
+            --nav-bg: rgba(255, 255, 255, 0.8);
+            --aurora-1: rgba(16, 185, 129, 0.1);
+            --aurora-2: rgba(14, 165, 233, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg-main);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.5s ease;
+        }
+
+        /* Animated Background */
+        .aurora-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            filter: blur(100px);
+            opacity: 0.8;
+        }
+
+        .blob {
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: var(--aurora-1);
+            border-radius: 50%;
+            animation: move 25s infinite alternate ease-in-out;
+        }
+
+        .blob-2 {
+            background: var(--aurora-2);
+            right: -100px;
+            bottom: -100px;
+            animation-duration: 30s;
+            animation-delay: -7s;
+        }
+
+        @keyframes move {
+            from { transform: translate(-15%, -15%) rotate(0deg); }
+            to { transform: translate(15%, 15%) rotate(45deg); }
+        }
+
+        /* Navbar */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 5%;
+            background: var(--nav-bg);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo-img {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 2px solid var(--primary);
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+        }
+
+        .logo-text {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 2px;
+        }
+
+        .theme-toggle {
+            background: var(--glass-card);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            padding: 10px 18px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Quiz Container */
+        .quiz-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 30px 15px; /* Reduced vertical padding */
+        }
+
+        .quiz-card {
+            background: var(--glass-card);
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            border: 1px solid var(--glass-border);
+            border-radius: 30px;
+            width: 100%;
+            max-width: 750px; /* Slightly narrower */
+            padding: 35px; /* Tighter padding */
+            max-height: 90vh; /* Don't exceed screen height */
+            overflow-y: auto; /* Scroll if necessary */
+            box-shadow: 0 25px 60px var(--glass-shadow);
+            position: relative;
+            animation: slideUp 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Hide scrollbar for Chrome, Safari and Opera */
+        .quiz-card::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* Hide scrollbar for IE, Edge and Firefox */
+        .quiz-card {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .quiz-header {
+            text-align: center;
+            margin-bottom: 25px; /* Tighter margin */
+        }
+
+        .timer-box {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--primary);
+            padding: 10px 20px; /* Slightly smaller */
+            border-radius: 50px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            border: 1px solid var(--glass-border);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .timer-box.warning {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.3);
+            animation: pulse-timer 1s infinite;
+        }
+
+        @keyframes pulse-timer {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            width: 0%;
+            transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .q-meta {
+            color: var(--text-sub);
+            font-size: 0.9rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+        }
+
+        .question-text {
+            font-size: 1.4rem; /* More compact font */
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 30px;
+            text-align: center;
+            color: var(--text-main);
+            font-family: 'Space Grotesk', sans-serif;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .option-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            padding: 15px 25px; /* Smaller padding */
+            border-radius: 12px;
+            color: var(--text-main);
+            font-size: 1rem;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .option-btn::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: var(--primary);
+            opacity: 0;
+            transition: 0.3s;
+        }
+
+        .option-btn:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(10px);
+            border-color: var(--primary);
+        }
+
+        .option-btn:hover::after {
+            opacity: 1;
+        }
+
+        .option-btn.selected {
+            background: var(--primary);
+            color: #020617;
+            border-color: var(--primary);
+            font-weight: 700;
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .quiz-footer {
+            margin-top: 45px;
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .next-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #020617;
+            border: none;
+            padding: 15px 40px;
+            border-radius: 12px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.3s;
+            display: none;
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.2);
+        }
+
+        .next-btn:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(16, 185, 129, 0.4);
+        }
+
+        /* Result Area */
+        .result-screen {
+            text-align: center;
+            display: none;
+        }
+
+        .score-box {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 40px;
+        }
+
+        .score-circle {
+            width: 200px;
+            height: 200px;
+            border: 8px solid var(--primary);
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: rgba(16, 185, 129, 0.05);
+        }
+
+        .score-num {
+            font-size: 4rem;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--primary);
+            line-height: 1;
+        }
+
+        .score-label {
+            font-size: 1rem;
+            color: var(--text-sub);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .result-msg {
+            font-size: 2rem;
+            font-family: 'Space Grotesk', sans-serif;
+            margin-bottom: 40px;
+            color: var(--text-main);
+        }
+
+        .result-actions {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .btn-action {
+            padding: 16px 35px;
+            border-radius: 14px;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            cursor: pointer;
+            text-decoration: none;
+            transition: 0.4s;
+            border: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .btn-retry {
+            background: var(--primary);
+            color: #020617;
+        }
+
+        .btn-retry:hover {
+            box-shadow: 0 0 30px rgba(16, 185, 129, 0.5);
+            transform: translateY(-5px);
+        }
+
+        .btn-home {
+            background: var(--glass-card);
+            color: var(--text-main);
+            border: 1px solid var(--glass-border);
+        }
+
+        .btn-home:hover {
+            background: var(--glass-border);
+            transform: translateY(-5px);
+        }
+
+        /* Responsive */
+        @media (max-width: 650px) {
+            .quiz-card { padding: 35px 20px; }
+            .question-text { font-size: 1.2rem; }
+            .option-btn { padding: 15px 20px; font-size: 1rem; }
+            .nav-btn span { display: none; }
+        }
+    </style>
+</head>
+
+<body data-theme="dark">
+    <div class="aurora-bg">
+        <div class="blob"></div>
+        <div class="blob blob-2"></div>
+    </div>
+
+    <nav>
+        <a href="index.html" class="logo-container">
+            <img src="logo.jpeg" alt="CYBER BREAKER" class="logo-img">
+            <div class="logo-text">CYBER BREAKER</div>
+        </a>
+        <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()">
+            <i class="fas fa-sun" id="themeIcon"></i>
+            <span id="themeLabel">Light Mode</span>
+        </button>
+    </nav>
+
+    <div class="quiz-wrapper">
+        <div class="quiz-card" id="quiz-container">
+            <div class="quiz-header" id="quizHeader">
+                <div class="timer-box" id="timerBox">
+                    <i class="fas fa-clock"></i> <span id="timeLeft">30</span>s
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+                <p class="q-meta" id="qCounter">Preparation Phase...</p>
+                <h1>Utility Software Quiz</h1>
+            </div>
+
+            <div id="quizBody">
+                <div class="question-text" id="questionText">Loading encrypted data...</div>
+                <div class="options-grid" id="optionsGrid">
+                    <!-- Options populated by JS -->
+                </div>
+            </div>
+
+            <div class="quiz-footer">
+                <button class="next-btn" id="nextBtn" onclick="handleNext()">Next Question <i class="fas fa-chevron-right"></i></button>
+            </div>
+
+            <!-- Result Screen -->
+            <div class="result-screen" id="resultArea">
+                <div class="score-box">
+                    <div class="score-circle">
+                        <span class="score-num" id="finalScore">0</span>
+                        <span class="score-label">Points</span>
+                    </div>
+                </div>
+                <div class="result-msg" id="resultMsg">Mission Complete</div>
+                <div class="result-actions">
+                    <button class="btn-action btn-retry" onclick="restartQuiz()">
+                        <i class="fas fa-rotate"></i> Try Again
+                    </button>
+                    <a href="utility software.html" class="btn-action btn-home">
+                        <i class="fas fa-book"></i> Review Guide
+                    </a>
+                    <a href="lessons.html" class="btn-action btn-home" style="background: var(--secondary); color: white;">
+                        <i class="fas fa-graduation-cap"></i> Exit Quiz
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            { q: "What is utility software mainly used for?", a: ["Playing games", "Writing documents", "Maintaining and optimizing the system", "Browsing the internet"], c: 2 },
+            { q: "Which of the following is an example of utility software?", a: ["Microsoft Word", "Google Chrome", "PowerPoint", "Avast Antivirus"], c: 3 },
+            { q: "Utility software works with which type of software?", a: ["System software", "Game software", "Web software", "None"], c: 0 },
+            { q: "What does antivirus software do?", a: ["Creates documents", "Detects and removes viruses", "Plays videos", "Edits photos"], c: 1 },
+            { q: "Which utility helps remove unnecessary files?", a: ["Media Player", "Disk Cleanup", "Word Processor", "Browser"], c: 1 },
+            { q: "What is the purpose of disk defragmentation?", a: ["Play music", "Create images", "Delete files", "Organize files on disk"], c: 3 },
+            { q: "Which software is used to compress files?", a: ["Chrome", "Excel", "WinRAR", "VLC"], c: 2 },
+            { q: "Backup software is used to:", a: ["Browse internet", "Edit videos", "Save copies of data", "Play games"], c: 2 },
+            { q: "Utility software helps improve:", a: ["System performance", "Only internet speed", "Only games", "Only videos"], c: 0 },
+            { q: "Which of these is NOT utility software?", a: ["Microsoft Word", "CCleaner", "Norton Antivirus", "Disk Cleanup"], c: 0 },
+            { q: "What type of files does disk cleanup remove?", a: ["System files", "Game files", "Important files", "Temporary files"], c: 3 },
+            { q: "Utility software mainly runs:", a: ["Only online", "In the background", "Only for games", "Only on phones"], c: 1 },
+            { q: "Which utility protects against malware?", a: ["Word processor", "Media player", "Browser", "Antivirus"], c: 3 },
+            { q: "File compression helps to:", a: ["Increase file size", "Reduce file size", "Delete files", "Scan files"], c: 1 },
+            { q: "Utility software is mainly part of:", a: ["Game software", "System software", "Web software", "Application software"], c: 1 },
+            { q: "Which tool improves disk performance?", a: ["Defragmenter", "Chrome", "Excel", "Word"], c: 0 },
+            { q: "What happens without utility software?", a: ["Computer runs faster", "Games improve", "Nothing changes", "System may become slow and unsafe"], c: 3 },
+            { q: "Which is used for cleaning junk files?", a: ["VLC", "PowerPoint", "Photoshop", "CCleaner"], c: 3 },
+            { q: "Utility software helps in:", a: ["Only typing", "System maintenance", "Only browsing", "Entertainment only"], c: 1 },
+            { q: "Which is a feature of utility software?", a: ["Makes games", "Designs graphics", "Edits videos", "Protects system"], c: 3 }
+        ];
+
+        let currentIdx = 0;
+        let score = 0;
+        let shuffled = [];
+        let timer;
+        let timeRemaining = 30;
+        let canAnswer = true;
+        let audioCtx;
+
+        function playSound(freq, color) {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.className = 'osc';
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            osc.type = 'sine';
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.2);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + 0.2);
+        }
+
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        function initQuiz() {
+            shuffled = shuffleArray([...questions]).slice(0, 10);
+            currentIdx = 0;
+            score = 0;
+            document.getElementById('resultArea').style.display = 'none';
+            document.getElementById('quizHeader').style.display = 'block';
+            document.getElementById('quizBody').style.display = 'block';
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const row = shuffled[currentIdx];
+            document.getElementById('qCounter').innerText = `Question ${currentIdx + 1} / 10`;
+            document.getElementById('questionText').innerText = row.q;
+            document.getElementById('progressFill').style.width = `${(currentIdx / 10) * 100}%`;
+            
+            const grid = document.getElementById('optionsGrid');
+            grid.innerHTML = '';
+            canAnswer = true;
+            document.getElementById('nextBtn').style.display = 'none';
+
+            row.a.forEach((text, i) => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn';
+                btn.innerHTML = `<span style="opacity: 0.5;">${String.fromCharCode(65+i)})</span> ${text}`;
+                btn.onclick = () => selectOption(i, btn);
+                grid.appendChild(btn);
+            });
+
+            resetTimer();
+        }
+
+        function resetTimer() {
+            clearInterval(timer);
+            timeRemaining = 30;
+            updateTimerDisplay();
+            timer = setInterval(() => {
+                timeRemaining--;
+                updateTimerDisplay();
+                if (timeRemaining <= 0) {
+                    clearInterval(timer);
+                    timeOut();
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const el = document.getElementById('timeLeft');
+            const box = document.getElementById('timerBox');
+            el.innerText = timeRemaining;
+            if (timeRemaining <= 10) box.classList.add('warning');
+            else box.classList.remove('warning');
+        }
+
+        function selectOption(idx, btn) {
+            if (!canAnswer) return;
+            canAnswer = false;
+            clearInterval(timer);
+
+            const correctIdx = shuffled[currentIdx].c;
+            const allBtns = document.querySelectorAll('.option-btn');
+            
+            if (idx === correctIdx) {
+                btn.classList.add('selected');
+                score++;
+                playSound(800);
+            } else {
+                btn.style.borderColor = "#ef4444";
+                btn.style.background = "rgba(239, 68, 68, 0.1)";
+                allBtns[correctIdx].classList.add('selected');
+                playSound(200);
+            }
+
+            document.getElementById('nextBtn').style.display = 'block';
+        }
+
+        function timeOut() {
+            canAnswer = false;
+            const correctIdx = shuffled[currentIdx].c;
+            const allBtns = document.querySelectorAll('.option-btn');
+            allBtns[correctIdx].classList.add('selected');
+            allBtns[correctIdx].style.boxShadow = "0 0 20px #ef4444";
+            document.getElementById('nextBtn').style.display = 'block';
+            document.getElementById('nextBtn').innerText = "Out of time! Next";
+            playSound(150);
+        }
+
+        function handleNext() {
+            currentIdx++;
+            if (currentIdx < 10) {
+                showQuestion();
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            document.getElementById('quizHeader').style.display = 'none';
+            document.getElementById('quizBody').style.display = 'none';
+            document.getElementById('nextBtn').style.display = 'none';
+            document.getElementById('resultArea').style.display = 'block';
+
+            document.getElementById('finalScore').innerText = score;
+            document.getElementById('progressFill').style.width = '100%';
+
+            const msg = document.getElementById('resultMsg');
+            if (score >= 9) msg.innerText = "Legendary! You're a Utility Expert!";
+            else if (score >= 7) msg.innerText = "Great Job! You know your tools!";
+            else msg.innerText = "Keep practicing, System Admin!";
+
+            if (score >= 7) {
+                confetti({ particleCount: 150, spread: 70, origin: { y: 0.6 } });
+                playSound(1000);
+            }
+        }
+
+        function restartQuiz() {
+            initQuiz();
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const isLight = body.getAttribute('data-theme') === 'light';
+            const icon = document.getElementById('themeIcon');
+            const label = document.getElementById('themeLabel');
+
+            if (isLight) {
+                body.removeAttribute('data-theme');
+                icon.classList.replace('fa-moon', 'fa-sun');
+                label.innerText = 'Light Mode';
+                localStorage.setItem('quizTheme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                icon.classList.replace('fa-sun', 'fa-moon');
+                label.innerText = 'Dark Mode';
+                localStorage.setItem('quizTheme', 'light');
+            }
+        }
+
+        window.onload = () => {
+            if (localStorage.getItem('quizTheme') === 'light') {
+                document.body.setAttribute('data-theme', 'light');
+                document.getElementById('themeIcon').classList.replace('fa-sun', 'fa-moon');
+                document.getElementById('themeLabel').innerText = 'Dark Mode';
+            }
+            initQuiz();
+        };
+    </script>
+</body>
+
+</html>

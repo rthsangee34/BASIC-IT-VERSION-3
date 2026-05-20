@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Utility Software Guide - CYBER BREAKER</title>
+    <!-- SEO Meta Tags -->
+    <meta name="description" content="Learn about Utility Software: definition, types, real-world examples, and differences from application software.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@400;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* Modern Google Translate Stylizing */
+        #google_translate_element {
+            margin-right: 15px;
+            display: inline-block;
+            vertical-align: middle;
+            z-index: 1001;
+        }
+
+        .goog-te-gadget-simple {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid var(--glass-border) !important;
+            border-radius: 12px !important;
+            padding: 8px 12px !important;
+            font-family: 'Inter', sans-serif !important;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .goog-te-gadget-simple:hover {
+            border-color: var(--primary) !important;
+            background: rgba(59, 130, 246, 0.15) !important;
+            transform: translateY(-2px);
+        }
+
+        .goog-te-gadget-icon { display: none !important; }
+
+        .goog-te-menu-value span {
+            color: var(--text-main) !important;
+            font-weight: 600 !important;
+            text-transform: uppercase;
+            font-size: 11px !important;
+        }
+
+        .goog-te-menu-value img { display: none !important; }
+        .goog-te-menu-value:before {
+            content: "🌐";
+            margin-right: 8px;
+            font-size: 14px;
+        }
+
+        /* Hide Google Branding & Bar */
+        .goog-te-banner-frame.skiptranslate { display: none !important; }
+        body { top: 0px !important; }
+        .goog-logo-link { display: none !important; }
+        .goog-te-gadget { color: transparent !important; }
+        
+        #google_translate_element a { display: none !important; }
+        .skiptranslate.goog-te-gadget > span { display: none !important; }
+
+    </style>
+    <style>
+        :root {
+            /* Aura Borealis / Frosty Palette */
+            --bg-deep: #020617;
+            --bg-glass: rgba(15, 23, 42, 0.7);
+            --border-glass: rgba(255, 255, 255, 0.1);
+            --primary: #10b981; /* Emerald for Utility/Maintenance */
+            --secondary: #0ea5e9; /* Sky Blue */
+            --accent: #3b82f6; /* Blue */
+            --text-main: #f0fdf4;
+            --text-muted: #94a0b8;
+            --glow-1: rgba(16, 185, 129, 0.2);
+            --glow-2: rgba(14, 165, 233, 0.2);
+            --card-shadow: 0 20px 50px rgba(0, 0, 0, 0.3);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        [data-theme="light"] {
+            --bg-deep: #f8fafc;
+            --bg-glass: rgba(255, 255, 255, 0.7);
+            --border-glass: rgba(16, 185, 129, 0.1);
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --glow-1: rgba(16, 185, 129, 0.1);
+            --glow-2: rgba(14, 165, 233, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+            transition: background-color 0.5s ease;
+        }
+
+        /* Ambient Background Effects */
+        .bg-elements {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .glow-sphere {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.6;
+            animation: float 20s infinite alternate ease-in-out;
+        }
+
+        .sphere-1 {
+            width: 500px;
+            height: 500px;
+            background: var(--glow-1);
+            top: -200px;
+            right: -100px;
+        }
+
+        .sphere-2 {
+            width: 600px;
+            height: 600px;
+            background: var(--glow-2);
+            bottom: -200px;
+            left: -100px;
+            animation-duration: 25s;
+        }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(100px, 50px) scale(1.1); }
+        }
+
+        /* Loading Screen */
+        #page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-deep);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+
+        .loader-shield {
+            font-size: 60px;
+            color: var(--primary);
+            animation: shieldPulse 1.5s infinite ease-in-out;
+            filter: drop-shadow(0 0 15px var(--primary));
+        }
+
+        @keyframes shieldPulse {
+            0%, 100% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; }
+        }
+
+        .loader-text {
+            margin-top: 25px;
+            font-family: 'Space Grotesk', sans-serif;
+            color: var(--primary);
+            font-weight: 700;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            font-size: 14px;
+        }
+
+        /* Header & Navigation */
+        header {
+            padding: 1.5rem 5%;
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1400px;
+            z-index: 1000;
+            border-radius: 20px;
+            border: 1px solid var(--border-glass);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: var(--card-shadow);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .logo img {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            border: 2px solid var(--primary);
+        }
+
+        .logo span {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.4rem;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .nav-btns {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .nav-btn {
+            background: var(--border-glass);
+            color: var(--text-main);
+            border: 1px solid var(--border-glass);
+            padding: 10px 20px;
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .nav-btn:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .theme-toggle {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: var(--border-glass);
+            border: 1px solid var(--border-glass);
+            color: var(--text-main);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            background: var(--secondary);
+            color: white;
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 12rem 5% 6rem;
+            max-width: 1400px;
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 5rem);
+            line-height: 1;
+            margin-bottom: 1.5rem;
+        }
+
+        .hero h1 span {
+            color: var(--primary);
+            position: relative;
+        }
+
+        .hero h1 span::after {
+            content: '';
+            position: absolute;
+            bottom: 10px;
+            left: 0;
+            width: 100%;
+            height: 15px;
+            background: var(--primary);
+            opacity: 0.2;
+            z-index: -1;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            max-width: 800px;
+            margin: 0 auto 3rem;
+        }
+
+        /* Frosty Cards Overlay */
+        .grid-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            padding: 2rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .glass-card {
+            background: var(--bg-glass);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--border-glass);
+            border-radius: 30px;
+            padding: 3rem;
+            height: 100%;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+
+        .glass-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+            transition: 0.8s;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-15px) scale(1.02);
+            border-color: var(--primary);
+            box-shadow: 0 30px 60px rgba(16, 185, 129, 0.2);
+        }
+
+        .glass-card:hover::before {
+            left: 100%;
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .glass-card h2, .glass-card h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+        }
+
+        .glass-card ul {
+            list-style: none;
+            margin-top: 1.5rem;
+        }
+
+        .glass-card li {
+            margin-bottom: 1rem;
+            padding-left: 2rem;
+            position: relative;
+            color: var(--text-muted);
+        }
+
+        .glass-card li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: var(--primary);
+            font-weight: bold;
+        }
+
+        .example-badge {
+            display: inline-block;
+            padding: 6px 15px;
+            background: var(--border-glass);
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-top: 1rem;
+        }
+
+        /* Comparison Table Section */
+        .comparison-section {
+            padding: 6rem 5%;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .table-container {
+            background: var(--bg-glass);
+            backdrop-filter: blur(20px);
+            border-radius: 30px;
+            border: 1px solid var(--border-glass);
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+        }
+
+        th {
+            background: var(--primary);
+            color: white;
+            padding: 1.5rem 2rem;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.2rem;
+        }
+
+        td {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid var(--border-glass);
+            color: var(--text-muted);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background: rgba(16, 185, 129, 0.05);
+            color: var(--text-main);
+        }
+
+        /* Footer */
+        footer {
+            padding: 5rem 5%;
+            text-align: center;
+            border-top: 1px solid var(--border-glass);
+            background: rgba(2, 6, 23, 0.5);
+        }
+
+        .footer-logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            display: block;
+        }
+
+        /* Animation Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @media (max-width: 768px) {
+            header { top: 10px; width: 95%; padding: 1rem; }
+            .grid-container { grid-template-columns: 1fr; }
+            .hero { padding-top: 10rem; }
+            .hero h1 { font-size: 3rem; }
+            .logo span { display: none; }
+        }
+
+    </style>
+</head>
+
+<body data-theme="dark">
+
+    <!-- Loading Screen -->
+    <div id="page-loader">
+        <i class="fas fa-shield-halved loader-shield"></i>
+        <div class="loader-text">Please wait...</div>
+    </div>
+
+    <!-- Ambient Background -->
+    <div class="bg-elements">
+        <div class="glow-sphere sphere-1"></div>
+        <div class="glow-sphere sphere-2"></div>
+    </div>
+
+    <header>
+        <a href="index.html" class="logo">
+            <img src="logo.jpeg" alt="Logo">
+            <span>CYBER BREAKER</span>
+        </a>
+        <div class="nav-btns">
+            <a href="index.html" class="nav-btn">Home</a>
+            <a href="lessons.html" class="nav-btn">Lessons</a>
+            <a href="Labs.html" class="nav-btn">🧪 Labs</a>
+            <div id="google_translate_element"></div>
+            <button class="theme-toggle" id="themeToggle" title="Toggle Theme">
+                <i class="fas fa-moon" id="themeIcon"></i>
+            </button>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1 class="reveal">The Digital <span>Maintenance</span> Crew</h1>
+            <p class="reveal">Utility software works in the background to ensure your computer stays fast, secure, and perfectly optimized.</p>
+            <div class="nav-btns reveal" style="justify-content: center; margin-bottom: 2rem;">
+                <a href="#definition" class="nav-btn" style="background: var(--primary); color: white;">Explore Guide</a>
+            </div>
+            <img data-src="utility_software_hero_rebuild_2026_1774100539269.png" alt="Utility Software Hero" class="hero-img reveal">
+        </section>
+
+        <!-- 1. What is Utility Software? -->
+        <section id="definition" class="grid-container">
+            <div class="glass-card reveal">
+                <div class="card-icon"><i class="fas fa-question-circle"></i></div>
+                <h2>What is Utility Software?</h2>
+                <p>Utility software is a type of system software designed to <strong>analyze, maintain, optimize, and protect</strong> a computer system.</p>
+                <ul>
+                    <li>It helps improve the performance, security, and efficiency of the computer.</li>
+                    <li>Works alongside the operating system to keep the computer running smoothly and safely.</li>
+                    <li>Without it, computers may become slow, disorganized, or vulnerable to viruses and errors.</li>
+                </ul>
+            </div>
+
+            <!-- 2. Examples -->
+            <div class="glass-card reveal">
+                <div class="card-icon"><i class="fas fa-list-check"></i></div>
+                <h3>Examples of Utility Software</h3>
+                <p>Common examples include tools that handle security, cleanup, and file management:</p>
+                <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-top: 1rem;">
+                    <span class="example-badge">Antivirus software</span>
+                    <span class="example-badge">Disk cleanup tools</span>
+                    <span class="example-badge">Disk defragmentation</span>
+                    <span class="example-badge">Backup software</span>
+                    <span class="example-badge">File compression tools</span>
+                </div>
+                <ul style="margin-top: 1.5rem;">
+                    <li><strong>Norton & Avast Antivirus</strong></li>
+                    <li><strong>CCleaner</strong></li>
+                    <li><strong>WinRAR</strong></li>
+                    <li><strong>Windows Disk Cleanup</strong></li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 3. Explanation -->
+        <section class="grid-container">
+            <div class="glass-card reveal" style="grid-column: 1 / -1; display: flex; flex-direction: column; align-items: center; text-align: center;">
+                <div class="card-icon"><i class="fas fa-info-circle"></i></div>
+                <h3>Explanation of Purpose</h3>
+                <p style="max-width: 900px;">Utility software is used to maintain and improve the computer system. Its main purposes are to:</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; width: 100%; margin-top: 2rem;">
+                    <div>
+                        <i class="fas fa-shield-virus" style="font-size: 2rem; color: var(--primary); margin-bottom: 1rem;"></i>
+                        <p>Protect from viruses & malware</p>
+                    </div>
+                    <div>
+                        <i class="fas fa-broom" style="font-size: 2rem; color: var(--primary); margin-bottom: 1rem;"></i>
+                        <p>Clean unnecessary files</p>
+                    </div>
+                    <div>
+                        <i class="fas fa-bolt" style="font-size: 2rem; color: var(--primary); margin-bottom: 1rem;"></i>
+                        <p>Improve system performance</p>
+                    </div>
+                    <div>
+                        <i class="fas fa-folder-tree" style="font-size: 2rem; color: var(--primary); margin-bottom: 1rem;"></i>
+                        <p>Organize and manage files</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Types of Utility Software -->
+        <section id="types">
+            <div style="text-align: center; margin-bottom: 4rem;">
+                <h2 class="reveal" style="font-size: 3rem; font-family: 'Outfit', sans-serif;">Essential Utilities</h2>
+            </div>
+            <div class="grid-container">
+                <!-- 1. Antivirus -->
+                <div class="glass-card reveal">
+                    <img data-src="antivirus_illustration_rebuild_2026_1774100674185.png" alt="Antivirus" class="type-img">
+                    <h3>1. Antivirus Software</h3>
+                    <p>Protects computers from viruses, malware, and harmful software.</p>
+                    <ul>
+                        <li>Detecting viruses</li>
+                        <li>Removing malware</li>
+                        <li>Real-time system protection</li>
+                    </ul>
+                    <span class="example-badge">Norton, Avast</span>
+                </div>
+
+                <!-- 2. Disk Cleanup -->
+                <div class="glass-card reveal">
+                    <img data-src="disk_cleanup_illustration_rebuild_2026_1774100699133.png" alt="Disk Cleanup" class="type-img">
+                    <h3>2. Disk Cleanup Software</h3>
+                    <p>Removes temporary and unnecessary files from the computer.</p>
+                    <ul>
+                        <li>Free up storage space</li>
+                        <li>Delete temporary files</li>
+                        <li>Improve system speed</li>
+                    </ul>
+                    <span class="example-badge">Windows Disk Cleanup</span>
+                </div>
+
+                <!-- 3. Defragmentation -->
+                <div class="glass-card reveal">
+                    <div class="card-icon"><i class="fas fa-microchip"></i></div>
+                    <h3>3. Disk Defragmentation</h3>
+                    <p>Reorganizes files stored on a hard disk to improve performance.</p>
+                    <ul>
+                        <li>Organize fragmented files</li>
+                        <li>Improve disk efficiency</li>
+                        <li>Speed up file access</li>
+                    </ul>
+                    <span class="example-badge">Windows Defragmenter</span>
+                </div>
+
+                <!-- 4. Backup -->
+                <div class="glass-card reveal">
+                    <div class="card-icon"><i class="fas fa-cloud-arrow-up"></i></div>
+                    <h3>4. Backup Software</h3>
+                    <p>Saves copies of important data so it can be restored if lost.</p>
+                    <ul>
+                        <li>Create data backups</li>
+                        <li>Restore lost files</li>
+                        <li>Protect important information</li>
+                    </ul>
+                    <span class="example-badge">Windows Backup</span>
+                </div>
+
+                <!-- 5. Compression -->
+                <div class="glass-card reveal">
+                    <div class="card-icon"><i class="fas fa-file-zipper"></i></div>
+                    <h3>5. File Compression</h3>
+                    <p>Reduces file size to save space and make sharing easier.</p>
+                    <ul>
+                        <li>Compress large files</li>
+                        <li>Extract compressed data</li>
+                        <li>Save storage space</li>
+                    </ul>
+                    <span class="example-badge">WinRAR</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. Real World Example -->
+        <section class="grid-container">
+            <div class="glass-card reveal" style="border: 2px solid var(--primary);">
+                <div class="card-icon"><i class="fas fa-earth-americas"></i></div>
+                <h3>5. Real-World Example</h3>
+                <p>When a user turns on a computer:</p>
+                <div style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 15px;">
+                    <div style="display: flex; gap: 1rem; align-items: start;">
+                        <span style="color: var(--primary); font-weight: 800;">01</span>
+                        <p>The operating system starts first.</p>
+                    </div>
+                    <div style="display: flex; gap: 1rem; align-items: start;">
+                        <span style="color: var(--primary); font-weight: 800;">02</span>
+                        <p><strong>Antivirus</strong> automatically scans for threats.</p>
+                    </div>
+                    <div style="display: flex; gap: 1rem; align-items: start;">
+                        <span style="color: var(--primary); font-weight: 800;">03</span>
+                        <p><strong>Disk cleanup</strong> removes yesterday's clutter.</p>
+                    </div>
+                    <div style="display: flex; gap: 1rem; align-items: start;">
+                        <span style="color: var(--primary); font-weight: 800;">04</span>
+                        <p><strong>Backup software</strong> saves important documents.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 6. Features -->
+            <div class="glass-card reveal">
+                <div class="card-icon"><i class="fas fa-star"></i></div>
+                <h3>6. Key Features</h3>
+                <ul>
+                    <li>Maintains and optimizes system performance</li>
+                    <li>Protects the computer from security threats</li>
+                    <li>Helps manage storage and files</li>
+                    <li>Works with the operating system</li>
+                    <li>Improves computer reliability and efficiency</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- 7. Comparison Table -->
+        <section class="comparison-section reveal">
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <h2>7. Utility vs Application Software</h2>
+            </div>
+            <div class="table-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Utility Software</th>
+                            <th>Application Software</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Primary Goal</strong></td>
+                            <td>Maintains and protects the system</td>
+                            <td>Performs user tasks</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Impact</strong></td>
+                            <td>Improves system performance</td>
+                            <td>Productivity or entertainment</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Operation</strong></td>
+                            <td>Works mainly in the background</td>
+                            <td>Used directly by users</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Dependency</strong></td>
+                            <td>Supports the operating system</td>
+                            <td>Depends on system software</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Example</strong></td>
+                            <td>Antivirus, Disk Cleanup</td>
+                            <td>Microsoft Word, Browsers</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Summary -->
+        <section style="padding-bottom: 8rem; text-align: center;">
+            <div class="glass-card reveal" style="max-width: 800px; margin: 0 auto; border: 2px dashed var(--primary);">
+                <h2 style="color: var(--primary);">✅ Summary</h2>
+                <p>Utility software helps <strong>maintain, protect, and optimize</strong> a computer system. It works with the operating system to ensure the computer runs efficiently, safely, and smoothly.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <span class="footer-logo">CYBER BREAKER PROJECT</span>
+        <p>Providing Clarity in the Digital Age.</p>
+        <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.6;">&copy; 2026 ICT Fundamentals Project</p>
+    </footer>
+
+    <script>
+        // Page Loader
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('page-loader');
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.visibility = 'hidden';
+                }, 800);
+            }, 1000);
+        });
+
+        // Intersection Observer for Reveal & Image Loading
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    if (entry.target.tagName === 'IMG' && entry.target.dataset.src) {
+                        entry.target.src = entry.target.dataset.src;
+                        entry.target.removeAttribute('data-src');
+                        entry.target.onload = () => entry.target.style.opacity = '1';
+                    }
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.reveal, img[data-src]').forEach(item => {
+            observer.observe(item);
+        });
+
+        // Theme Toggle
+        const themeBtn = document.getElementById('themeToggle');
+        const themeIcon = document.getElementById('themeIcon');
+        const body = document.body;
+
+        if (localStorage.getItem('theme') === 'light') {
+            body.setAttribute('data-theme', 'light');
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
+        }
+
+        themeBtn.addEventListener('click', () => {
+            if (body.getAttribute('data-theme') === 'light') {
+                body.removeAttribute('data-theme');
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+                localStorage.setItem('theme', 'dark');
+            } else {
+                body.setAttribute('data-theme', 'light');
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
+                localStorage.setItem('theme', 'light');
+            }
+        });
+
+        // Parallax Effect for Background spheres
+        window.addEventListener('scroll', () => {
+            const sphere1 = document.querySelector('.sphere-1');
+            const sphere2 = document.querySelector('.sphere-2');
+            const scrolled = window.pageYOffset;
+            sphere1.style.transform = `translateY(${scrolled * 0.2}px)`;
+            sphere2.style.transform = `translateY(-${scrolled * 0.15}px)`;
+        });
+
+        // Instant Page Loader
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('page-loader');
+            loader.style.opacity = '0';
+            setTimeout(() => {
+                loader.style.visibility = 'hidden';
+            }, 100);
+        });
+
+        // Google Translate Init
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+
+</html>

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Number System Lab | Cyber Breaker Labs</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800&family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg: #010a14;
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --primary: #00ffcc;
+            --secondary: #00d4ff;
+            --accent: #9d00ff;
+            --text: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.6);
+            --border: rgba(255, 255, 255, 0.1);
+            --glow: rgba(0, 255, 204, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(0, 255, 204, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(157, 0, 255, 0.05) 0%, transparent 20%);
+        }
+
+        nav {
+            padding: 1.2rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(1, 10, 20, 0.9);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            background: var(--card-bg);
+            color: var(--text);
+            text-decoration: none;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 600;
+            border: 1px solid var(--border);
+            transition: 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .back-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateX(-5px);
+        }
+
+        .main-container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 2rem;
+        }
+
+        .lab-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 30px;
+            padding: 3rem;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+
+        .panel-header h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.2rem;
+            color: var(--primary);
+            text-shadow: 0 0 20px var(--glow);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Bit Grid */
+        .bit-container {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-bottom: 4rem;
+            flex-wrap: wrap;
+        }
+
+        .bit-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .weight-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.8rem;
+            color: var(--secondary);
+            font-weight: 800;
+        }
+
+        .bit-box {
+            width: 80px;
+            height: 100px;
+            background: #000;
+            border: 2px solid var(--border);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            user-select: none;
+        }
+
+        .bit-box.active {
+            border-color: var(--primary);
+            color: var(--primary);
+            box-shadow: 0 0 25px var(--glow);
+            transform: scale(1.05);
+            background: rgba(0, 255, 204, 0.05);
+        }
+
+        .bit-box:not(.active) {
+            color: #334155;
+        }
+
+        /* Results Display */
+        .results-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .result-card {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .result-card label {
+            display: block;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.7rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 0.5rem;
+        }
+
+        .result-card .value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--secondary);
+        }
+
+        /* Sidebar / Challenge Area */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .challenge-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 1.5rem;
+        }
+
+        .side-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .target-val {
+            font-size: 3.5rem;
+            font-weight: 800;
+            text-align: center;
+            margin: 1rem 0;
+            font-family: 'Orbitron', sans-serif;
+            color: var(--accent);
+            text-shadow: 0 0 15px rgba(157, 0, 255, 0.3);
+        }
+
+        .btn-action {
+            width: 100%;
+            padding: 12px;
+            border-radius: 12px;
+            border: none;
+            font-family: 'Orbitron', sans-serif;
+            font-weight: 700;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: 0.3s;
+            background: var(--primary);
+            color: black;
+            margin-bottom: 0.5rem;
+        }
+
+        .btn-action:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px var(--glow);
+            filter: brightness(1.1);
+        }
+
+        .status-msg {
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 600;
+            min-height: 1.2rem;
+        }
+
+        .history-list {
+            list-style: none;
+            font-size: 0.85rem;
+        }
+
+        .history-item {
+            padding: 10px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .history-item:last-child { border: none; }
+
+        @media (max-width: 900px) {
+            .main-container { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div style="font-family: 'Orbitron'; font-weight: 800; font-size: 1.2rem; color: var(--primary)">
+            NUMBER SYSTEM LAB
+        </div>
+        <a href="../Labs.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Labs
+        </a>
+    </nav>
+
+    <div class="main-container">
+        
+        <!-- Simulation Area -->
+        <div class="lab-panel">
+            <div class="panel-header">
+                <h1>Binary Translator</h1>
+                <p style="color: var(--text-muted)">Toggle the bits to see how binary relates to decimal values.</p>
+            </div>
+
+            <div class="bit-container" id="bit-container">
+                <!-- Bits will be generated by JS -->
+            </div>
+
+            <div class="results-grid">
+                <div class="result-card">
+                    <label>Binary Stream</label>
+                    <div class="value" id="bin-val">00000000</div>
+                </div>
+                <div class="result-card">
+                    <label>Decimal Equivalent</label>
+                    <div class="value" id="dec-val">000</div>
+                </div>
+            </div>
+
+            <!-- Conversion Math Overlay -->
+            <div id="math-breakdown" style="margin-top: 2rem; padding: 1.5rem; background: rgba(0,0,0,0.2); border-radius: 15px; font-family: 'monospace'; font-size: 0.9rem; color: var(--text-muted); text-align: center;">
+                0×1 + 0×2 + 0×4 + 0×8 + 0×16 + 0×32 + 0×64 + 0×128 = 0
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+            
+            <div class="challenge-box">
+                <div class="side-title">
+                    <i class="fas fa-bullseye"></i> Practice Mode
+                </div>
+                <p style="font-size: 0.85rem; color: var(--text-muted);">Set the binary bits to match this decimal target:</p>
+                <div class="target-val" id="target-dec">000</div>
+                
+                <button class="btn-action" onclick="checkAnswer()">Verify Result</button>
+                <button class="btn-action" style="background: var(--card-bg); color: white; border: 1px solid var(--border);" onclick="newChallenge()">New Target</button>
+                
+                <div class="status-msg" id="status-msg">Click 'New Target' to start!</div>
+            </div>
+
+            <div class="challenge-box">
+                <div class="side-title">
+                    <i class="fas fa-history"></i> Recent Progress
+                </div>
+                <ul class="history-list" id="history-list">
+                    <li class="history-item"><span>Target</span> <span>Status</span></li>
+                </ul>
+            </div>
+
+        </div>
+
+    </div>
+
+    <script>
+        const weights = [128, 64, 32, 16, 8, 4, 2, 1];
+        let bits = [0, 0, 0, 0, 0, 0, 0, 0];
+        let targetValue = 0;
+
+        function initBitContainer() {
+            const container = document.getElementById('bit-container');
+            container.innerHTML = "";
+            weights.forEach((w, i) => {
+                const col = document.createElement('div');
+                col.className = 'bit-column';
+                
+                const label = document.createElement('div');
+                label.className = 'weight-label';
+                label.innerText = w;
+                
+                const box = document.createElement('div');
+                box.className = 'bit-box';
+                box.id = `bit-${i}`;
+                box.innerText = "0";
+                box.onclick = () => toggleBit(i);
+                
+                col.appendChild(label);
+                col.appendChild(box);
+                container.appendChild(col);
+            });
+        }
+
+        function toggleBit(index) {
+            bits[index] = bits[index] === 0 ? 1 : 0;
+            const box = document.getElementById(`bit-${index}`);
+            box.innerText = bits[index];
+            if (bits[index] === 1) {
+                box.classList.add('active');
+            } else {
+                box.classList.remove('active');
+            }
+            updateResults();
+        }
+
+        function updateResults() {
+            const binary = bits.join("");
+            let decimal = 0;
+            let mathParts = [];
+            
+            bits.forEach((b, i) => {
+                const w = weights[i];
+                if (b === 1) decimal += w;
+                mathParts.push(`${b}×${w}`);
+            });
+
+            document.getElementById('bin-val').innerText = binary;
+            document.getElementById('dec-val').innerText = decimal.toString().padStart(3, '0');
+            document.getElementById('math-breakdown').innerText = mathParts.reverse().join(" + ") + " = " + decimal;
+        }
+
+        function newChallenge() {
+            targetValue = Math.floor(Math.random() * 256);
+            document.getElementById('target-dec').innerText = targetValue.toString().padStart(3, '0');
+            document.getElementById('status-msg').innerText = "Match the target!";
+            document.getElementById('status-msg').style.color = "var(--text-muted)";
+            
+            // Clear current bits
+            bits = [0, 0, 0, 0, 0, 0, 0, 0];
+            weights.forEach((w, i) => {
+                const box = document.getElementById(`bit-${i}`);
+                box.innerText = "0";
+                box.classList.remove('active');
+            });
+            updateResults();
+        }
+
+        function checkAnswer() {
+            const currentDec = parseInt(document.getElementById('dec-val').innerText);
+            const msg = document.getElementById('status-msg');
+            const history = document.getElementById('history-list');
+            
+            const li = document.createElement('li');
+            li.className = 'history-item';
+
+            if (currentDec === targetValue && targetValue !== 0) {
+                msg.innerText = "EXCELLENT! Correct.";
+                msg.style.color = "var(--primary)";
+                li.innerHTML = `<span>DEC ${targetValue}</span> <span style="color: var(--primary)">PASS</span>`;
+            } else {
+                msg.innerText = "INCORRECT. Try again.";
+                msg.style.color = "var(--accent)";
+                li.innerHTML = `<span>DEC ${targetValue}</span> <span style="color: var(--accent)">FAIL</span>`;
+            }
+            
+            history.prepend(li);
+        }
+
+        initBitContainer();
+        updateResults();
+    </script>
+</body>
+</html>

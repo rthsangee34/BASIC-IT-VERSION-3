@@ -1,0 +1,854 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Application Software - CYBER BREAKER</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@400;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Modern Google Translate Stylizing */
+        #google_translate_element {
+            margin-right: 15px;
+            display: inline-block;
+            vertical-align: middle;
+            z-index: 1001;
+        }
+
+        .goog-te-gadget-simple {
+            background: rgba(255, 255, 255, 0.05) !important;
+            border: 1px solid var(--glass-border) !important;
+            border-radius: 12px !important;
+            padding: 8px 12px !important;
+            font-family: 'Inter', sans-serif !important;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .goog-te-gadget-simple:hover {
+            border-color: var(--primary) !important;
+            background: rgba(59, 130, 246, 0.15) !important;
+            transform: translateY(-2px);
+        }
+
+        .goog-te-gadget-icon { display: none !important; }
+
+        .goog-te-menu-value span {
+            color: var(--text-main) !important;
+            font-weight: 600 !important;
+            text-transform: uppercase;
+            font-size: 11px !important;
+        }
+
+        .goog-te-menu-value img { display: none !important; }
+        .goog-te-menu-value:before {
+            content: "🌐";
+            margin-right: 8px;
+            font-size: 14px;
+        }
+
+        /* Hide Google Branding & Bar */
+        .goog-te-banner-frame.skiptranslate { display: none !important; }
+        body { top: 0px !important; }
+        .goog-logo-link { display: none !important; }
+        .goog-te-gadget { color: transparent !important; }
+        
+        #google_translate_element a { display: none !important; }
+        .skiptranslate.goog-te-gadget > span { display: none !important; }
+
+    </style>
+    <style>
+        :root {
+            /* Light Theme (Default) */
+            --bg-deep: #f8fafc;
+            --bg-card: rgba(255, 255, 255, 0.7);
+            --primary: #3b82f6;
+            --secondary: #a855f7;
+            --accent: #10b981;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --glass: rgba(255, 255, 255, 0.4);
+            --glass-border: rgba(15, 23, 42, 0.1);
+            --header-bg: rgba(248, 250, 252, 0.8);
+            --glow-opacity: 0.1;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+            --row-even: rgba(59, 130, 246, 0.05);
+        }
+
+        body.dark-theme {
+            /* Dark Theme */
+            --bg-deep: #0f172a;
+            --bg-card: rgba(30, 41, 59, 0.6);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --header-bg: rgba(15, 23, 42, 0.8);
+            --glow-opacity: 0.15;
+            --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            --row-even: rgba(255, 255, 255, 0.03);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+            transition: background-color 0.4s ease, color 0.4s ease;
+        }
+
+        /* Animated Background Glows */
+        .bg-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background:
+                radial-gradient(circle at 10% 20%, rgba(168, 85, 247, var(--glow-opacity)) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(59, 130, 246, var(--glow-opacity)) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, rgba(16, 185, 129, calc(var(--glow-opacity) * 0.5)) 0%, transparent 50%);
+        }
+
+        /* Header Navigation */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: var(--header-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            text-decoration: none;
+        }
+
+        .logo-container img {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .logo-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+        }
+
+        .theme-toggle {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .theme-toggle:hover {
+            transform: scale(1.1) rotate(15deg);
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 8rem 5% 4rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .hero h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            line-height: 1.1;
+            max-width: 900px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .hero h1 span {
+            background: linear-gradient(to right, var(--secondary), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: clamp(1.1rem, 2vw, 1.4rem);
+            color: var(--text-muted);
+            max-width: 800px;
+            animation: fadeInUp 1s ease-out 0.2s backwards;
+        }
+
+        .hero-img {
+            width: 100%;
+            max-width: 1000px;
+            border-radius: 30px;
+            box-shadow: var(--card-shadow);
+            margin-top: 2rem;
+            border: 1px solid var(--glass-border);
+            animation: scaleIn 1s ease-out 0.4s backwards;
+        }
+
+        /* Content Sections */
+        section {
+            padding: 4rem 10%;
+        }
+
+        .section-header {
+            margin-bottom: 3rem;
+            text-align: center;
+        }
+
+        .section-header h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.8rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Frosty Card Styles */
+        .glass-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: var(--card-shadow);
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            opacity: 0;
+            transform: translateY(40px);
+        }
+
+        .glass-card.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .glass-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--secondary);
+            box-shadow: 0 20px 40px rgba(168, 85, 247, 0.15);
+        }
+
+        /* Types Grid */
+        .types-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+
+        .type-icon {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .type-img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 16px;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--glass-border);
+        }
+
+        .card-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .card-list li {
+            position: relative;
+            padding-left: 1.5rem;
+            margin-bottom: 0.5rem;
+            color: var(--text-muted);
+        }
+
+        .card-list li::before {
+            content: '●';
+            position: absolute;
+            left: 0;
+            color: var(--secondary);
+            font-size: 0.8rem;
+            top: 2px;
+        }
+
+        /* Real World Process */
+        .process-container {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            padding: 1.5rem;
+            background: var(--glass);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+        }
+
+        .step-num {
+            min-width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.2rem;
+            box-shadow: 0 5px 15px rgba(168, 85, 247, 0.3);
+        }
+
+        /* Essential Features */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-item {
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .feature-item i {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            display: block;
+            background: linear-gradient(to bottom, var(--secondary), var(--primary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Comparison Table */
+        .comparison-container {
+            overflow-x: auto;
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--bg-card);
+            backdrop-filter: blur(10px);
+        }
+
+        th, td {
+            padding: 1.5rem;
+            text-align: left;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        th {
+            background: linear-gradient(to right, var(--secondary), var(--primary));
+            color: white;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.2rem;
+        }
+
+        tr:nth-child(even) {
+            background: var(--row-even);
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        /* Footer */
+        footer {
+            padding: 4rem 10%;
+            text-align: center;
+            background: var(--glass);
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .footer-logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        /* Responsive Fixes */
+        @media (max-width: 768px) {
+            section {
+                padding: 4rem 5%;
+            }
+            .hero {
+                padding-top: 6rem;
+            }
+            .step {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+        }
+        /* Page Loader */
+        #page-loader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-deep);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+
+        .loader-icon {
+            font-size: 50px;
+            color: var(--secondary);
+            animation: appPulse 1.5s infinite ease-in-out;
+        }
+
+        @keyframes appPulse {
+            0%, 100% { transform: scale(1) rotate(0deg); opacity: 0.8; }
+            50% { transform: scale(1.2) rotate(15deg); opacity: 1; filter: drop-shadow(0 0 15px var(--secondary)); }
+        }
+
+        .loader-text {
+            margin-top: 20px;
+            font-family: 'Outfit', sans-serif;
+            color: var(--secondary);
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        /* Image Lazy Loading */
+        img[data-src] {
+            opacity: 0;
+            transition: opacity 1s cubic-bezier(0.4, 0, 0.2, 1);
+            transform: translateY(20px);
+        }
+
+        img.loaded {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- Premium Page Loader -->
+    <div id="page-loader">
+        <i class="fas fa-cubes loader-icon"></i>
+        <div class="loader-text">Please wait...</div>
+    </div>
+
+    <div class="bg-glow"></div>
+
+    <header>
+        <a href="index.html" class="logo-container">
+            <img src="logo.jpeg" alt="Logo">
+            <div class="logo-text">CYBER BREAKER</div>
+        </a>
+        <nav>
+            <ul>
+                <li><a href="index.html">Home</a></li>
+                <li><a href="lessons.html">Lessons</a></li>
+                <li><a href="system software.html">System</a></li>
+                <li><a href="Labs.html">🧪 Labs</a></li>
+            </ul>
+            <div id="google_translate_element"></div>
+            <button class="theme-toggle" id="theme-toggle">
+                <span id="theme-icon">🌙</span>
+            </button>
+        </nav>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero">
+            <h1>Making Computers Useful: <span>Application Software</span></h1>
+            <p>Application software is designed for you. It's the set of programs that allow you to create, communicate, learn, and play in the digital world.</p>
+            <img data-src="application_software_hero_rebuild_1774100515406.png" alt="Application Software Hero" class="hero-img">
+        </section>
+
+        <!-- Definition Section -->
+        <section id="definition">
+            <div class="glass-card" style="max-width: 1000px; margin: 0 auto;">
+                <h2 style="font-family: 'Outfit', sans-serif; font-size: 2.2rem; margin-bottom: 1.5rem;">User-Centric Power</h2>
+                <p style="font-size: 1.1rem; margin-bottom: 1.5rem;">While system software keeps the machine running, <strong>application software</strong> is what makes the machine useful for real people. It sits on top of the system software and performs specific tasks that you request.</p>
+                <div class="features-grid">
+                    <div class="feature-item">
+                        <span style="font-size: 2.5rem;">📄</span>
+                        <h3>Task Focused</h3>
+                        <p>Designed to help you complete specific work or activities.</p>
+                    </div>
+                    <div class="feature-item">
+                        <span style="font-size: 2.5rem;">🤝</span>
+                        <h3>Interactive</h3>
+                        <p>Provides an interface for you to communicate with the computer.</p>
+                    </div>
+                    <div class="feature-item">
+                        <span style="font-size: 2.5rem;">⚙️</span>
+                        <h3>System Dependent</h3>
+                        <p>Relies on an operating system (like Windows) to function.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Types Section -->
+        <section id="types">
+            <div class="section-header">
+                <h2>Types of Application Software</h2>
+                <p style="color: var(--text-muted);">From work to play, there is an app for everything.</p>
+            </div>
+            
+            <div class="types-grid">
+                <!-- Word Processing -->
+                <div class="glass-card">
+                    <img data-src="word_processor_illustration_rebuild_2026_1774100627944.png" alt="Word Processing" class="type-img">
+                    <h3>1. Word Processing</h3>
+                    <p>Designed for creating, editing, and formatting text-based documents.</p>
+                    <ul class="card-list">
+                        <li>Writing essays & reports</li>
+                        <li>Formatting text & pages</li>
+                        <li>Printing documents</li>
+                    </ul>
+                    <p style="margin-top: 1rem; font-weight: bold; color: var(--secondary);">Example: Microsoft Word</p>
+                </div>
+
+                <!-- Web Browsers -->
+                <div class="glass-card">
+                    <img data-src="web_browser_illustration_rebuild_2026_1774100649947.png" alt="Web Browser" class="type-img">
+                    <h3>2. Web Browsers</h3>
+                    <p>Your gateway to information and entertainment on the World Wide Web.</p>
+                    <ul class="card-list">
+                        <li>Viewing websites</li>
+                        <li>Searching information</li>
+                        <li>Watching online videos</li>
+                    </ul>
+                    <p style="margin-top: 1rem; font-weight: bold; color: var(--secondary);">Examples: Chrome, Firefox</p>
+                </div>
+
+                <!-- Multimedia Software -->
+                <div class="glass-card">
+                    <img data-src="SOFTWARE/application.jpeg" alt="Multimedia" class="type-img">
+                    <h3>3. Multimedia Software</h3>
+                    <p>Programs that allow you to play and enjoy sound and video files.</p>
+                    <ul class="card-list">
+                        <li>Playing high-quality music</li>
+                        <li>Watching HD movies</li>
+                        <li>Managing media libraries</li>
+                    </ul>
+                    <p style="margin-top: 1rem; font-weight: bold; color: var(--secondary);">Example: VLC Media Player</p>
+                </div>
+
+                <!-- Graphic Design -->
+                <div class="glass-card">
+                    <img data-src="graphic_design_illustration_1773585263636.png" alt="Graphic Design" class="type-img">
+                    <h3>4. Graphic Design Software</h3>
+                    <p>The tools used by artists and designers to create stunning visuals.</p>
+                    <ul class="card-list">
+                        <li>Editing photos</li>
+                        <li>Designing logos & icons</li>
+                        <li>Creating digital paintings</li>
+                    </ul>
+                    <p style="margin-top: 1rem; font-weight: bold; color: var(--secondary);">Example: Adobe Photoshop</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Real World Example -->
+        <section id="real-world" style="background: var(--row-even);">
+            <div class="section-header">
+                <h2>The Student Workflow</h2>
+                <p>How application apps help you succeed every day.</p>
+            </div>
+            
+            <div class="process-container">
+                <div class="glass-card step">
+                    <div class="step-num">1</div>
+                    <div>
+                        <h4>System Ready</h4>
+                        <p>The Operating System (System Software) starts and manages the CPU and RAM.</p>
+                    </div>
+                </div>
+                <div class="glass-card step">
+                    <div class="step-num">2</div>
+                    <div>
+                        <h4>Online Research</h4>
+                        <p>The student opens <strong>Google Chrome</strong> (App Software) to find info online.</p>
+                    </div>
+                </div>
+                <div class="glass-card step">
+                    <div class="step-num">3</div>
+                    <div>
+                        <h4>Content Creation</h4>
+                        <p>The student uses <strong>Microsoft Word</strong> (App Software) to write a report.</p>
+                    </div>
+                </div>
+                <div class="glass-card step">
+                    <div class="step-num">4</div>
+                    <div>
+                        <h4>Productive Output</h4>
+                        <p>The application software translates user ideas into useful results.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Comparison Table -->
+        <section id="comparison">
+            <div class="section-header">
+                <h2>System vs Application Software</h2>
+                <p>Understanding their distinct roles in computing.</p>
+            </div>
+            
+            <div class="comparison-container">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>System Software</th>
+                            <th>Application Software</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Primary Focus</strong></td>
+                            <td>Hardware Management</td>
+                            <td>User Tasks & Activities</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Operation</strong></td>
+                            <td>Runs in the Background</td>
+                            <td>Interactive & User-Visible</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Necessity</strong></td>
+                            <td>Must have to run the PC</td>
+                            <td>Added for specific needs</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Example</strong></td>
+                            <td>Windows, Linux, Drivers</td>
+                            <td>Word, Browser, Photoshop</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- Summary -->
+        <section id="summary" style="text-align: center; padding-bottom: 8rem;">
+            <div class="glass-card" style="max-width: 800px; margin: 0 auto; border: 2px solid var(--secondary);">
+                <h2 style="font-family: 'Outfit', sans-serif; color: var(--secondary); margin-bottom: 1rem;">✅ Summary</h2>
+                <p>Application software is the bridge that makes computers useful for humans. It provides tools for productivity, communication, and entertainment, working hand-in-hand with system software to deliver results.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <span class="footer-logo">CYBER BREAKER PROJECT</span>
+        <p>Empowering digital literacy for the future.</p>
+        <p style="margin-top: 1rem; font-size: 0.8rem; opacity: 0.7;">&copy; 2026 ICT Fundamentals Module</p>
+    </footer>
+
+    <script>
+        // Page Preloader Logic
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('page-loader');
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                setTimeout(() => {
+                    loader.style.visibility = 'hidden';
+                    initLazyLoading();
+                }, 800);
+            }, 1000);
+        });
+
+        // Lazy Loading
+        function initLazyLoading() {
+            const images = document.querySelectorAll('img[data-src]');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        img.onload = () => img.classList.add('loaded');
+                        observer.unobserve(img);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            images.forEach(img => observer.observe(img));
+        }
+
+        // Audio UI Feedback
+        let audioCtx;
+        function playClickSound(freq = 400, type = 'sine', duration = 0.1) {
+            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+            gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            osc.start();
+            osc.stop(audioCtx.currentTime + duration);
+        }
+
+        // Theme Toggle Logic
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const body = document.body;
+
+        // Sync with system settings
+        if (localStorage.getItem('theme') === 'dark') {
+            body.classList.add('dark-theme');
+            themeIcon.textContent = '☀️';
+        }
+
+        themeToggle.addEventListener('click', () => {
+            playClickSound(550, 'sine', 0.08);
+            body.classList.toggle('dark-theme');
+            const isDark = body.classList.contains('dark-theme');
+            themeIcon.textContent = isDark ? '☀️' : '🌙';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+
+        // Add sound to navigation links
+        document.querySelectorAll('nav a').forEach(link => {
+            link.addEventListener('click', () => playClickSound(450, 'sine', 0.05));
+        });
+
+        // Intersection Observer for scroll animations
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('show');
+                    // Handle lazy loading for images
+                    if (entry.target.tagName === 'IMG' && entry.target.dataset.src) {
+                        entry.target.src = entry.target.dataset.src;
+                        entry.target.removeAttribute('data-src');
+                        entry.target.onload = () => entry.target.style.opacity = '1';
+                    }
+                }
+            });
+        }, { threshold: 0.1 });
+
+        document.querySelectorAll('.glass-card, img[data-src]').forEach(item => {
+            observer.observe(item);
+        });
+
+        // Instant Page Loader
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('page-loader');
+            loader.style.opacity = '0';
+            setTimeout(() => {
+                loader.style.visibility = 'hidden';
+            }, 100);
+        });
+
+        // Google Translate Init
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+</body>
+
+</html>

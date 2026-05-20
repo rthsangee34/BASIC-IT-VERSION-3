@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Software Explorer | Cyber Breaker OS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --bg-os: #0f172a;
+            --taskbar-bg: rgba(15, 23, 42, 0.85);
+            --win-bg: rgba(30, 41, 59, 0.95);
+            --primary: #3b82f6;
+            --system-color: #a855f7;
+            --app-color: #10b981;
+            --utility-color: #f59e0b;
+            --text: #f8fafc;
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Outfit', sans-serif;
+        }
+
+        body {
+            background: var(--bg-os);
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+            background-image: radial-gradient(circle at 50% 50%, #1e293b 0%, #0f172a 100%);
+        }
+
+        /* Desktop Grid */
+        .desktop {
+            height: calc(100vh - 50px);
+            padding: 2rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fill, 100px);
+            grid-auto-rows: 110px;
+            gap: 20px;
+            align-content: start;
+        }
+
+        .icon {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            color: var(--text);
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 12px;
+            transition: all 0.2s;
+            text-align: center;
+            gap: 8px;
+        }
+
+        .icon:hover {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+        }
+
+        .icon i {
+            font-size: 2.5rem;
+            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.3));
+        }
+
+        .icon span {
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+
+        /* Category Labels */
+        .category-tag {
+            font-size: 0.6rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            text-transform: uppercase;
+            font-weight: 800;
+        }
+        .tag-sys { background: var(--system-color); color: white; }
+        .tag-app { background: var(--app-color); color: white; }
+        .tag-util { background: var(--utility-color); color: white; }
+
+        /* Windows */
+        .window {
+            position: absolute;
+            background: var(--win-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            min-width: 400px;
+            min-height: 300px;
+            display: none;
+            flex-direction: column;
+            overflow: hidden;
+            backdrop-filter: blur(20px);
+            animation: winOpen 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10;
+        }
+
+        @keyframes winOpen {
+            from { transform: scale(0.9); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .win-header {
+            background: rgba(255, 255, 255, 0.05);
+            padding: 10px 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: move;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .win-id {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .win-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .win-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .btn-close { background: #ff5f56; }
+        .btn-min { background: #ffbd2e; }
+        .btn-max { background: #27c93f; }
+
+        .win-body {
+            padding: 1.5rem;
+            flex: 1;
+            color: var(--text);
+            overflow-y: auto;
+        }
+
+        /* Taskbar */
+        .taskbar {
+            height: 50px;
+            background: var(--taskbar-bg);
+            backdrop-filter: blur(15px);
+            display: flex;
+            align-items: center;
+            padding: 0 1rem;
+            gap: 10px;
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .start-btn {
+            width: 40px;
+            height: 40px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+
+        .start-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .taskbar-icons {
+            display: flex;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .running-app {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            border-bottom: 2px solid var(--primary);
+        }
+
+        .back-btn {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.3s;
+        }
+
+        .back-btn:hover {
+            background: var(--primary);
+        }
+
+        /* App Specific UIs */
+        .antivirus-scan {
+            border: 2px solid var(--utility-color);
+            background: rgba(245, 158, 11, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--utility-color);
+            width: 0%;
+            transition: width linear;
+        }
+
+        .word-doc {
+            background: white;
+            color: #333;
+            min-height: 200px;
+            padding: 20px;
+            border-radius: 4px;
+            outline: none;
+        }
+
+        .info-panel {
+            background: rgba(59, 130, 246, 0.1);
+            border-left: 4px solid var(--primary);
+            padding: 10px;
+            margin-bottom: 15px;
+            font-size: 0.85rem;
+        }
+
+        /* Start Menu Popup */
+        .start-menu {
+            position: absolute;
+            bottom: 60px;
+            left: 10px;
+            width: 300px;
+            background: var(--win-bg);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: none;
+            flex-direction: column;
+            gap: 1rem;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.5);
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="desktop" id="desktop">
+        <!-- Icons -->
+        <div class="icon" onclick="openWindow('os-settings')">
+            <i class="fas fa-cog" style="color: var(--system-color)"></i>
+            <span class="category-tag tag-sys">System</span>
+            <span>OS Settings</span>
+        </div>
+
+        <div class="icon" onclick="openWindow('document-writer')">
+            <i class="fas fa-file-word" style="color: var(--app-color)"></i>
+            <span class="category-tag tag-app">Application</span>
+            <span>Writer Plus</span>
+        </div>
+
+        <div class="icon" onclick="openWindow('security-suite')">
+            <i class="fas fa-shield-halved" style="color: var(--utility-color)"></i>
+            <span class="category-tag tag-util">Utility</span>
+            <span>Cyber Shield</span>
+        </div>
+
+        <div class="icon" onclick="openWindow('disk-cleanup')">
+            <i class="fas fa-broom" style="color: var(--utility-color)"></i>
+            <span class="category-tag tag-util">Utility</span>
+            <span>Disk Optimizer</span>
+        </div>
+
+        <div class="icon" onclick="openWindow('web-browser')">
+            <i class="fas fa-globe" style="color: var(--app-color)"></i>
+            <span class="category-tag tag-app">Application</span>
+            <span>Explorer 2.0</span>
+        </div>
+    </div>
+
+    <!-- Windows -->
+    
+    <!-- OS Settings -->
+    <div class="window" id="os-settings">
+        <div class="win-header">
+            <div class="win-id"><i class="fas fa-cog"></i> OS Settings</div>
+            <div class="win-controls">
+                <div class="win-btn btn-close" onclick="closeWindow('os-settings')"></div>
+            </div>
+        </div>
+        <div class="win-body">
+            <div class="info-panel">
+                <strong>System Software</strong> provides the core interface. It coordinates hardware and other apps.
+            </div>
+            <h3>Kernel Version: 5.4.1</h3>
+            <p>Status: Running Correctly</p>
+            <div style="margin-top: 20px;">
+                <label>CPU Usage:</label>
+                <div class="progress-bar"><div class="progress-fill" style="width: 45%; background: var(--system-color)"></div></div>
+                <label>RAM Usage:</label>
+                <div class="progress-bar"><div class="progress-fill" style="width: 30%; background: var(--system-color)"></div></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Writer Plus -->
+    <div class="window" id="document-writer">
+        <div class="win-header">
+            <div class="win-id"><i class="fas fa-file-word"></i> Writer Plus</div>
+            <div class="win-controls">
+                <div class="win-btn btn-close" onclick="closeWindow('document-writer')"></div>
+            </div>
+        </div>
+        <div class="win-body">
+            <div class="info-panel" style="border-color: var(--app-color)">
+                <strong>Application Software</strong> is created for users like you to perform specific tasks.
+            </div>
+            <div class="word-doc" contenteditable="true">
+                Start typing your notes here. You are using an educational simulated application software.
+            </div>
+        </div>
+    </div>
+
+    <!-- Security Suite -->
+    <div class="window" id="security-suite">
+        <div class="win-header">
+            <div class="win-id"><i class="fas fa-shield-halved"></i> Cyber Shield</div>
+            <div class="win-controls">
+                <div class="win-btn btn-close" onclick="closeWindow('security-suite')"></div>
+            </div>
+        </div>
+        <div class="win-body">
+            <div class="info-panel" style="border-color: var(--utility-color)">
+                <strong>Utility Software</strong> helps maintain, customize, and protect the computer system.
+            </div>
+            <h3>System Protection</h3>
+            <p>Database updated at: 14:12:11</p>
+            <div class="antivirus-scan">
+                <p id="scan-status">System Scan Idle</p>
+                <div class="progress-bar"><div class="progress-fill" id="scan-bar"></div></div>
+                <button onclick="startScan()" id="scan-btn" style="padding: 5px 15px; border-radius: 5px; border: none; background: var(--utility-color); color: white; cursor: pointer; margin-top: 10px;">Run Full Scan</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Start Menu -->
+    <div class="start-menu" id="start-menu">
+        <h3 style="border-bottom: 2px solid var(--primary); padding-bottom: 5px; margin-bottom: 15px;">Cyber Breaker OS</h3>
+        <p style="font-size: 0.9rem; margin-bottom: 5px;">User: Student</p>
+        <div style="display: flex; flex-direction: column; gap: 8px;">
+            <div style="display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 6px; cursor: pointer;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">
+                <i class="fas fa-user-circle"></i> Profile
+            </div>
+            <div style="display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 6px; cursor: pointer;" onmouseover="this.style.background='rgba(255,255,255,0.1)'" onmouseout="this.style.background='transparent'">
+                <i class="fas fa-power-off"></i> Shut Down
+            </div>
+        </div>
+    </div>
+
+    <div class="taskbar">
+        <div class="start-btn" onclick="toggleStart()"><i class="fas fa-cubes" style="color: white"></i></div>
+        <div class="taskbar-icons" id="taskbar-apps">
+            <!-- Dynamic taskbar items -->
+        </div>
+        <button class="back-btn" onclick="location.href='../Labs.html'">
+            <i class="fas fa-arrow-left"></i> Hub
+        </button>
+    </div>
+
+    <script>
+        const windows = {};
+        const openWins = new Set();
+
+        function openWindow(id) {
+            const win = document.getElementById(id);
+            win.style.display = 'flex';
+            
+            // Random positioning for realism
+            if(!openWins.has(id)) {
+                const randomX = 50 + Math.random() * 100;
+                const randomY = 50 + Math.random() * 100;
+                win.style.left = randomX + 'px';
+                win.style.top = randomY + 'px';
+            }
+
+            openWins.add(id);
+            updateTaskbar();
+            bringToFront(id);
+            
+            // Close start menu
+            document.getElementById('start-menu').style.display = 'none';
+        }
+
+        function closeWindow(id) {
+            document.getElementById(id).style.display = 'none';
+            openWins.delete(id);
+            updateTaskbar();
+        }
+
+        function updateTaskbar() {
+            const container = document.getElementById('taskbar-apps');
+            container.innerHTML = "";
+            openWins.forEach(id => {
+                const icon = document.createElement('div');
+                icon.className = 'running-app';
+                const windowIcon = document.getElementById(id).querySelector('.win-header i').outerHTML;
+                icon.innerHTML = windowIcon;
+                icon.onclick = () => bringToFront(id);
+                container.appendChild(icon);
+            });
+        }
+
+        function bringToFront(id) {
+            document.querySelectorAll('.window').forEach(win => win.style.zIndex = 10);
+            document.getElementById(id).style.zIndex = 20;
+        }
+
+        function toggleStart() {
+            const menu = document.getElementById('start-menu');
+            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function startScan() {
+            const bar = document.getElementById('scan-bar');
+            const status = document.getElementById('scan-status');
+            const btn = document.getElementById('scan-btn');
+            
+            btn.disabled = true;
+            status.innerText = "Scanning System Files...";
+            
+            let progress = 0;
+            bar.style.transition = 'width 5s linear';
+            bar.style.width = '100%';
+            
+            setTimeout(() => {
+                status.innerText = "No Threats Found! System Secure.";
+                btn.disabled = false;
+                bar.style.transition = 'none';
+                bar.style.width = '0%';
+            }, 5000);
+        }
+
+        // Draggable Logic
+        document.querySelectorAll('.win-header').forEach(header => {
+            header.onmousedown = function(event) {
+                const win = header.parentElement;
+                let shiftX = event.clientX - win.getBoundingClientRect().left;
+                let shiftY = event.clientY - win.getBoundingClientRect().top;
+
+                bringToFront(win.id);
+
+                function moveAt(pageX, pageY) {
+                    win.style.left = pageX - shiftX + 'px';
+                    win.style.top = pageY - shiftY + 'px';
+                }
+
+                function onMouseMove(event) {
+                    moveAt(event.pageX, event.pageY);
+                }
+
+                document.addEventListener('mousemove', onMouseMove);
+
+                header.onmouseup = function() {
+                    document.removeEventListener('mousemove', onMouseMove);
+                    header.onmouseup = null;
+                };
+            };
+
+            header.ondragstart = function() {
+                return false;
+            };
+        });
+
+    </script>
+</body>
+</html>

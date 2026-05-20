@@ -1,0 +1,883 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER BREAKER - ICT Basics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Outfit:wght@400;700&display=swap"
+        rel="stylesheet">
+    <style>
+        /* Modern Google Translate Stylizing */
+        #google_translate_element {
+            margin-right: 15px;
+            display: inline-block;
+            vertical-align: middle;
+            z-index: 1001;
+        }
+
+        .goog-te-gadget-simple {
+            background: var(--glass) !important;
+            border: 1px solid var(--glass-border) !important;
+            border-radius: 12px !important;
+            padding: 8px 12px !important;
+            font-family: 'Inter', sans-serif !important;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .goog-te-gadget-simple:hover {
+            border-color: var(--primary) !important;
+            background: rgba(59, 130, 246, 0.15) !important;
+            transform: translateY(-2px);
+        }
+
+        .goog-te-gadget-icon { display: none !important; }
+
+        .goog-te-menu-value span {
+            color: var(--text-main) !important;
+            font-weight: 600 !important;
+            text-transform: uppercase;
+            font-size: 11px !important;
+            letter-spacing: 0.5px;
+        }
+
+        .goog-te-menu-value img { display: none !important; }
+        .goog-te-menu-value:before {
+            content: "🌐";
+            margin-right: 8px;
+            font-size: 14px;
+        }
+
+        /* Hide Google Branding & Bar */
+        .goog-te-banner-frame.skiptranslate { display: none !important; }
+        body { top: 0px !important; }
+        .goog-logo-link { display: none !important; }
+        .goog-te-gadget { color: transparent !important; }
+        .goog-te-gadget .goog-te-combo { margin: 4px 0 !important; }
+        
+        #google_translate_element a { display: none !important; }
+        .skiptranslate.goog-te-gadget > span { display: none !important; }
+
+        :root {
+            /* Light Theme (Default) */
+            --bg-deep: #f8fafc;
+            --bg-card: rgba(255, 255, 255, 0.8);
+            --primary: #3b82f6;
+            --secondary: #a855f7;
+            --accent: #10b981;
+            --text-main: #0f172a;
+            --text-muted: #475569;
+            --glass: rgba(255, 255, 255, 0.5);
+            --glass-border: rgba(15, 23, 42, 0.1);
+            --header-bg: rgba(248, 250, 252, 0.8);
+            --glow-opacity: 0.1;
+            --card-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        [data-theme="dark"] {
+            /* Dark Theme */
+            --bg-deep: #0f172a;
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --glass: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --header-bg: rgba(15, 23, 42, 0.8);
+            --glow-opacity: 0.15;
+            --card-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            transition: background-color 0.3s, color 0.3s, border-color 0.3s, box-shadow 0.3s;
+        }
+
+        body {
+            background-color: var(--bg-deep);
+            color: var(--text-main);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        /* Animated Background */
+        .bg-glow {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background:
+                radial-gradient(circle at 20% 30%, rgba(59, 130, 246, var(--glow-opacity)) 0%, transparent 40%),
+                radial-gradient(circle at 80% 70%, rgba(168, 85, 247, var(--glow-opacity)) 0%, transparent 40%);
+        }
+
+        /* Google Translate Stylizing */
+        #google_translate_element {
+            margin-right: 15px;
+        }
+
+        .goog-te-gadget-simple {
+            background: var(--glass) !important;
+            border: 1px solid var(--glass-border) !important;
+            border-radius: 12px !important;
+            padding: 8px 12px !important;
+            font-family: 'Inter', sans-serif !important;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .goog-te-gadget-simple:hover {
+            border-color: var(--primary) !important;
+            background: rgba(59, 130, 246, 0.1) !important;
+        }
+
+        .goog-te-gadget-icon { display: none !important; }
+
+        .goog-te-menu-value span {
+            color: var(--text-main) !important;
+            font-weight: 600 !important;
+            text-transform: uppercase;
+            font-size: 12px !important;
+        }
+
+        .goog-te-menu-value img { display: none !important; }
+        .goog-te-menu-value:before {
+            content: "\f1ab";
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            margin-right: 8px;
+            color: var(--primary);
+        }
+
+        /* Hide Google Bar */
+        .goog-te-banner-frame.skiptranslate { display: none !important; }
+        body { top: 0px !important; }
+        .goog-logo-link { display: none !important; }
+        .goog-te-gadget { color: transparent !important; }
+        .goog-te-gadget .goog-te-combo { margin: 0 !important; }
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 5%;
+            background: var(--header-bg);
+            backdrop-filter: blur(10px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-container img {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            object-fit: cover;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.2);
+        }
+
+        .logo-text {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0.6rem 1.2rem;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        nav a:hover {
+            color: var(--primary);
+            background: var(--glass-border);
+            transform: translateY(-2px);
+        }
+
+        /* Nav Buttons Specific Styling */
+        .nav-link-btn {
+            border: 1px solid var(--glass-border);
+            background: var(--glass);
+        }
+
+        .nav-link-btn:hover {
+            border-color: var(--primary);
+            box-shadow: 0 5px 15px rgba(59, 130, 246, 0.1);
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            color: var(--text-main);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            z-index: 1002;
+            position: relative;
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(15deg);
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* Hero Section */
+        .hero {
+            height: 80vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 10%;
+            background: radial-gradient(circle at center, rgba(59, 130, 246, 0.05) 0%, transparent 70%);
+        }
+
+        .hero h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            line-height: 1.1;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .hero span {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            max-width: 850px;
+            margin-bottom: 2.5rem;
+            animation: fadeInUp 1s ease-out 0.3s backwards;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Sections Styling */
+        section {
+            padding: 5rem 10%;
+        }
+
+        .section-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.8rem;
+            margin-bottom: 4rem;
+            text-align: center;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 70px;
+            height: 4px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            border-radius: 2px;
+        }
+
+        /* Info Cards */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+        }
+
+        .card {
+            background: var(--bg-card);
+            padding: 2.5rem;
+            border-radius: 24px;
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(15px);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--card-shadow);
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(59, 130, 246, 0.1);
+        }
+
+        body.dark-theme .card:hover {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .card h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.6rem;
+            margin-bottom: 1.2rem;
+            color: var(--primary);
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            line-height: 1.6;
+        }
+
+        /* Timeline Styling */
+        .timeline {
+            position: relative;
+            max-width: 900px;
+            margin: 40px auto;
+        }
+
+        .timeline::after {
+            content: '';
+            position: absolute;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--primary), var(--secondary));
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            margin-left: -1.5px;
+            border-radius: 10px;
+            opacity: 0.3;
+        }
+
+        .timeline-item {
+            padding: 20px 40px;
+            position: relative;
+            width: 50%;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease-out;
+        }
+
+        .timeline-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .timeline-item::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            right: -10px;
+            background: var(--bg-deep);
+            border: 4px solid var(--secondary);
+            top: 30px;
+            border-radius: 50%;
+            z-index: 1;
+            box-shadow: 0 0 10px var(--secondary);
+        }
+
+        .left {
+            left: 0;
+            text-align: right;
+        }
+
+        .right {
+            left: 50%;
+            text-align: left;
+        }
+
+        .right::after {
+            left: -10px;
+            border-color: var(--primary);
+            box-shadow: 0 0 10px var(--primary);
+        }
+
+        .content {
+            padding: 25px;
+            background: var(--bg-card);
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--card-shadow);
+            position: relative;
+        }
+
+        .content h2 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2rem;
+            color: var(--text-main);
+            margin-bottom: 12px;
+        }
+
+        .content p {
+            color: var(--text-muted);
+            font-size: 1rem;
+            margin-bottom: 15px;
+        }
+
+        .content img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-radius: 14px;
+            border: 1px solid var(--glass-border);
+            transition: transform 0.3s;
+        }
+
+        .content:hover img {
+            transform: scale(1.02);
+        }
+
+        /* Responsive Timeline */
+        @media screen and (max-width: 800px) {
+            header {
+                padding: 1rem 3%;
+            }
+
+            nav {
+                gap: 1rem;
+            }
+
+            nav ul {
+                gap: 1rem;
+            }
+
+            .hero h1 {
+                font-size: 3rem;
+            }
+
+            .timeline::after {
+                left: 31px;
+            }
+
+            .timeline-item {
+                width: 100%;
+                padding-left: 60px;
+                padding-right: 20px;
+                text-align: left;
+            }
+
+            .timeline-item::after {
+                left: 21px;
+            }
+
+            .right {
+                left: 0%;
+            }
+        }
+
+        footer {
+            text-align: center;
+            padding: 4rem;
+            border-top: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            background: var(--glass);
+        }
+
+        .footer-logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.5rem;
+        }
+
+        /* Hero Buttons */
+        .hero-btns {
+            display: flex;
+            gap: 1.5rem;
+            margin-top: 1rem;
+            animation: fadeInUp 1s ease-out 0.6s backwards;
+        }
+
+        .btn-hero {
+            padding: 1rem 2.5rem;
+            border-radius: 14px;
+            font-weight: 700;
+            font-size: 1rem;
+            text-decoration: none;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            border: none;
+            cursor: pointer;
+            font-family: 'Outfit', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--glass);
+            color: var(--text-main);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
+        }
+
+        .btn-secondary:hover {
+            background: var(--glass-border);
+            transform: translateY(-5px);
+            border-color: var(--primary);
+        }
+
+        @media (max-width: 600px) {
+            .hero-btns {
+                flex-direction: column;
+                width: 100%;
+                max-width: 300px;
+            }
+            .btn-hero {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+        /* Page Loader */
+        #page-preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-deep);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+
+        .preloader-orbit {
+            width: 60px;
+            height: 60px;
+            border: 2px solid var(--primary);
+            border-radius: 50%;
+            border-top-color: transparent;
+            animation: preloaderSpin 1s linear infinite;
+        }
+
+        @keyframes preloaderSpin {
+            to { transform: rotate(360deg); }
+        }
+
+        .preloader-text {
+            margin-top: 20px;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 700;
+            letter-spacing: 2px;
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 1s infinite alternate;
+        }
+
+        /* Image Lazy Loading */
+        img[data-src] {
+            opacity: 0;
+            transition: opacity 0.6s ease-in-out;
+        }
+
+        img.loaded {
+            opacity: 1;
+        }
+
+    </style>
+</head>
+
+<body>
+
+    <!-- Premium Page Loader -->
+    <div id="page-preloader">
+        <div class="preloader-orbit"></div>
+        <div class="preloader-text">Please wait...</div>
+    </div>
+
+    <div class="bg-glow"></div>
+
+    <header>
+        <div class="logo-container">
+            <img src="logo.jpeg" alt="ICT Logo">
+            <div class="logo-text">CYBER BREAKER</div>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="lessons.html" class="nav-link-btn">🚀 Explore</a></li>
+                <li><a href="Labs.html" class="nav-link-btn">🧪 Labs</a></li>
+            </ul>
+            <div id="google_translate_element"></div>
+            <button class="theme-toggle" id="theme-toggle" title="Toggle Theme">
+                <span id="theme-icon">🌙</span>
+            </button>
+        </nav>
+    </header>
+
+    <section class="hero" id="intro">
+        <h1>Understanding <span>ICT</span><br>For The Modern World</h1>
+        <p>ICT is the bridge that connects hardware, software, and people. It represents the use of computers,
+            smartphones, internet, and networks to create, store, and share information globally.</p>
+        <div class="hero-btns">
+            <a href="lessons.html" class="btn-hero btn-primary">
+                <span>🚀</span> Explore Lessons
+            </a>
+            <a href="Labs.html" class="btn-hero btn-secondary">
+                <span>🧪</span> Open Labs
+            </a>
+        </div>
+    </section>
+
+    <section id="why">
+        <h2 class="section-title">Why This Site Exists</h2>
+        <div class="info-grid">
+            <div class="card">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🎓</div>
+                <h3>Simple Education</h3>
+                <p>Designed specifically to help students and beginners understand the digital world without the weight
+                    of complicated jargon.</p>
+            </div>
+            <div class="card">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🌐</div>
+                <h3>Always Accessible</h3>
+                <p>Completely free and easy to access from any modern browser. Knowledge should always be just one click
+                    away.</p>
+            </div>
+            <div class="card">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">📦</div>
+                <h3>Syllabus Driven</h3>
+                <p>Focused on school syllabus topics including ICT basics, hardware devices, operating systems, and
+                    essential software.</p>
+            </div>
+        </div>
+    </section>
+
+    <section id="timeline">
+        <h2 class="section-title">The Growth of Technology</h2>
+        <div class="timeline">
+            <div class="timeline-item left">
+                <div class="content">
+                    <h2>1940s</h2>
+                    <p><strong>Room-sized computers.</strong> The birth of electronic computation systems like ENIAC.
+                    </p>
+                    <div class="img-placeholder" style="height: 220px;">
+                        <img data-src="firstgen.jpeg" alt="First Gen Computers">
+                    </div>
+                </div>
+            </div>
+            <div class="timeline-item right">
+                <div class="content">
+                    <h2>1980s</h2>
+                    <p><strong>Personal Computers.</strong> Technology enters the home with microprocessors and GUI
+                        interfaces.</p>
+                    <div class="img-placeholder" style="height: 220px;">
+                        <img data-src="secondgen.jpeg" alt="PC Revolution">
+                    </div>
+                </div>
+            </div>
+            <div class="timeline-item left">
+                <div class="content">
+                    <h2>1990s</h2>
+                    <p><strong>The Web Era.</strong> Internet and email become mainstream, connecting the world via the
+                        World Wide Web.</p>
+                    <div class="img-placeholder" style="height: 220px;">
+                        <img data-src="thirdgen.jpeg" alt="The Web Age">
+                    </div>
+                </div>
+            </div>
+            <div class="timeline-item right">
+                <div class="content">
+                    <h2>2000s</h2>
+                    <p><strong>Mobile Mobility.</strong> Smartphones and social media redefine how we communicate on the
+                        go.</p>
+                    <div class="img-placeholder" style="height: 220px;">
+                        <img data-src="fourthgen.jpeg" alt="Smartphones">
+                    </div>
+                </div>
+            </div>
+            <div class="timeline-item left">
+                <div class="content">
+                    <h2>Today</h2>
+                    <p><strong>The Intelligence Era.</strong> AI, Cloud Computing, and 5G networks create a truly
+                        hyper-connected world.</p>
+                    <div class="img-placeholder" style="height: 220px;">
+                        <img data-src="fifth_generation_of_computer.jpg.jpeg" alt="Modern AI Cloud">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-logo">CYBER BREAKER PROJECT</div>
+        <p>Created to empower the next generation of digital learners.</p>
+        <p style="margin-top: 1rem; font-size: 0.8rem;">&copy; 2026 CYBER BREAKER Education Initiative</p>
+    </footer>
+
+    <script>
+        // Page Preloader Logic
+        window.addEventListener('load', () => {
+            const preloader = document.getElementById('page-preloader');
+            preloader.style.opacity = '0';
+            setTimeout(() => {
+                preloader.style.visibility = 'hidden';
+                initLazyLoading();
+            }, 100); // Sharp fade out
+        });
+
+        // Lazy Loading Logic
+        function initLazyLoading() {
+            const images = document.querySelectorAll('img[data-src]');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const img = entry.target;
+                        img.src = img.dataset.src;
+                        img.onload = () => img.classList.add('loaded');
+                        observer.unobserve(img);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            images.forEach(img => observer.observe(img));
+        }
+
+        // Theme Toggle Logic
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = document.getElementById('theme-icon');
+        const bodyElement = document.body;
+
+        function applyGlobalTheme(theme) {
+            if (theme === 'dark') {
+                bodyElement.setAttribute('data-theme', 'dark');
+                themeIcon.textContent = '☀️';
+            } else {
+                bodyElement.removeAttribute('data-theme');
+                themeIcon.textContent = '🌙';
+            }
+        }
+
+        // Check for saved theme (sync with other pages via cyberTheme key)
+        const savedGlobalTheme = localStorage.getItem('cyberTheme') || 'light';
+        applyGlobalTheme(savedGlobalTheme);
+
+        themeToggle.addEventListener('click', () => {
+            const isCurrentlyDark = bodyElement.getAttribute('data-theme') === 'dark';
+            const newThemeStatus = isCurrentlyDark ? 'light' : 'dark';
+            applyGlobalTheme(newThemeStatus);
+            localStorage.setItem('cyberTheme', newThemeStatus);
+        });
+
+        // Simple scroll reveal for timeline items
+        const observerOptions = {
+            threshold: 0.1
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    // Handle lazy loading for images if they have data-src
+                    if (entry.target.tagName === 'IMG' && entry.target.dataset.src) {
+                        entry.target.src = entry.target.dataset.src;
+                        entry.target.removeAttribute('data-src');
+                    }
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.timeline-item, img[data-src]').forEach(item => {
+            observer.observe(item);
+        });
+
+        // Google Translate Init
+        function googleTranslateElementInit() {
+            new google.translate.TranslateElement({
+                pageLanguage: 'en',
+                layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+                autoDisplay: false
+            }, 'google_translate_element');
+        }
+    </script>
+    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+</body>
+
+</html>

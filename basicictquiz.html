@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CYBER BREAKER - ICT Quiz</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti Library -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            /* Light Theme */
+            --primary: #2563eb;
+            --secondary: #3b82f6;
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --hover-bg: #f1f5f9;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            --transition: all 0.3s ease;
+        }
+
+        [data-theme="dark"] {
+            --bg: #0f172a;
+            --card-bg: #1e293b;
+            --text: #f1f5f9;
+            --text-muted: #94a3b8;
+            --border: #334155;
+            --hover-bg: #334155;
+            --shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            transition: var(--transition);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 800px;
+            width: 100%;
+        }
+
+        /* Header & Theme Toggle */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3rem;
+            width: 100%;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .theme-toggle {
+            cursor: pointer;
+            font-size: 1.2rem;
+            padding: 0.5rem;
+            border-radius: 50%;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            color: var(--text);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 45px;
+            height: 45px;
+            transition: var(--transition);
+        }
+
+        .theme-toggle:hover {
+            transform: rotate(15deg) scale(1.1);
+        }
+
+        /* Quiz UI */
+        .quiz-card {
+            background: var(--card-bg);
+            border-radius: 24px;
+            padding: 3rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-bar-container {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 6px;
+            background: var(--border);
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+
+        .q-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        #timer {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            padding: 4px 12px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        #timer.warning {
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .question-text {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin-bottom: 2rem;
+            line-height: 1.4;
+        }
+
+        .options-grid {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .option {
+            padding: 1.2rem 1.5rem;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-weight: 500;
+            background: transparent;
+            width: 100%;
+            text-align: left;
+            color: var(--text);
+            font-size: 1rem;
+        }
+
+        .option:hover {
+            border-color: var(--primary);
+            background: var(--hover-bg);
+            transform: translateX(5px);
+        }
+
+        .option.correct {
+            border-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+        }
+
+        .option.wrong {
+            border-color: #ef4444;
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .option i {
+            display: none;
+        }
+
+        .correct i.fa-check,
+        .wrong i.fa-xmark {
+            display: block;
+        }
+
+        /* Result View */
+        .result-view {
+            text-align: center;
+            display: none;
+        }
+
+        .result-view i.trophy-icon {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            display: block;
+        }
+
+        .score-circle {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            border: 8px solid var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 2rem auto;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .btn-group {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+            margin-top: 2rem;
+        }
+
+        .btn-quiz {
+            padding: 1rem 3rem;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.3);
+            transition: var(--transition);
+            width: fit-content;
+            text-decoration: none;
+        }
+
+        .btn-quiz:hover {
+            transform: translateY(-3px);
+            background: var(--secondary);
+        }
+
+        .btn-secondary {
+            background: var(--card-bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+        }
+
+        .btn-secondary:hover {
+            background: var(--hover-bg);
+        }
+
+        /* Footer links */
+        .footer-nav {
+            margin-top: 2rem;
+            text-align: center;
+        }
+
+        .footer-nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .footer-nav a:hover {
+            color: var(--primary);
+        }
+
+        @media (max-width: 600px) {
+            .quiz-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .question-text {
+                font-size: 1.3rem;
+            }
+        }
+    </style>
+</head>
+
+<body data-theme="light">
+
+    <div class="container">
+        <header>
+            <div class="logo" style="display: flex; align-items: center; gap: 10px;">
+                <img src="logo.jpeg" alt="CYBER BREAKER" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--primary);">
+                <span>CYBER BREAKER</span>
+            </div>
+            <button class="theme-toggle" id="themeBtn" title="Toggle Theme">
+                <i class="fas fa-moon"></i>
+            </button>
+        </header>
+
+        <main class="quiz-card">
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+
+            <!-- Quiz Screen -->
+            <div id="quizScreen">
+                <div class="q-info">
+                    <span id="questionCount">Question 1 of 10</span>
+                    <span id="timer"><i class="fas fa-clock"></i> <span id="time-left">30</span>s</span>
+                </div>
+                <div class="question-text" id="questionText">Loading question...</div>
+                <div class="options-grid" id="optionsGrid">
+                    <!-- Options injected by JS -->
+                </div>
+            </div>
+
+            <!-- Result Screen -->
+            <div id="resultScreen" class="result-view">
+                <div id="resultIcon">
+                    <i class="fas fa-trophy trophy-icon"></i>
+                </div>
+                <h2 id="resultTitle">Quiz Completed!</h2>
+                <div class="score-circle" id="scoreValue">0/10</div>
+                <div id="failurePanel" style="display: none; background: rgba(239, 68, 68, 0.1); padding: 25px; border-radius: 24px; border: 1px solid rgba(239, 68, 68, 0.2); margin: 2rem 0;">
+                    <p style="color: #ef4444; font-weight: 700; font-size: 1.2rem; margin-bottom: 0.5rem;">Score Too Low!</p>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">You need at least 7 correct answers to earn your star. Would you like to try again?</p>
+                </div>
+                <p id="feedbackText">Great effort! Keep learning.</p>
+
+                <div class="btn-group">
+                    <button class="btn-quiz" id="restartBtn" onclick="restartQuiz()">Try Again</button>
+                    <a href="guide1.html" class="btn-quiz btn-secondary" id="backToGuideBtn" style="display: none;">Back
+                        to Study Guide</a>
+                </div>
+            </div>
+        </main>
+
+        <div class="footer-nav">
+            <a href="guide1.html"><i class="fas fa-arrow-left"></i> Back to Study Guide</a>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                q: "What does ICT stand for?",
+                a: [
+                    { t: "Information Computer Technology", c: false },
+                    { t: "Information and Communication Technology", c: true },
+                    { t: "Internet Communication Tool", c: false },
+                    { t: "Internal Computer Technology", c: false }
+                ]
+            },
+            {
+                q: "What is data?",
+                a: [
+                    { t: "Processed information", c: false },
+                    { t: "Raw facts and figures", c: true },
+                    { t: "Computer programs", c: false },
+                    { t: "Internet connection", c: false }
+                ]
+            },
+            {
+                q: "Which of the following is an example of hardware?",
+                a: [
+                    { t: "Microsoft Word", c: false },
+                    { t: "Google Chrome", c: false },
+                    { t: "Keyboard", c: true },
+                    { t: "Windows", c: false }
+                ]
+            },
+            {
+                q: "What is software?",
+                a: [
+                    { t: "Physical parts of a computer", c: false },
+                    { t: "Programs that run on a computer", c: true },
+                    { t: "Internet cables", c: false },
+                    { t: "Computer screens", c: false }
+                ]
+            },
+            {
+                q: "Which device is used to enter data into a computer?",
+                a: [
+                    { t: "Printer", c: false },
+                    { t: "Monitor", c: false },
+                    { t: "Keyboard", c: true },
+                    { t: "Speaker", c: false }
+                ]
+            },
+            {
+                q: "Which of the following is an output device?",
+                a: [
+                    { t: "Mouse", c: false },
+                    { t: "Monitor", c: true },
+                    { t: "Scanner", c: false },
+                    { t: "Microphone", c: false }
+                ]
+            },
+            {
+                q: "Which device is used to store data?",
+                a: [
+                    { t: "USB flash drive", c: true },
+                    { t: "Keyboard", c: false },
+                    { t: "Monitor", c: false },
+                    { t: "Mouse", c: false }
+                ]
+            },
+            {
+                q: "What does the internet help us do?",
+                a: [
+                    { t: "Break computers", c: false },
+                    { t: "Communicate and share information", c: true },
+                    { t: "Remove data", c: false },
+                    { t: "Stop software", c: false }
+                ]
+            },
+            {
+                q: "Which of these is a communication technology?",
+                a: [
+                    { t: "Wi-Fi", c: true },
+                    { t: "Printer", c: false },
+                    { t: "Keyboard", c: false },
+                    { t: "Scanner", c: false }
+                ]
+            },
+            {
+                q: "What is information?",
+                a: [
+                    { t: "Raw numbers only", c: false },
+                    { t: "Useless data", c: false },
+                    { t: "Processed data with meaning", c: true },
+                    { t: "Hardware parts", c: false }
+                ]
+            }
+        ];
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let soundContext;
+        let timerInterval;
+        let timeLeft = 30;
+
+        // Sound Engine
+        function playClickSound(frequency = 400, type = 'sine', volume = 0.1) {
+            if (!soundContext) soundContext = new (window.AudioContext || window.webkitAudioContext)();
+            const osc = soundContext.createOscillator();
+            const gain = soundContext.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(frequency, soundContext.currentTime);
+            gain.gain.setValueAtTime(0.1, soundContext.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, soundContext.currentTime + 0.1);
+            osc.connect(gain);
+            gain.connect(soundContext.destination);
+            osc.start();
+            osc.stop(soundContext.currentTime + 0.1);
+        }
+
+        // Shuffling Algorithm
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        function initQuiz() {
+            shuffle(questions);
+            questions.forEach(q => shuffle(q.a));
+            currentQuestionIndex = 0;
+            score = 0;
+            showQuestion();
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 30;
+            const timerEl = document.getElementById('timer');
+            const timeLeftEl = document.getElementById('time-left');
+            timerEl.classList.remove('warning');
+            timeLeftEl.innerText = timeLeft;
+
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timeLeftEl.innerText = timeLeft;
+                if (timeLeft <= 10) {
+                    timerEl.classList.add('warning');
+                    playClickSound(200, 'square', 0.05);
+                }
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    handleAnswer(null, false); // Auto-fail on timeout
+                }
+            }, 1000);
+        }
+
+        function showQuestion() {
+            startTimer();
+            const q = questions[currentQuestionIndex];
+            document.getElementById('questionText').innerText = q.q;
+            document.getElementById('questionCount').innerText = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+
+            const optionsGrid = document.getElementById('optionsGrid');
+            optionsGrid.innerHTML = '';
+
+            q.a.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = 'option';
+                btn.innerHTML = `${opt.t} <i class="fas fa-check"></i><i class="fas fa-xmark"></i>`;
+                btn.onclick = () => handleAnswer(btn, opt.c);
+                optionsGrid.appendChild(btn);
+            });
+
+            const progress = ((currentQuestionIndex) / questions.length) * 100;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+        }
+
+        function handleAnswer(btn, isCorrect) {
+            clearInterval(timerInterval);
+            if (btn) {
+                playClickSound(isCorrect ? 600 : 200, isCorrect ? 'triangle' : 'square');
+            } else {
+                playClickSound(150, 'sawtooth', 0.2);
+            }
+
+            const allOptions = document.querySelectorAll('.option');
+            allOptions.forEach(o => o.style.pointerEvents = 'none');
+
+            if (btn) {
+                if (isCorrect) {
+                    btn.classList.add('correct');
+                    score++;
+                } else {
+                    btn.classList.add('wrong');
+                }
+            }
+
+            // Always highlight correct answer if wrong or timeout
+            if (!isCorrect) {
+                 allOptions.forEach((o, i) => {
+                    if (questions[currentQuestionIndex].a[i].c) o.classList.add('correct');
+                });
+            }
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < questions.length) {
+                    showQuestion();
+                } else {
+                    showResults();
+                }
+            }, 1200);
+        }
+
+        function triggerConfetti() {
+            const duration = 3 * 1000;
+            const animationEnd = Date.now() + duration;
+            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            const interval = setInterval(function () {
+                const timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                const particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
+            }, 250);
+        }
+
+        function showResults() {
+            document.getElementById('quizScreen').style.display = 'none';
+            document.getElementById('resultScreen').style.display = 'block';
+            document.getElementById('scoreValue').innerText = `${score}/${questions.length}`;
+            document.getElementById('progressBar').style.width = `100%`;
+
+            const backToGuideBtn = document.getElementById('backToGuideBtn');
+            const resultTitle = document.getElementById('resultTitle');
+            const feedbackText = document.getElementById('feedbackText');
+            const resultIcon = document.getElementById('resultIcon');
+            const failurePanel = document.getElementById('failurePanel');
+            const restartBtn = document.getElementById('restartBtn');
+
+            if (score >= 7) {
+                resultTitle.innerText = "Congratulations!";
+                feedbackText.innerText = "Excellent! You passed the challenge.";
+                resultIcon.innerHTML = '<i class="fas fa-star trophy-icon" style="color: #fbbf24;"></i>';
+                backToGuideBtn.style.display = 'none';
+                failurePanel.style.display = 'none';
+                restartBtn.innerText = "Restart Quiz";
+                triggerConfetti();
+                playClickSound(800, 'triangle', 0.5);
+            } else {
+                resultTitle.innerText = "Quiz Completed";
+                feedbackText.innerText = "";
+                resultIcon.innerHTML = '<i class="fas fa-circle-exclamation trophy-icon" style="color: #ef4444;"></i>';
+                failurePanel.style.display = 'block';
+                restartBtn.innerText = "Try Again Now";
+                backToGuideBtn.style.display = 'inline-block';
+                playClickSound(150, 'sawtooth', 0.5);
+            }
+        }
+
+        function restartQuiz() {
+            playClickSound(500);
+            document.getElementById('quizScreen').style.display = 'block';
+            document.getElementById('resultScreen').style.display = 'none';
+            initQuiz();
+        }
+
+        // Theme Toggle Logic
+        const themeBtn = document.getElementById('themeBtn');
+        themeBtn.onclick = () => {
+            playClickSound(440);
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            body.setAttribute('data-theme', newTheme);
+            themeBtn.innerHTML = newTheme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+        };
+
+        // Initialize on load
+        window.onload = initQuiz;
+    </script>
+</body>
+
+</html>
