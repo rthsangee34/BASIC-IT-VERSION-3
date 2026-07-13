@@ -1,0 +1,571 @@
+/* Shared responsive layer for the ICT Basics site.
+   Loaded last so it can correct older page-level fixed widths without changing the original design. */
+
+:root {
+    --responsive-edge: clamp(1rem, 4vw, 3rem);
+    --responsive-gap: clamp(1rem, 3vw, 2rem);
+    --responsive-card-pad: clamp(1rem, 3vw, 2rem);
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+}
+
+body {
+    width: 100%;
+    min-width: 0;
+    overflow-x: hidden;
+}
+
+body,
+button,
+input,
+select,
+textarea {
+    font-size-adjust: none;
+}
+
+img,
+video,
+canvas,
+svg,
+iframe {
+    max-width: 100%;
+}
+
+img,
+video {
+    height: auto;
+}
+
+iframe {
+    border: 0;
+}
+
+table {
+    width: 100%;
+    max-width: 100%;
+    border-collapse: collapse;
+}
+
+pre,
+code,
+.value,
+.result,
+.result-box {
+    white-space: pre-wrap;
+    word-break: break-word;
+}
+
+main,
+section,
+header,
+nav,
+footer,
+.container,
+.main-container,
+.wrapper,
+.workspace,
+.lab-container,
+.city-container,
+.timeline-container,
+.quiz-container,
+.learn-content,
+.section,
+.hero,
+.content,
+.page-content {
+    max-width: 100%;
+}
+
+section,
+.section,
+.container,
+.main-container,
+.quiz-container,
+.timeline-container,
+.lab-container,
+.city-container,
+.learn-content {
+    padding-left: max(var(--responsive-edge), env(safe-area-inset-left)) !important;
+    padding-right: max(var(--responsive-edge), env(safe-area-inset-right)) !important;
+}
+
+.hero,
+.section-header,
+.header-section,
+.quiz-header,
+.title-group,
+.panel-header,
+.card,
+.glass-card,
+.feature-card,
+.course-card,
+.lab-card,
+.printer-card,
+.result-card,
+.device-card,
+.part-card,
+.quiz-card,
+.info-card,
+.building,
+.panel {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.glass-card,
+.card,
+.feature-card,
+.course-card,
+.lab-card,
+.printer-card,
+.result-card,
+.device-card,
+.part-card,
+.quiz-card,
+.info-card,
+.building,
+.panel {
+    padding: var(--responsive-card-pad);
+}
+
+.grid,
+.card-grid,
+.features-grid,
+.courses-grid,
+.labs-grid,
+.types-grid,
+.info-grid,
+.results-grid,
+.comparison-grid,
+.options-grid,
+.printer-grid,
+.city-map,
+.sorting-area,
+.grid-2,
+.grid-3,
+.ipos-flow {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)) !important;
+    gap: var(--responsive-gap);
+}
+
+.table-container,
+.comparison-container,
+.table-wrapper,
+.scroll-table,
+.device-table,
+.responsive-scroll {
+    max-width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.table-container table,
+.comparison-container table,
+.table-wrapper table,
+.device-table table {
+    min-width: min(680px, 100%);
+}
+
+.hero-img,
+.logo-img,
+.logo-container img,
+img[style*="width"] {
+    max-width: 100% !important;
+}
+
+a,
+button,
+.btn,
+.btn-main,
+.btn-hero,
+.nav-btn,
+.nav-link-btn,
+.back-btn,
+.back-button,
+.back-link,
+.theme-toggle,
+.option-btn,
+.mode-btn,
+.btn-action {
+    min-height: 44px;
+    touch-action: manipulation;
+}
+
+input,
+select,
+textarea {
+    max-width: 100%;
+    min-height: 44px;
+}
+
+header,
+nav,
+.header,
+.nav-container {
+    width: 100%;
+}
+
+nav ul,
+.nav-links,
+.nav-actions,
+.nav-btns,
+.header-actions,
+.hero-buttons,
+.button-group,
+.cta-group,
+.mode-toggle {
+    min-width: 0;
+}
+
+@media (min-width: 769px) {
+    nav ul,
+    .nav-links,
+    .nav-actions,
+    .nav-btns,
+    .header-actions {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+    }
+}
+
+@media (max-width: 900px) {
+    .hero,
+    .header,
+    header,
+    nav,
+    .nav-container,
+    .main-container,
+    .comparison-container,
+    .process-container,
+    .cooling-grid {
+        gap: var(--responsive-gap) !important;
+    }
+
+    .hero {
+        min-height: auto !important;
+        padding-top: clamp(2rem, 8vw, 4rem) !important;
+        padding-bottom: clamp(2rem, 8vw, 4rem) !important;
+    }
+
+    .hero h1,
+    .panel-header h1,
+    .header-section h1,
+    .quiz-header h1,
+    h1 {
+        font-size: clamp(2rem, 9vw, 4rem) !important;
+        line-height: 1.08 !important;
+    }
+
+    h2,
+    .question-text {
+        font-size: clamp(1.35rem, 5.5vw, 2.25rem) !important;
+        line-height: 1.2 !important;
+    }
+}
+
+@media (max-width: 768px) {
+    body {
+        line-height: 1.55;
+    }
+
+    header,
+    nav,
+    .header,
+    .nav-container {
+        align-items: flex-start !important;
+        flex-direction: column !important;
+        padding: 0.85rem var(--responsive-edge) !important;
+    }
+
+    .logo-container,
+    .logo {
+        width: 100%;
+        justify-content: flex-start;
+    }
+
+    .logo-text,
+    .title-group h1 {
+        max-width: 100%;
+        font-size: clamp(1rem, 5vw, 1.35rem) !important;
+        line-height: 1.2;
+    }
+
+    nav ul,
+    .nav-links,
+    .nav-actions,
+    .nav-btns,
+    .header-actions {
+        width: 100%;
+        display: flex !important;
+        gap: 0.65rem !important;
+        overflow-x: auto;
+        overscroll-behavior-inline: contain;
+        padding: 0.25rem 0 0.4rem !important;
+        scrollbar-width: thin;
+        justify-content: flex-start !important;
+    }
+
+    nav ul {
+        list-style: none;
+    }
+
+    nav li {
+        flex: 0 0 auto;
+    }
+
+    nav a,
+    .nav-btn,
+    .nav-link-btn,
+    .back-btn,
+    .back-button,
+    .back-link,
+    .theme-toggle,
+    .mode-btn {
+        flex: 0 0 auto;
+        white-space: nowrap;
+        padding: 0.7rem 0.9rem !important;
+        font-size: 0.92rem !important;
+    }
+
+    #google_translate_element {
+        margin: 0 !important;
+        max-width: 100%;
+    }
+
+    .goog-te-gadget-simple {
+        max-width: 100%;
+        padding: 0.65rem 0.8rem !important;
+    }
+
+    .hero {
+        display: flex !important;
+        flex-direction: column !important;
+        text-align: center;
+        align-items: center !important;
+    }
+
+    .hero p,
+    .section-header p,
+    .header-section p,
+    .quiz-header p {
+        font-size: clamp(0.98rem, 4vw, 1.12rem) !important;
+        max-width: 62ch;
+    }
+
+    .hero-img {
+        width: min(100%, 520px) !important;
+        max-height: 46vh;
+        object-fit: contain;
+    }
+
+    .hero-buttons,
+    .button-group,
+    .cta-group,
+    .result-actions,
+    .quiz-actions {
+        width: 100%;
+        display: flex !important;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.85rem !important;
+    }
+
+    .hero-buttons a,
+    .button-group a,
+    .cta-group a,
+    .result-actions a,
+    .quiz-actions a,
+    .btn-main,
+    .btn-hero,
+    .btn-action {
+        width: 100%;
+        justify-content: center;
+        text-align: center;
+    }
+
+    .glass-card,
+    .card,
+    .feature-card,
+    .course-card,
+    .lab-card,
+    .printer-card,
+    .result-card,
+    .device-card,
+    .part-card,
+    .quiz-card,
+    .info-card,
+    .building,
+    .panel {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    .options-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .option-btn {
+        width: 100%;
+        min-height: 52px;
+        white-space: normal;
+        text-align: left;
+    }
+
+    .quiz-card {
+        border-radius: 18px !important;
+    }
+
+    .progress-container,
+    .progress-bar {
+        max-width: 100%;
+    }
+
+    [style*="grid-template-columns"] {
+        grid-template-columns: 1fr !important;
+    }
+
+    [style*="display: grid"],
+    [style*="display:grid"] {
+        grid-template-columns: 1fr !important;
+    }
+
+    [style*="max-width"] {
+        max-width: 100% !important;
+    }
+
+    [style*="min-width"] {
+        min-width: 0 !important;
+    }
+
+    .timeline::before,
+    .timeline-line {
+        left: 1rem !important;
+    }
+
+    .gen-card,
+    .timeline-item,
+    .comparison-row {
+        grid-template-columns: 1fr !important;
+        grid-template-areas: none !important;
+    }
+
+    .bit-container {
+        overflow-x: auto;
+        justify-content: flex-start !important;
+        padding-bottom: 0.75rem;
+    }
+
+    .bit-col {
+        flex: 0 0 auto;
+    }
+
+    .window,
+    .desktop-window,
+    .workspace,
+    .desktop,
+    .monitor,
+    .lab-screen {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    .taskbar,
+    .start-menu {
+        max-width: calc(100vw - 1rem) !important;
+    }
+
+    .start-menu {
+        left: 0.5rem !important;
+        right: 0.5rem !important;
+        width: auto !important;
+    }
+
+    .city-map,
+    .network-canvas,
+    .simulation-area,
+    .game-area {
+        min-height: 420px;
+    }
+}
+
+@media (max-width: 520px) {
+    :root {
+        --responsive-edge: 0.9rem;
+        --responsive-card-pad: 1rem;
+    }
+
+    section,
+    .section,
+    .container,
+    .main-container,
+    .quiz-container,
+    .timeline-container,
+    .lab-container,
+    .city-container,
+    .learn-content {
+        padding-top: clamp(1.5rem, 7vw, 2.5rem) !important;
+        padding-bottom: clamp(1.5rem, 7vw, 2.5rem) !important;
+    }
+
+    .logo-container img,
+    .logo-img {
+        width: 38px !important;
+        height: 38px !important;
+    }
+
+    .hero h1,
+    h1 {
+        font-size: clamp(1.8rem, 11vw, 2.8rem) !important;
+    }
+
+    h2,
+    .question-text {
+        font-size: clamp(1.22rem, 7vw, 1.7rem) !important;
+    }
+
+    p,
+    li,
+    label,
+    input,
+    select,
+    textarea,
+    button,
+    a {
+        word-break: normal;
+        overflow-wrap: anywhere;
+    }
+
+    .quiz-header,
+    .section-header,
+    .header-section {
+        text-align: center;
+    }
+
+    .mode-toggle {
+        width: 100%;
+        overflow-x: auto;
+    }
+
+    .mode-btn {
+        flex: 1 0 auto;
+        justify-content: center;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+    }
+}
